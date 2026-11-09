@@ -1,0 +1,3634 @@
+<!doctype html>
+<html lang="th">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>TWOK · ระบบเช็คชื่อล่าบอส</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Kanit:ital,wght@0,400;0,600;0,800;1,800&family=Noto+Sans+Thai:wght@400;600&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        --base: #14161c;
+        --panel: #1c1f27;
+        --panel2: #262a36;
+        --line: #3d4352;
+        --bone: #f6f3ee;
+        --mute: #b8bece;
+        --blood: #e11d2e;
+        --ember: #ff6a1a;
+        --gold: #ffc83d;
+        --ok: #3ddc84;
+        --warn: #ffb020;
+        --blue: #5aa9ff;
+        --cut: 12px;
+      }
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+      body {
+        background:
+          radial-gradient(
+            1100px 520px at 50% -10%,
+            rgba(225, 29, 46, 0.28),
+            transparent 60%
+          ),
+          repeating-linear-gradient(
+            135deg,
+            rgba(255, 255, 255, 0.018) 0 2px,
+            transparent 2px 14px
+          ),
+          var(--base);
+        color: var(--bone);
+        font-family: 'Noto Sans Thai', system-ui, sans-serif;
+        font-size: 16px;
+        line-height: 1.5;
+        min-height: 100vh;
+        padding-bottom: 60px;
+      }
+      h1,
+      h2,
+      h3,
+      .disp {
+        font-family: 'Kanit', 'Noto Sans Thai', sans-serif;
+      }
+      button,
+      input,
+      textarea,
+      select {
+        font: inherit;
+        color: inherit;
+      }
+      :focus-visible {
+        outline: 3px solid var(--gold);
+        outline-offset: 2px;
+      }
+      .chip.new {
+        border-color: var(--ok);
+        background: rgba(61, 220, 132, 0.14);
+      }
+      .hide {
+        display: none !important;
+      }
+      .hint {
+        color: var(--mute);
+        font-size: 14px;
+      }
+      .mute {
+        color: var(--mute);
+      }
+
+      /* ===== Header ===== */
+      header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 14px;
+        flex-wrap: wrap;
+        padding: 12px 24px;
+        border-bottom: 3px solid var(--blood);
+        background: linear-gradient(
+          90deg,
+          rgba(60, 8, 14, 0.95),
+          rgba(20, 22, 28, 0.95) 60%
+        );
+        box-shadow: 0 6px 30px rgba(225, 29, 46, 0.25);
+      }
+      .logo {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+      }
+      .logo img {
+        width: 54px;
+        height: 54px;
+        object-fit: contain;
+        filter: drop-shadow(0 0 12px rgba(255, 106, 26, 0.55));
+      }
+      .logo b {
+        font-family: 'Kanit';
+        font-weight: 800;
+        font-style: italic;
+        font-size: 40px;
+        letter-spacing: 2px;
+        line-height: 1;
+        background: linear-gradient(
+          180deg,
+          #fff,
+          var(--gold) 35%,
+          var(--ember) 65%,
+          var(--blood)
+        );
+        -webkit-background-clip: text;
+        background-clip: text;
+        color: transparent;
+      }
+      .logo span {
+        color: var(--mute);
+        font-size: 14px;
+      }
+      .hstats {
+        display: flex;
+        gap: 8px;
+        flex-wrap: wrap;
+      }
+      .hs {
+        background: var(--base);
+        border: 1px solid var(--line);
+        padding: 4px 12px;
+        text-align: center;
+        min-width: 86px;
+      }
+      .hs b {
+        display: block;
+        font-family: 'Kanit';
+        font-size: 22px;
+        color: var(--gold);
+        line-height: 1.1;
+      }
+      .hs span {
+        font-size: 12px;
+        color: var(--mute);
+      }
+      .tools {
+        display: flex;
+        gap: 8px;
+        flex-wrap: wrap;
+      }
+
+      /* ===== Buttons / inputs ===== */
+      .btn {
+        cursor: pointer;
+        border: 1px solid var(--line);
+        background: var(--panel2);
+        padding: 8px 14px;
+        font-weight: 600;
+        clip-path: polygon(
+          var(--cut) 0,
+          100% 0,
+          100% calc(100% - var(--cut)),
+          calc(100% - var(--cut)) 100%,
+          0 100%,
+          0 var(--cut)
+        );
+        transition:
+          background 0.15s,
+          transform 0.1s;
+      }
+      .btn:hover {
+        background: #343a4a;
+      }
+      .btn:active {
+        transform: scale(0.97);
+      }
+      .btn.red {
+        background: var(--blood);
+        border-color: var(--blood);
+        color: #fff;
+      }
+      .btn.red:hover {
+        background: #ff2b3d;
+      }
+      .btn.gold {
+        background: var(--gold);
+        border-color: var(--gold);
+        color: #14161c;
+      }
+      .btn.gold:hover {
+        background: #ffd866;
+      }
+      .btn.sm {
+        padding: 4px 10px;
+        font-size: 14px;
+      }
+      .btn.ghost {
+        background: transparent;
+      }
+      .btn[disabled] {
+        opacity: 0.45;
+        cursor: not-allowed;
+      }
+      input[type='text'],
+      input[type='number'],
+      input[type='search'],
+      input[type='datetime-local'],
+      textarea,
+      select {
+        background: var(--base);
+        border: 1px solid var(--line);
+        padding: 8px 10px;
+        min-width: 0;
+      }
+      input[type='text'],
+      input[type='search'],
+      textarea {
+        width: 100%;
+      }
+      textarea {
+        resize: vertical;
+        min-height: 76px;
+      }
+      input[type='checkbox'] {
+        width: 18px;
+        height: 18px;
+        accent-color: var(--blood);
+      }
+
+      /* ===== Tabs ===== */
+      nav {
+        display: flex;
+        gap: 6px;
+        flex-wrap: wrap;
+        max-width: 1400px;
+        margin: 18px auto 0;
+        padding: 0 20px;
+      }
+      .tab {
+        cursor: pointer;
+        background: var(--panel);
+        border: 1px solid var(--line);
+        border-bottom: none;
+        padding: 10px 20px;
+        font-family: 'Kanit';
+        font-weight: 600;
+        font-size: 18px;
+        color: var(--mute);
+      }
+      .tab.on {
+        background: var(--panel2);
+        color: var(--gold);
+        border-top: 4px solid var(--blood);
+        padding-top: 7px;
+      }
+      main {
+        max-width: 1400px;
+        margin: 0 auto;
+        padding: 0 20px;
+      }
+      .sec {
+        background: var(--panel);
+        border: 1px solid var(--line);
+        padding: 18px;
+        min-height: 300px;
+      }
+      .sec h2 {
+        font-size: 24px;
+        margin-bottom: 10px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 10px;
+        flex-wrap: wrap;
+      }
+      .panel {
+        background: var(--panel2);
+        border: 1px solid var(--line);
+        padding: 14px;
+      }
+      .grid2 {
+        display: grid;
+        grid-template-columns: minmax(300px, 1fr) minmax(300px, 1fr);
+        gap: 16px;
+      }
+      @media (max-width: 900px) {
+        .grid2 {
+          grid-template-columns: 1fr;
+        }
+      }
+      .row {
+        display: flex;
+        gap: 10px;
+        align-items: center;
+        flex-wrap: wrap;
+      }
+      .row label {
+        display: flex;
+        gap: 6px;
+        align-items: center;
+      }
+
+      /* ===== Drop zone ===== */
+      .drop {
+        border: 3px dashed var(--line);
+        background: rgba(255, 255, 255, 0.02);
+        padding: 26px 16px;
+        text-align: center;
+        transition: all 0.15s;
+      }
+      .drop.over {
+        border-color: var(--gold);
+        background: rgba(255, 200, 61, 0.08);
+        transform: scale(1.01);
+      }
+      .drop .big {
+        font-family: 'Kanit';
+        font-weight: 800;
+        font-size: 26px;
+      }
+      .rule {
+        margin: 10px 0;
+        padding: 8px 12px;
+        background: rgba(255, 200, 61, 0.1);
+        border-left: 5px solid var(--gold);
+      }
+      .bulk {
+        display: flex;
+        gap: 8px;
+        flex-wrap: wrap;
+        align-items: center;
+        margin: 12px 0;
+        padding: 10px;
+        background: var(--panel2);
+        border: 1px solid var(--line);
+      }
+
+      /* ===== Draft card ===== */
+      .card {
+        display: grid;
+        grid-template-columns: 230px 1fr;
+        gap: 14px;
+        background: var(--panel2);
+        border: 1px solid var(--line);
+        border-left: 6px solid var(--ember);
+        padding: 12px;
+        margin-bottom: 14px;
+      }
+      .card.done {
+        border-left-color: var(--ok);
+      }
+      .card.err {
+        border-left-color: var(--blood);
+      }
+      @media (max-width: 760px) {
+        .card {
+          grid-template-columns: 1fr;
+        }
+      }
+      .cthumb {
+        position: relative;
+        background: #000;
+        min-height: 120px;
+        display: grid;
+        place-items: center;
+        cursor: zoom-in;
+        align-self: start;
+      }
+      .cthumb img {
+        width: 100%;
+        display: block;
+        max-height: 300px;
+        object-fit: contain;
+      }
+      .cthumb .noimg {
+        color: var(--mute);
+        padding: 30px 10px;
+        text-align: center;
+        cursor: default;
+      }
+      .cno {
+        position: absolute;
+        left: 6px;
+        top: 6px;
+        background: var(--gold);
+        color: #111;
+        font-family: 'Kanit';
+        font-weight: 800;
+        padding: 0 10px;
+        font-size: 20px;
+      }
+      .crow {
+        display: flex;
+        gap: 10px;
+        flex-wrap: wrap;
+        align-items: flex-end;
+        margin-bottom: 8px;
+      }
+      .crow label {
+        display: grid;
+        gap: 2px;
+        font-size: 13px;
+        color: var(--mute);
+      }
+      .crow input[type='number'] {
+        width: 84px;
+      }
+      .seg {
+        display: flex;
+      }
+      .seg button {
+        cursor: pointer;
+        background: var(--base);
+        border: 1px solid var(--line);
+        padding: 7px 10px;
+        font-size: 14px;
+      }
+      .seg button.on {
+        background: var(--gold);
+        color: #111;
+        border-color: var(--gold);
+        font-weight: 800;
+      }
+      .pts {
+        display: inline-block;
+        background: var(--blood);
+        color: #fff;
+        font-family: 'Kanit';
+        font-weight: 800;
+        padding: 2px 12px;
+        font-size: 20px;
+      }
+      .pts.p1 {
+        background: #3a4152;
+      }
+      .bar {
+        height: 8px;
+        background: var(--base);
+        border: 1px solid var(--line);
+        overflow: hidden;
+        margin: 6px 0;
+      }
+      .bar i {
+        display: block;
+        height: 100%;
+        width: 0;
+        background: linear-gradient(90deg, var(--ember), var(--gold));
+        transition: width 0.2s;
+      }
+      .chips {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 6px;
+        margin: 8px 0;
+      }
+      .chip {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        background: rgba(61, 220, 132, 0.16);
+        border: 1px solid var(--ok);
+        padding: 2px 4px 2px 10px;
+        font-weight: 600;
+      }
+      .chip.warn {
+        background: rgba(255, 176, 32, 0.16);
+        border-color: var(--warn);
+      }
+      .chip.man {
+        background: rgba(90, 169, 255, 0.16);
+        border-color: var(--blue);
+      }
+      .chip button {
+        background: none;
+        border: none;
+        color: var(--mute);
+        cursor: pointer;
+        font-size: 16px;
+        padding: 0 6px;
+      }
+      .chip button:hover {
+        color: var(--blood);
+      }
+      .chip small {
+        color: var(--mute);
+        font-weight: 400;
+      }
+      .urow {
+        display: flex;
+        gap: 6px;
+        flex-wrap: wrap;
+        align-items: center;
+        padding: 6px 0;
+        border-top: 1px dashed var(--line);
+      }
+      .urow code {
+        background: var(--base);
+        padding: 1px 8px;
+        color: var(--warn);
+        max-width: 260px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+      .urow input {
+        width: 190px;
+      }
+      .sug {
+        cursor: pointer;
+        background: var(--base);
+        border: 1px solid var(--blue);
+        color: var(--blue);
+        padding: 1px 8px;
+        font-size: 14px;
+      }
+      .sug:hover {
+        background: var(--blue);
+        color: #111;
+      }
+      .cact {
+        display: flex;
+        gap: 8px;
+        flex-wrap: wrap;
+        margin-top: 8px;
+      }
+      .warnbox {
+        background: rgba(225, 29, 46, 0.18);
+        border: 1px solid var(--blood);
+        padding: 6px 10px;
+        margin-bottom: 8px;
+      }
+      details summary {
+        cursor: pointer;
+        color: var(--mute);
+        padding: 4px 0;
+      }
+
+      /* ===== Table ===== */
+      .tbl {
+        width: 100%;
+        border-collapse: collapse;
+      }
+      .tbl th,
+      .tbl td {
+        padding: 7px 10px;
+        border-bottom: 1px solid var(--line);
+        text-align: left;
+        vertical-align: top;
+      }
+      .tbl th {
+        background: var(--panel2);
+        position: sticky;
+        top: 0;
+        color: var(--gold);
+        font-family: 'Kanit';
+        font-weight: 600;
+        z-index: 1;
+      }
+      .tbl td.num {
+        text-align: right;
+        font-family: 'Kanit';
+        font-weight: 600;
+      }
+      .tbl td.pts {
+        color: var(--gold);
+        font-size: 18px;
+        font-family: 'Kanit';
+        font-weight: 800;
+      }
+      .tw {
+        max-height: 70vh;
+        overflow: auto;
+        border: 1px solid var(--line);
+      }
+      .n1,
+      .n2 {
+        display: inline-block;
+        margin: 1px 2px;
+        padding: 0 5px;
+        font-size: 14px;
+      }
+      .n1 {
+        color: var(--mute);
+      }
+      .n2 {
+        background: var(--gold);
+        color: #111;
+        font-weight: 800;
+      }
+      .thumb {
+        width: 84px;
+        height: 52px;
+        object-fit: cover;
+        background: #000;
+        cursor: zoom-in;
+        border: 1px solid var(--line);
+      }
+      .rk {
+        font-family: 'Kanit';
+        font-weight: 800;
+        color: var(--gold);
+      }
+      .tag {
+        display: inline-block;
+        padding: 0 8px;
+        font-size: 13px;
+        font-weight: 700;
+      }
+      .tag.n {
+        background: #3a4152;
+      }
+      .tag.b {
+        background: var(--gold);
+        color: #111;
+      }
+
+      /* ===== Modal ===== */
+      .modal {
+        position: fixed;
+        inset: 0;
+        z-index: 70;
+        background: rgba(0, 0, 0, 0.82);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 14px;
+      }
+      .modal .box {
+        background: var(--panel);
+        border: 2px solid var(--gold);
+        max-width: 760px;
+        width: 100%;
+        max-height: 92vh;
+        overflow: auto;
+        padding: 16px;
+        display: grid;
+        gap: 12px;
+      }
+      .modal h3 {
+        font-size: 22px;
+        color: var(--gold);
+      }
+      .pickList {
+        max-height: 46vh;
+        overflow: auto;
+        border: 1px solid var(--line);
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(210px, 1fr));
+      }
+      .pickList label {
+        display: flex;
+        gap: 8px;
+        align-items: center;
+        padding: 5px 10px;
+        border-bottom: 1px solid var(--line);
+        cursor: pointer;
+      }
+      .pickList label:hover {
+        background: var(--panel2);
+      }
+      #viewer .box {
+        max-width: 96vw;
+        width: auto;
+        padding: 8px;
+      }
+      #viewer img {
+        max-width: 94vw;
+        max-height: 84vh;
+        display: block;
+      }
+      #cropBox {
+        position: relative;
+        display: inline-block;
+        cursor: crosshair;
+        touch-action: none;
+        user-select: none;
+        max-width: 100%;
+      }
+      #cropBox img {
+        max-width: 100%;
+        max-height: 68vh;
+        display: block;
+        pointer-events: none;
+      }
+      #cropSel {
+        position: absolute;
+        border: 3px solid var(--gold);
+        background: rgba(255, 200, 61, 0.18);
+        pointer-events: none;
+        display: none;
+      }
+      #toast {
+        position: fixed;
+        bottom: 20px;
+        left: 50%;
+        transform: translateX(-50%);
+        background: var(--blood);
+        padding: 10px 20px;
+        z-index: 90;
+        display: none;
+        font-weight: 600;
+        max-width: 90vw;
+        text-align: center;
+      }
+      .dangerzone {
+        border: 1px dashed var(--blood);
+        padding: 10px;
+        margin-top: 12px;
+      }
+      #auth {
+        position: fixed;
+        inset: 0;
+        z-index: 9999;
+        background: var(--base);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      #auth .box {
+        width: min(360px, 92vw);
+        display: grid;
+        gap: 10px;
+        padding: 22px;
+        border: 1px solid var(--line);
+        border-radius: 10px;
+      }
+      #auth.hide {
+        display: none;
+      }
+      #authMsg {
+        color: #ff6b6b;
+        min-height: 1.2em;
+        font-size: 14px;
+      }
+      input.adj {
+        width: 56px;
+        margin-left: 6px;
+        padding: 2px 4px;
+      }
+    </style>
+  </head>
+  <body>
+    <datalist id="dlMembers"></datalist>
+
+    <header>
+      <div class="logo">
+        <img id="logo" alt="" /><b>TWOK</b><span>ระบบเช็คชื่อล่าบอส</span>
+      </div>
+      <div class="hstats">
+        <div class="hs"><b id="hsMem">0</b><span>สมาชิก</span></div>
+        <div class="hs"><b id="hsSes">0</b><span>รอบ/รูปที่บันทึก</span></div>
+        <div class="hs"><b id="hsPts">0</b><span>แต้มที่แจกแล้ว</span></div>
+      </div>
+      <div class="tools">
+        <span id="who" class="hint"></span>
+        <button class="btn" id="btnLogout" hidden>🚪 ออกจากระบบ</button>
+        <button class="btn" id="btnBackup">💾 สำรองข้อมูล</button>
+        <button class="btn" id="btnRestore">📂 โหลดข้อมูล</button>
+        <input type="file" id="restoreFile" accept=".json" class="hide" />
+      </div>
+    </header>
+
+    <div id="auth" class="hide">
+      <div class="box">
+        <b style="font-size: 20px">🔐 TWOK — เข้าสู่ระบบ</b>
+        <input
+          type="email"
+          id="authEmail"
+          placeholder="อีเมล"
+          autocomplete="username"
+        />
+        <input
+          type="password"
+          id="authPass"
+          placeholder="รหัสผ่าน"
+          autocomplete="current-password"
+        />
+        <button class="btn red" id="authGo">เข้าสู่ระบบ</button>
+        <div id="authMsg"></div>
+      </div>
+    </div>
+    <div id="cloudBanner" class="hint" style="padding: 4px 14px"></div>
+    <nav id="tabs">
+      <button class="tab on" data-tab="add">📥 ใส่รูปเช็คชื่อ</button>
+      <button class="tab" data-tab="table">📊 ตารางคะแนน</button>
+      <button class="tab" data-tab="sessions">🗂 รอบที่บันทึก</button>
+      <button class="tab" data-tab="log">📜 Log</button>
+      <button class="tab" data-tab="members">👥 สมาชิก &amp; ตั้งค่า</button>
+    </nav>
+
+    <main>
+      <!-- ============ TAB: ใส่รูป ============ -->
+      <section class="sec" id="tab-add">
+        <div class="drop" id="drop">
+          <div class="big">
+            🖼️ ลากรูป TS มาวางที่นี่ (ใส่หลายรูปพร้อมกันได้)
+          </div>
+          <div class="hint" style="margin: 6px 0 12px">
+            หรือกด <b>Ctrl+V</b> วางรูปที่เพิ่งแคป · รูปละ 1 ตัวบอส = 1 รอบ
+          </div>
+          <div class="row" style="justify-content: center">
+            <button class="btn red" id="btnPick">📁 เลือกไฟล์รูป</button>
+            <button class="btn" id="btnManual">
+              ➕ เพิ่มรอบแบบไม่มีรูป (วาง/ติ๊กชื่อเอง)
+            </button>
+            <input
+              type="file"
+              id="picFile"
+              accept="image/*"
+              multiple
+              class="hide"
+            />
+          </div>
+        </div>
+        <div class="rule" id="ruleBanner"></div>
+        <div class="bulk hide" id="bulk">
+          <b>ทุกรูปที่รอบันทึก:</b>
+          <button class="btn sm" id="bOcrAll">🔎 อ่านชื่อทั้งหมด</button>
+          <span class="mute">ตั้งแต้มทุกรูป:</span>
+          <button class="btn sm" data-bulkmode="auto">⏱ ตามเวลา</button>
+          <button class="btn sm" data-bulkmode="normal">☀️ แต้มปกติ</button>
+          <button class="btn sm" id="bBulkPlus">➕ +1 แต้มทุกรูป</button>
+          <button class="btn sm" data-bulkmode="bonus">🌙 แต้มพิเศษ</button>
+          <button class="btn sm gold" id="bSaveAll">✅ บันทึกทั้งหมด</button>
+          <button class="btn sm ghost" id="bClearDrafts">
+            🗑 ล้างที่ยังไม่บันทึก
+          </button>
+          <span id="ocrStatus" class="hint"></span>
+        </div>
+        <div id="drafts"></div>
+        <div class="hint" id="addTip" style="margin-top: 10px">
+          วิธีใช้: ① ใส่รูป → ② ระบบอ่านชื่อให้ แล้วจับคู่กับรายชื่อสมาชิก → ③
+          ตรวจสีเหลือง/ชื่อที่ไม่ตรง แก้ได้ → ④ กดบันทึก<br />
+          ไม่ต้องใส่รายชื่อไว้ก่อน —
+          ชื่อที่อ่านได้จากรูปจะถูกเพิ่มเป็นสมาชิกและนับแต้มให้เอง<br />กด
+          <b>➕ +1 แต้ม</b> ที่การ์ดรูปไหน คนในรูปนั้นจะได้แต้มเพิ่ม (1 → 2)
+        </div>
+      </section>
+
+      <!-- ============ TAB: ตาราง ============ -->
+      <section class="sec hide" id="tab-table">
+        <h2>
+          📊 ตารางคะแนน
+          <span class="row">
+            <input
+              type="search"
+              id="tSearch"
+              placeholder="🔍 ค้นหาชื่อ..."
+              style="width: 200px"
+            />
+            <select id="tSort">
+              <option value="pts">เรียงตามแต้ม</option>
+              <option value="cnt">เรียงตามจำนวนครั้ง</option>
+              <option value="name">เรียงตามชื่อ</option>
+            </select>
+          </span>
+        </h2>
+        <div class="row" style="margin-bottom: 10px">
+          <button class="btn red sm" id="bCopySheet">
+            📋 คัดลอกไปวางในชีต
+          </button>
+          <button class="btn sm" id="bCsv">⬇ ดาวน์โหลด CSV</button>
+          <button class="btn gold sm" id="bTickets">
+            🎟 ส่งออกเป็นตั๋ว (ชื่อ,ตั๋ว) ไปจับฉลาก
+          </button>
+          <span class="hint">เลขรูปที่มีพื้นหลังทอง = รอบที่ได้แต้มพิเศษ</span>
+        </div>
+        <div class="tw">
+          <table class="tbl">
+            <thead>
+              <tr>
+                <th>#</th>
+                <th>ชื่อสมาชิก</th>
+                <th>รูปที่เข้าร่วม</th>
+                <th style="text-align: right">มา (รอบ)</th>
+                <th style="text-align: right">
+                  นับรวม (ครั้ง)<small class="mute"> / ปรับ</small>
+                </th>
+                <th style="text-align: right">
+                  แต้ม<small class="mute"> / ปรับ</small>
+                </th>
+                <th style="text-align: right">อีกกี่ครั้งได้แต้มต่อไป</th>
+                <th style="text-align: right">เข้าร่วม</th>
+              </tr>
+            </thead>
+            <tbody id="tBody"></tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- ============ TAB: รอบ ============ -->
+      <section class="sec hide" id="tab-sessions">
+        <h2>
+          🗂 รอบที่บันทึก
+          <span class="row"
+            ><button class="btn sm" id="bRenum">
+              🔢 เรียงเลขรูปใหม่ตามเวลา
+            </button></span
+          >
+        </h2>
+        <div class="tw">
+          <table class="tbl">
+            <thead>
+              <tr>
+                <th>รูปที่</th>
+                <th>รูป</th>
+                <th>เวลา</th>
+                <th>บอส/หมายเหตุ</th>
+                <th>นับเป็น (ครั้ง)</th>
+                <th style="text-align: right">มา (คน)</th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody id="sBody"></tbody>
+          </table>
+        </div>
+      </section>
+
+      <section class="sec hide" id="tab-log">
+        <h2>📜 Log การใช้งานทั้งหมด</h2>
+        <div class="tw">
+          <table class="tbl">
+            <thead>
+              <tr>
+                <th>เวลา</th>
+                <th>ผู้ใช้</th>
+                <th>การกระทำ</th>
+                <th>รายละเอียด</th>
+              </tr>
+            </thead>
+            <tbody id="logBody"></tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- ============ TAB: สมาชิก ============ -->
+      <section class="sec hide" id="tab-members">
+        <div class="grid2">
+          <div>
+            <h2>👥 รายชื่อสมาชิก <span class="hint" id="mCount"></span></h2>
+            <div class="row" style="margin-bottom: 8px">
+              <button class="btn red sm" id="bLegacy">
+                📥 นำเข้าจากชีตเดิม
+              </button>
+            </div>
+            <details style="margin-bottom: 10px" open>
+              <summary>
+                วางรายชื่อสมาชิก (1 บรรทัด = 1 คน —
+                คัดลอกคอลัมน์ชื่อจากชีตมาวางได้)
+              </summary>
+              <textarea
+                id="mBulk"
+                placeholder="TWไอแอมซอรี่&#10;AOEoTW&#10;JazzGod&#10;วัยรุ่นลบทาTW (เป็ด)"
+              ></textarea>
+              <button class="btn sm" id="mBulkAdd" style="margin-top: 6px">
+                เพิ่มทั้งหมด
+              </button>
+            </details>
+            <input
+              type="search"
+              id="mSearch"
+              placeholder="🔍 ค้นหาสมาชิก..."
+              style="margin-bottom: 8px"
+            />
+            <div class="tw" style="max-height: 52vh">
+              <table class="tbl">
+                <tbody id="mBody"></tbody>
+              </table>
+            </div>
+          </div>
+          <div>
+            <h2>⚙️ ตั้งค่า</h2>
+            <div class="panel" style="display: grid; gap: 12px">
+              <div>
+                <b>กติกาแต้ม</b>
+                <div class="row" style="margin-top: 6px">
+                  <label
+                    >นับครั้ง (กลางวัน)
+                    <input
+                      type="number"
+                      id="cNormal"
+                      min="0"
+                      max="99"
+                      style="width: 70px"
+                  /></label>
+                  <label
+                    >นับครั้ง (หลังเที่ยงคืน)
+                    <input
+                      type="number"
+                      id="cBonus"
+                      min="0"
+                      max="99"
+                      style="width: 70px"
+                  /></label>
+                </div>
+                <div class="row" style="margin-top: 6px">
+                  <label
+                    >แคปตั้งแต่
+                    <select id="cFrom"></select>
+                    ถึง
+                    <select id="cTo"></select
+                  ></label>
+                </div>
+                <div class="row" style="margin-top: 6px">
+                  <label
+                    >เข้าร่วมครบ
+                    <input
+                      type="number"
+                      id="cPer"
+                      min="1"
+                      max="99"
+                      style="width: 70px"
+                    />
+                    ครั้ง = 1 แต้ม</label
+                  >
+                </div>
+                <label
+                  style="
+                    margin-top: 6px;
+                    display: flex;
+                    gap: 8px;
+                    align-items: center;
+                  "
+                  ><input type="checkbox" id="cUseCode" /> บังคับเลขท้ายชื่อ 2–4
+                  หลัก (ใช้ยืนยันตัวตนตอนอ่านรูป)</label
+                >
+                <div class="hint" id="cRuleHint"></div>
+              </div>
+              <div>
+                <b>การอ่านชื่อจากรูป</b>
+                <label
+                  style="
+                    margin-top: 6px;
+                    display: flex;
+                    gap: 8px;
+                    align-items: center;
+                  "
+                  >ความเข้มงวดการจับคู่
+                  <input
+                    type="range"
+                    id="cThr"
+                    min="55"
+                    max="95"
+                    style="flex: 1" />
+                  <span id="cThrV" class="rk"></span
+                ></label>
+                <div class="hint">
+                  ต่ำ = จับคู่ง่าย (พลาดได้มากขึ้น) · สูง = ต้องเหมือนมาก
+                  (ชื่อที่ไม่ตรงจะให้ตรวจเอง)
+                </div>
+                <label
+                  style="
+                    margin-top: 6px;
+                    display: flex;
+                    gap: 8px;
+                    align-items: center;
+                  "
+                  ><input type="checkbox" id="cAuto" />
+                  เริ่มอ่านชื่ออัตโนมัติเมื่อใส่รูป</label
+                >
+                <label
+                  style="
+                    margin-top: 6px;
+                    display: flex;
+                    gap: 8px;
+                    align-items: center;
+                  "
+                  ><input type="checkbox" id="cAutoNew" />
+                  ชื่อที่อ่านได้แต่ไม่มีในรายชื่อ →
+                  เพิ่มเป็นสมาชิกใหม่ให้เลย</label
+                >
+                <label
+                  style="
+                    margin-top: 6px;
+                    display: flex;
+                    gap: 8px;
+                    align-items: center;
+                  "
+                  >ไม่นับคนที่มีป้าย (คั่นด้วยคอมมา เช่น ALIT)
+                  <input
+                    type="text"
+                    id="cSkip"
+                    placeholder="เว้นว่าง = นับทุกคน"
+                /></label>
+                <label
+                  style="
+                    margin-top: 6px;
+                    display: flex;
+                    gap: 8px;
+                    align-items: center;
+                  "
+                  ><input type="checkbox" id="cSameCrop" />
+                  ใช้พื้นที่ตัดภาพเดิมกับทุกรูป (แนะนำ)</label
+                >
+                <div class="row" style="margin-top: 6px">
+                  <button class="btn sm" id="bClearCrop">
+                    ล้างพื้นที่ตัดภาพที่จำไว้</button
+                  ><button class="btn sm" id="bClearIgnore">
+                    ล้างบรรทัดที่เคยกด "ข้าม"
+                  </button>
+                </div>
+              </div>
+              <div>
+                <b>🤖 อ่านชื่อด้วย AI (Gemini)</b>
+                <label
+                  style="
+                    margin-top: 6px;
+                    display: flex;
+                    gap: 8px;
+                    align-items: center;
+                  "
+                  ><input type="checkbox" id="cAi" /> ใช้ AI อ่านรูปแทนระบบเดิม
+                  (ถ้า AI พลาดจะกลับไปใช้ระบบเดิมเอง)</label
+                >
+                <label style="margin-top: 6px; display: block"
+                  >API key
+                  <input
+                    type="password"
+                    id="cAiKey"
+                    placeholder="วางคีย์จาก aistudio.google.com"
+                    autocomplete="off"
+                /></label>
+                <label style="margin-top: 6px; display: block"
+                  >ชื่อโมเดล
+                  <input
+                    type="text"
+                    id="cAiModel"
+                    placeholder="gemini-2.5-flash"
+                /></label>
+                <div class="hint">
+                  คีย์เก็บในเบราว์เซอร์เครื่องนี้เท่านั้น ไม่ขึ้น Firebase —
+                  ต้องวางทีละเครื่อง
+                </div>
+              </div>
+              <div class="dangerzone">
+                <b style="color: var(--blood)">โซนอันตราย</b>
+                <div class="row" style="margin-top: 6px">
+                  <button class="btn sm ghost" id="bResetAll">
+                    🗑 ล้างข้อมูลทั้งหมด
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <!-- ===== Modals ===== -->
+    <div class="modal hide" id="viewer">
+      <div class="box">
+        <img id="viewerImg" alt="" />
+        <div class="row">
+          <button class="btn red" data-close="viewer">ปิด</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="modal hide" id="cropModal">
+      <div class="box">
+        <h3>✂️ ลากเลือกพื้นที่ "รายชื่อคนในห้อง"</h3>
+        <div class="hint">
+          ลากกรอบครอบเฉพาะรายชื่อ (ไม่ต้องเอาแชท/หน้าต่างอื่น) จะอ่านแม่นขึ้นมาก
+          ระบบจะจำพื้นที่นี้ไว้ใช้กับรูปถัดไป
+        </div>
+        <div style="text-align: center">
+          <div id="cropBox">
+            <img id="cropImg" alt="" />
+            <div id="cropSel"></div>
+          </div>
+        </div>
+        <div class="row">
+          <button class="btn red" id="cropOk">ใช้พื้นที่นี้ + อ่านใหม่</button
+          ><button class="btn" id="cropClear">ไม่ตัด (ใช้ทั้งภาพ)</button
+          ><button class="btn ghost" data-close="cropModal">ยกเลิก</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="modal hide" id="pickModal">
+      <div class="box">
+        <h3 id="pickTitle">เลือกผู้เข้าร่วม</h3>
+        <div class="row">
+          <input
+            type="search"
+            id="pickSearch"
+            placeholder="🔍 พิมพ์ค้นหา..."
+            style="flex: 1"
+          /><button class="btn sm" id="pickAll">เลือกที่เห็นทั้งหมด</button
+          ><button class="btn sm" id="pickNone">ล้างทั้งหมด</button>
+        </div>
+        <div class="pickList" id="pickList"></div>
+        <div class="row">
+          <b id="pickCount"></b><span style="flex: 1"></span
+          ><button class="btn red" id="pickOk">ตกลง</button
+          ><button class="btn ghost" data-close="pickModal">ยกเลิก</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="modal hide" id="sesModal">
+      <div class="box">
+        <h3>แก้ไขรอบ</h3>
+        <div class="crow">
+          <label>รูปที่ <input type="number" id="seNo" min="1" /></label>
+          <label>เวลา <input type="datetime-local" id="seTime" /></label>
+          <label
+            >แต้ม
+            <select id="seMode">
+              <option value="auto">ตามเวลา (อัตโนมัติ)</option>
+              <option value="fixed">กำหนดเอง</option>
+            </select></label
+          >
+          <label
+            >นับเป็น (ครั้ง) <input type="number" id="sePts" min="0" max="99"
+          /></label>
+        </div>
+        <label class="mute"
+          >บอส/หมายเหตุ <input type="text" id="seLabel"
+        /></label>
+        <div>
+          <b>ผู้เข้าร่วม <span id="seCount"></span></b>
+          <button class="btn sm" id="seEditAtt">✏️ เลือกผู้เข้าร่วม</button>
+        </div>
+        <div class="chips" id="seChips"></div>
+        <div class="row">
+          <button class="btn red" id="seOk">บันทึก</button
+          ><button class="btn ghost" data-close="sesModal">ยกเลิก</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="modal hide" id="legacyModal">
+      <div class="box">
+        <h3>📥 นำเข้าจากชีตเดิม</h3>
+        <div class="hint">
+          คัดลอกตารางจากชีต (คอลัมน์ ชื่อสมาชิก + รูปที่เข้าร่วม) มาวาง
+          หรือเลือกไฟล์ CSV · ระบบจะสร้างรอบตามเลขรูปที่เจอ (รอบละ 1 แต้ม)
+          และสมาชิกให้ครบ
+        </div>
+        <textarea
+          id="lgText"
+          style="min-height: 150px"
+          placeholder="ชื่อสมาชิก&#9;รูปที่เข้าร่วม&#9;จำนวนครั้ง&#10;TWไอแอมซอรี่&#9;1,2,3,4,5&#9;5"
+        ></textarea>
+        <div class="row">
+          <input type="file" id="lgFile" accept=".csv,.tsv,.txt" /><label
+            >วิธีนำเข้า:
+            <select id="lgMode">
+              <option value="replace">แทนที่ข้อมูลเดิมทั้งหมด</option>
+              <option value="merge">รวมเข้ากับเลขรูปเดิม</option>
+            </select></label
+          >
+        </div>
+        <div id="lgPreview" class="hint"></div>
+        <div class="row">
+          <button class="btn red" id="lgOk">นำเข้า</button
+          ><button class="btn ghost" data-close="legacyModal">ยกเลิก</button>
+        </div>
+      </div>
+    </div>
+    <div id="toast"></div>
+
+    <script>
+      /* ============================================================
+   ✅ ภาพรวม: ระบบเช็คชื่อล่าบอส TWOK — ข้อมูลเก็บในเครื่อง (localStorage + IndexedDB สำหรับรูป)
+   📍 Key Logic: แคปจอ TS → ปรับภาพ → OCR (Tesseract.js) → จับคู่ชื่อกับรายชื่อสมาชิกแบบ "ใกล้เคียง" → คนตรวจ/แก้ → บันทึกเป็นรอบ
+   ⚠️ Pitfall: OCR ไม่แม่น 100% (โดยเฉพาะชื่อไทย) จึงมีขั้นตรวจก่อนบันทึก และระบบ "จำ" ชื่อที่แก้แล้วเพื่อแม่นขึ้นเรื่อยๆ
+   ============================================================ */
+      const KEY = 'twok_attend_v1'
+      const $ = s => document.querySelector(s),
+        $$ = s => [...document.querySelectorAll(s)]
+      const uid = () =>
+        Date.now().toString(36) + Math.random().toString(36).slice(2, 7)
+      const esc = s =>
+        String(s).replace(
+          /[&<>"']/g,
+          c =>
+            ({
+              '&': '&amp;',
+              '<': '&lt;',
+              '>': '&gt;',
+              '"': '&quot;',
+              "'": '&#39;',
+            })[c]
+        )
+      const pad = n => String(n).padStart(2, '0')
+
+      const defState = () => ({
+        members: [], // {id,name,aliases:[skeleton...]}
+        sessions: [], // {id,no,label,time,auto,pts,att:[mid],hash}
+        logs: [],
+        ignore: [], // skeleton ของบรรทัดขยะที่เคยกดข้าม
+        cfg: {
+          normal: 1,
+          bonus: 2,
+          per: 5,
+          useCode: true,
+          from: 0,
+          to: 6,
+          thr: 72,
+          autoOcr: true,
+          autoNew: true,
+          sameCrop: true,
+          crop: null,
+        },
+      })
+      function load() {
+        try {
+          const d = JSON.parse(localStorage.getItem(KEY))
+          if (d) {
+            const s = defState()
+            return { ...s, ...d, cfg: { ...s.cfg, ...d.cfg } }
+          }
+        } catch (e) {}
+        return defState()
+      }
+      let S = load()
+      S.cfg.autoNew = S.cfg.autoNew !== false
+      function save() {
+        try {
+          localStorage.setItem(KEY, JSON.stringify(S))
+          window.cloudSave && window.cloudSave()
+        } catch (e) {
+          toast('บันทึกไม่ได้! พื้นที่เต็ม ลองกดสำรองข้อมูลแล้วล้างของเก่า')
+        }
+      }
+      let tt
+      function toast(msg) {
+        const t = $('#toast')
+        t.textContent = msg
+        t.style.display = 'block'
+        clearTimeout(tt)
+        tt = setTimeout(() => (t.style.display = 'none'), 3600)
+      }
+      function download(name, text, type) {
+        const a = document.createElement('a')
+        a.href = URL.createObjectURL(new Blob([text], { type }))
+        a.download = name
+        a.click()
+        setTimeout(() => URL.revokeObjectURL(a.href), 2000)
+      }
+      async function copyText(text, ok = 'คัดลอกแล้ว') {
+        try {
+          await navigator.clipboard.writeText(text)
+          toast(ok)
+          return
+        } catch (e) {}
+        const ta = document.createElement('textarea')
+        ta.value = text
+        ta.style.cssText = 'position:fixed;left:-9999px;opacity:0'
+        document.body.appendChild(ta)
+        ta.select()
+        let o = false
+        try {
+          o = document.execCommand('copy')
+        } catch (e) {}
+        ta.remove()
+        toast(o ? ok : 'คัดลอกไม่สำเร็จ')
+      }
+      const fmtTime = ms =>
+        ms == null
+          ? '—'
+          : new Date(ms).toLocaleString('th-TH', {
+              dateStyle: 'short',
+              timeStyle: 'short',
+            })
+      const toLocalInput = ms => {
+        const d = new Date(ms)
+        return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}T${pad(d.getHours())}:${pad(d.getMinutes())}`
+      }
+      const fromLocalInput = v => {
+        const t = new Date(v).getTime()
+        return isNaN(t) ? null : t
+      }
+
+      /* ---------- แต้ม: แคปช่วงเที่ยงคืน = แต้มพิเศษ ---------- */
+      function autoPts(ms) {
+        const c = S.cfg
+        if (ms == null) return c.normal
+        const h = new Date(ms).getHours()
+        if (c.from === c.to) return c.normal
+        const inWin =
+          c.from < c.to ? h >= c.from && h < c.to : h >= c.from || h < c.to
+        return inWin ? c.bonus : c.normal
+      }
+      const sesPts = s => (s.auto ? autoPts(s.time) : s.pts) // = "จำนวนครั้งที่นับ" ของรอบนั้น
+      const per = () => Math.max(1, S.cfg.per || 5)
+      const codeOf = s =>
+        (String(s)
+          .replace(/[^\p{L}\p{N}]+$/u, '')
+          .match(/(\d{2,4})$/) || [])[1] || ''
+      const stripCode = s => String(s).replace(/\s*\d{2,4}\s*$/, '')
+      const codeBadge = m =>
+        S.cfg.useCode && !codeOf(m.name)
+          ? ' <span class="mute" title="ไม่มีเลขท้ายชื่อ 2-4 หลัก">⚠️ไม่มีเลข</span>'
+          : ''
+      function logAct(act, detail = '') {
+        const e = {
+          t: Date.now(),
+          u: window.CUR_USER || 'ในเครื่อง',
+          act,
+          detail: String(detail).slice(0, 300),
+        }
+        if (window.cloudLog) window.cloudLog(e)
+        else {
+          ;(S.logs = S.logs || []).unshift(e)
+          S.logs.length = Math.min(S.logs.length, 500)
+        }
+      }
+      let LOGS = null
+      function renderLog(list) {
+        if (list) LOGS = list
+        const rows = LOGS || S.logs || []
+        $('#logBody').innerHTML = rows.length
+          ? rows
+              .map(
+                e =>
+                  `<tr><td style="white-space:nowrap">${new Date(e.t).toLocaleString('th-TH')}</td><td>${esc(e.u || '')}</td><td>${esc(e.act)}</td><td>${esc(e.detail || '')}</td></tr>`
+              )
+              .join('')
+          : '<tr><td colspan="4" class="mute" style="padding:30px;text-align:center">ยังไม่มี Log</td></tr>'
+      }
+      function applyRemote(j) {
+        try {
+          const d = JSON.parse(j),
+            s = defState()
+          S = { ...s, ...d, cfg: { ...s.cfg, ...d.cfg } }
+          try {
+            localStorage.setItem(KEY, JSON.stringify(S))
+          } catch (e) {}
+          renderAll()
+        } catch (e) {}
+      }
+      const ruleText = () => {
+        const c = S.cfg
+        return c.from === c.to
+          ? `ทุกรอบนับ ${c.normal} ครั้ง · เข้าร่วมครบ ${per()} ครั้ง = 1 แต้ม`
+          : `รูปที่แคปช่วง ${pad(c.from)}:00–${pad(c.to)}:00 น. นับ ${c.bonus} ครั้ง · เวลาอื่นนับ ${c.normal} ครั้ง · ครบ ${per()} ครั้ง = 1 แต้ม`
+      }
+
+      /* ============================================================
+   จับคู่ชื่อแบบใกล้เคียง (ทนการอ่านผิดเล็กน้อย / วรรณยุกต์หาย / ช่องว่าง)
+   ============================================================ */
+      function skel(s) {
+        s = String(s || '')
+          .normalize('NFKC')
+          .toLowerCase()
+        s = s.replace(/[\u0e31\u0e34-\u0e3a\u0e47-\u0e4e]/g, '') // ตัดสระบน/ล่าง วรรณยุกต์ (OCR มักอ่านพลาด)
+        s = s
+          .replace(/[|!1i]/g, 'l')
+          .replace(/0/g, 'o')
+          .replace(/5/g, 's') // ตัวอักษรหน้าตาคล้ายกัน
+        return s.replace(/[^\p{L}\p{N}]+/gu, '')
+      }
+      function lev(a, b) {
+        const m = a.length,
+          n = b.length
+        if (!m) return n
+        if (!n) return m
+        let prev = Array.from({ length: n + 1 }, (_, j) => j),
+          cur = new Array(n + 1)
+        for (let i = 1; i <= m; i++) {
+          cur[0] = i
+          for (let j = 1; j <= n; j++)
+            cur[j] = Math.min(
+              prev[j] + 1,
+              cur[j - 1] + 1,
+              prev[j - 1] + (a[i - 1] === b[j - 1] ? 0 : 1)
+            )
+          ;[prev, cur] = [cur, prev]
+        }
+        return prev[n]
+      }
+      function sim(a, b) {
+        if (!a || !b) return 0
+        if (a === b) return 1
+        const mx = Math.max(a.length, b.length),
+          mn = Math.min(a.length, b.length)
+        let s = 1 - lev(a, b) / mx
+        if (mn >= 4 && (a.includes(b) || b.includes(a)))
+          s = Math.max(s, 0.8 + (0.2 * mn) / mx) // ชื่อถูกพ่วงข้อความอื่นติดมา
+        if (mn <= 3 && s < 1) s = Math.min(s, 0.6) // ชื่อสั้นมาก ต้องตรงเป๊ะถึงจะอัตโนมัติ
+        return s
+      }
+      function variants(m) {
+        // ชื่อเต็ม / ไม่มีวงเล็บ / ชื่อเล่นในวงเล็บ / ชื่อที่ระบบจำไว้
+        const out = new Set(),
+          add = x => {
+            x = skel(x)
+            if (x) out.add(x)
+          }
+        add(m.name)
+        add(m.name.replace(/[\(（\[【].*?[\)）\]】]/g, ''))
+        for (const x of m.name.matchAll(/[\(（\[【](.+?)[\)）\]】]/g)) {
+          const k = skel(x[1])
+          if (k.length >= 3) out.add(k)
+        }
+        ;(m.aliases || []).forEach(a => out.add(a))
+        return [...out]
+      }
+      // ตัดป้ายกิลด์ [..][..] หน้าชื่อ และเลเวลท้ายชื่อ (เช่น 30, 27+, /31) ออก
+      function nameFromLine(t) {
+        t = String(t)
+        t = t.replace(/^[^\[【\]】]{0,5}?(?=[\[【])/, '')
+        // ป้ายที่ตัวเปิด [ หายไป เช่น "ฝีมือ][TWOK] ชื่อ" → ตัดถึง ] ตัวแรก
+        if (/^[^\[【\]】]{0,25}[\]】]/.test(t))
+          t = t.replace(/^[^\[【\]】]{0,25}[\]】]/, '')
+        t = t
+          .replace(/^(?:\s*[\[【][^\]】]*[\]】])+/, '')
+          .replace(/^[^\p{L}\p{N}]+/u, '')
+        // ตัดขยะท้ายบรรทัด (ไอคอนที่ถูกอ่านเป็นตัวอักษร) แล้วค่อยตัดเลเวล
+        t = t.replace(/[^\p{L}\p{M}\p{N}+]+$/u, '')
+        t = t.replace(
+          S.cfg.useCode
+            ? /[\s\/]+\d{1,2}\+?\s*$/
+            : /(?:[\s\/]+|(?<=[\u0E00-\u0E7F]))\d{1,2}\+?\s*$/,
+          ''
+        )
+        t = t.replace(/\d{1,2}\+\s*$/, '')
+        return t.replace(/[\s\/]+$/, '')
+      }
+      function cleanLine(t) {
+        return String(t)
+          .replace(/^[^\p{L}\p{N}]+/u, '')
+          .replace(/[^\p{L}\p{M}\p{N})\]】）]+$/u, '')
+          .replace(/\s+/g, ' ')
+          .trim()
+      }
+      function matchLines(rawLines, thr) {
+        const idx = S.members.map(m => ({ m, v: variants(m) }))
+        const ign = new Set(S.ignore)
+        const L = rawLines
+          .map(cleanLine)
+          .map(t => ({ text: t, k: skel(t) }))
+          .filter(x => x.k.length >= 2 && !ign.has(x.k))
+        const pairs = []
+        L.forEach((l, li) =>
+          idx.forEach(({ m, v }) => {
+            let best = 0
+            for (const x of v) {
+              const sc = sim(l.k, x)
+              if (sc > best) {
+                best = sc
+                if (best === 1) break
+              }
+            }
+            if (S.cfg.useCode) {
+              const lc = codeOf(l.text),
+                mc = codeOf(m.name)
+              if (lc && mc) {
+                if (lc === mc) {
+                  if (
+                    sim(skel(stripCode(l.text)), skel(stripCode(m.name))) >= 0.3
+                  )
+                    best = Math.max(best, 0.95)
+                } else best *= 0.6 // เลขไม่ตรง = น่าจะคนละคน
+              }
+            }
+            if (best >= 0.45) pairs.push({ li, mid: m.id, score: best })
+          })
+        )
+        pairs.sort((a, b) => b.score - a.score)
+        const usedL = new Set(),
+          usedM = new Set(),
+          found = []
+        for (const p of pairs) {
+          if (p.score < thr) break
+          if (usedL.has(p.li) || usedM.has(p.mid)) continue
+          usedL.add(p.li)
+          usedM.add(p.mid)
+          found.push({
+            mid: p.mid,
+            conf: p.score,
+            text: L[p.li].text,
+            ord: p.li,
+          })
+        }
+        const unk = []
+        L.forEach((l, li) => {
+          if (usedL.has(li)) return
+          unk.push({
+            text: l.text,
+            li,
+            sugg: pairs
+              .filter(p => p.li === li && !usedM.has(p.mid))
+              .slice(0, 3)
+              .map(p => ({ mid: p.mid, score: p.score })),
+          })
+        })
+        return { found, unk }
+      }
+
+      /* ============================================================
+   อ่านรูป: ปรับภาพ → OCR (โหลด Tesseract.js ตอนใช้ครั้งแรก ต้องมีเน็ต)
+   ============================================================ */
+      async function loadBitmap(file) {
+        if (window.createImageBitmap) {
+          try {
+            return await createImageBitmap(file)
+          } catch (e) {}
+        }
+        return await new Promise((res, rej) => {
+          const im = new Image()
+          im.onload = () => res(im)
+          im.onerror = () => rej(new Error('เปิดรูปไม่ได้'))
+          im.src = URL.createObjectURL(file)
+        })
+      }
+      const bw = b => b.width || b.naturalWidth,
+        bh = b => b.height || b.naturalHeight
+      async function preprocess(file, crop, scaleOverride) {
+        const bmp = await loadBitmap(file),
+          W = bw(bmp),
+          H = bh(bmp)
+        let sx = 0,
+          sy = 0,
+          sw = W,
+          sh = H
+        if (crop) {
+          sx = Math.round(crop.x * W)
+          sy = Math.round(crop.y * H)
+          sw = Math.max(20, Math.round(crop.w * W))
+          sh = Math.max(20, Math.round(crop.h * H))
+        }
+        const scale =
+          scaleOverride ?? Math.max(1, Math.min(3, 1600 / sw, 6000 / sh)) // ขยายรูปเล็กให้ตัวหนังสือชัดขึ้น
+        const c = document.createElement('canvas')
+        c.width = Math.round(sw * scale)
+        c.height = Math.round(sh * scale)
+        const ctx = c.getContext('2d', { willReadFrequently: true })
+        ctx.imageSmoothingQuality = 'high'
+        ctx.drawImage(bmp, sx, sy, sw, sh, 0, 0, c.width, c.height)
+        bmp.close && bmp.close()
+        const img = ctx.getImageData(0, 0, c.width, c.height),
+          d = img.data,
+          n = c.width * c.height
+        const hist = new Uint32Array(256),
+          g = new Uint8Array(n)
+        let sum = 0
+        for (let i = 0, p = 0; i < n; i++, p += 4) {
+          const v = (d[p] * 0.299 + d[p + 1] * 0.587 + d[p + 2] * 0.114) | 0
+          g[i] = v
+          hist[v]++
+          sum += v
+        }
+        const mean = sum / n,
+          pct = q => {
+            let a = 0
+            for (let v = 0; v < 256; v++) {
+              a += hist[v]
+              if (a >= n * q) return v
+            }
+            return 255
+          }
+        const lo = pct(0.02),
+          hi = Math.max(lo + 1, pct(0.98)),
+          inv = mean < 128 // 🔧 ธีมมืด (ตัวหนังสือสว่าง) → กลับสีให้เป็นตัวดำพื้นขาว
+        for (let i = 0, p = 0; i < n; i++, p += 4) {
+          let v = ((g[i] - lo) * 255) / (hi - lo)
+          v = v < 0 ? 0 : v > 255 ? 255 : v
+          if (inv) v = 255 - v
+          d[p] = d[p + 1] = d[p + 2] = v
+          d[p + 3] = 255
+        }
+        ctx.putImageData(img, 0, 0)
+        return c
+      }
+      /* ---------- แยกรูปเป็นทีละบรรทัด (ชื่อเรียงจากบนลงล่าง + อ่านแม่นกว่า) ---------- */
+      function splitRows(c) {
+        const W = c.width,
+          H = c.height
+        const d = c
+          .getContext('2d', { willReadFrequently: true })
+          .getImageData(0, 0, W, H).data
+        const xa = Math.round(W * 0.08),
+          xb = Math.round(W * 0.78),
+          th = Math.max(2, Math.round((xb - xa) * 0.004))
+        let bands = [],
+          st = -1
+        for (let y = 0; y <= H; y++) {
+          let n = 0
+          // นับเฉพาะช่วงกลางภาพ (ข้ามไอคอนซ้าย/ขวาที่คร่อมระหว่างบรรทัด)
+          if (y < H)
+            for (let x = xa, p = (y * W + xa) * 4; x < xb; x++, p += 4)
+              if (d[p] < 150) n++
+          const on = y < H && n > th
+          if (on && st < 0) st = y
+          if (!on && st >= 0) {
+            bands.push([st, y])
+            st = -1
+          }
+        }
+        if (!bands.length) return { ok: false }
+        let med = bands.map(b => b[1] - b[0]).sort((a, b) => a - b)[
+          bands.length >> 1
+        ]
+        const gap = Math.max(1, Math.round(med * 0.12)),
+          m = []
+        for (const b of bands) {
+          const p = m[m.length - 1]
+          if (p && b[0] - p[1] <= gap) p[1] = b[1]
+          else m.push([b[0], b[1]])
+        }
+        med = m.map(b => b[1] - b[0]).sort((a, b) => a - b)[m.length >> 1]
+        const rows = m.filter(b => b[1] - b[0] >= med * 0.4)
+        const ok =
+          rows.length >= 2 &&
+          rows.length <= 80 &&
+          rows.every(b => b[1] - b[0] <= med * 2.2)
+        return { ok, rows, med }
+      }
+      function rowCanvas(base, band, med) {
+        const pad = Math.max(2, Math.round(med * 0.35)),
+          y0 = Math.max(0, band[0] - pad),
+          y1 = Math.min(base.height, band[1] + pad),
+          h = y1 - y0,
+          W = base.width
+        // 🔧 ตัดไอคอนหน้าบรรทัด (วงกลมทึบ) และไอคอนท้ายบรรทัด (อยู่ห่างตัวหนังสือมาก) ออก
+        const d = base
+          .getContext('2d', { willReadFrequently: true })
+          .getImageData(0, band[0], W, band[1] - band[0]).data
+        const bh = band[1] - band[0],
+          col = new Uint8Array(W),
+          cnt = new Int32Array(W)
+        for (let x = 0; x < W; x++)
+          for (let y = 0, p = x * 4; y < bh; y++, p += W * 4)
+            if (d[p] < 150) {
+              col[x] = 1
+              cnt[x]++
+            }
+        const clusters = gap => {
+          const out = []
+          for (let x = 0; x < W; x++)
+            if (col[x]) {
+              const p = out[out.length - 1]
+              if (p && x - p[1] <= gap) p[1] = x + 1
+              else out.push([x, x + 1])
+            }
+          return out
+        }
+        let sx = 0,
+          ex = W
+        const c1 = clusters(Math.max(1, Math.round(med * 0.55)))
+        if (c1.length > 1) {
+          const f = c1[0],
+            w1 = f[1] - f[0]
+          let ink = 0
+          for (let x = f[0]; x < f[1]; x++) ink += cnt[x]
+          if (w1 <= med * 1.8 && ink / (w1 * bh) > 0.5)
+            sx = Math.max(0, f[1] - 1)
+        }
+        const c2 = clusters(Math.max(2, Math.round(med * 2.2))).filter(
+          c => c[1] > sx
+        )
+        if (c2.length) ex = Math.min(W, c2[0][1] + 2)
+        const cw = Math.max(8, ex - sx)
+        const k = Math.max(1, Math.min(6, 90 / h)),
+          B = 20
+        const c = document.createElement('canvas')
+        c.width = Math.round(cw * k) + B * 2
+        c.height = Math.round(h * k) + B * 2
+        const ctx = c.getContext('2d')
+        ctx.fillStyle = '#fff'
+        ctx.fillRect(0, 0, c.width, c.height)
+        ctx.imageSmoothingQuality = 'high'
+        ctx.drawImage(
+          base,
+          sx,
+          y0,
+          cw,
+          h,
+          B,
+          B,
+          c.width - B * 2,
+          c.height - B * 2
+        )
+        return c
+      }
+      function loadScript(src) {
+        return new Promise((res, rej) => {
+          const s = document.createElement('script')
+          s.src = src
+          s.onload = res
+          s.onerror = () =>
+            rej(
+              new Error(
+                'โหลดระบบอ่านรูปไม่ได้ — ต้องต่อเน็ตครั้งแรก (หรือใช้วิธีวาง/ติ๊กชื่อเอง)'
+              )
+            )
+          document.head.appendChild(s)
+        })
+      }
+      let worker = null,
+        curDraft = null
+      async function ensureOcr() {
+        if (worker) return worker
+        if (!window.Tesseract)
+          await loadScript(
+            'https://cdn.jsdelivr.net/npm/tesseract.js@5.1.1/dist/tesseract.min.js'
+          )
+        worker = await Tesseract.createWorker(['tha', 'eng'], 1, {
+          logger: m => ocrProgress(m),
+        })
+        await worker.setParameters({
+          tessedit_pageseg_mode: '6',
+          preserve_interword_spaces: '1',
+        })
+        return worker
+      }
+      let rowMode = false
+      function ocrProgress(m) {
+        const d = curDraft
+        if (!d || rowMode) return
+        const map = {
+          'loading tesseract core': 'โหลดระบบอ่านรูป...',
+          'initializing tesseract': 'เตรียมระบบ...',
+          'loading language traineddata':
+            'โหลดข้อมูลภาษาไทย (ครั้งแรกครั้งเดียว)...',
+          'initializing api': 'เตรียมระบบ...',
+          'recognizing text': 'กำลังอ่านชื่อ...',
+        }
+        d.msg = map[m.status] || m.status
+        d.prog = m.progress || 0
+        const el = document.querySelector(`[data-d="${d.id}"] .bar i`),
+          tx = document.querySelector(`[data-d="${d.id}"] .ocrmsg`)
+        if (el)
+          el.style.width =
+            Math.round(
+              (m.status === 'recognizing text'
+                ? 0.15 + 0.85 * d.prog
+                : d.prog * 0.15) * 100
+            ) + '%'
+        if (tx) tx.textContent = d.msg
+      }
+
+      /* ============================================================
+   รูป: เวลาแคป / แฮช กันใส่ซ้ำ / thumbnail เก็บใน IndexedDB
+   ============================================================ */
+      async function exifTime(file) {
+        if (!/jpe?g/i.test(file.type || file.name)) return null
+        try {
+          const v = new DataView(await file.slice(0, 131072).arrayBuffer())
+          if (v.getUint16(0) !== 0xffd8) return null
+          let off = 2
+          while (off < v.byteLength - 4) {
+            const mk = v.getUint16(off),
+              len = v.getUint16(off + 2)
+            if (mk === 0xffe1) {
+              if (v.getUint32(off + 4) !== 0x45786966) return null
+              const t = off + 10,
+                le = v.getUint16(t) === 0x4949,
+                g16 = o => v.getUint16(o, le),
+                g32 = o => v.getUint32(o, le)
+              const rd = p => {
+                const o = {},
+                  c = g16(p)
+                for (let i = 0; i < c; i++) {
+                  const e = p + 2 + i * 12
+                  o[g16(e)] = { cnt: g32(e + 4), val: e + 8 }
+                }
+                return o
+              }
+              const str = en => {
+                const p = en.cnt > 4 ? t + g32(en.val) : en.val
+                let s = ''
+                for (let i = 0; i < en.cnt - 1; i++)
+                  s += String.fromCharCode(v.getUint8(p + i))
+                return s
+              }
+              const i0 = rd(t + g32(t + 4))
+              let s = null
+              if (i0[0x8769]) {
+                const ie = rd(t + g32(i0[0x8769].val))
+                if (ie[0x9003]) s = str(ie[0x9003])
+              }
+              if (!s && i0[0x0132]) s = str(i0[0x0132])
+              const m =
+                s && s.match(/(\d{4}):(\d\d):(\d\d) (\d\d):(\d\d):(\d\d)/)
+              return m
+                ? new Date(
+                    +m[1],
+                    +m[2] - 1,
+                    +m[3],
+                    +m[4],
+                    +m[5],
+                    +m[6]
+                  ).getTime()
+                : null
+            }
+            off += 2 + len
+          }
+        } catch (e) {}
+        return null
+      }
+      async function fileHash(file) {
+        const b = new Uint8Array(await file.slice(0, 262144).arrayBuffer())
+        let h = 2166136261
+        for (let i = 0; i < b.length; i++) {
+          h ^= b[i]
+          h = Math.imul(h, 16777619)
+        }
+        return (h >>> 0).toString(16) + '-' + file.size
+      }
+      const idb = {
+        db: null,
+        async open() {
+          if (this.db) return this.db
+          this.db = await new Promise((res, rej) => {
+            const r = indexedDB.open('twok_attend', 1)
+            r.onupgradeneeded = () => r.result.createObjectStore('imgs')
+            r.onsuccess = () => res(r.result)
+            r.onerror = () => rej(r.error)
+          })
+          return this.db
+        },
+        async tx(mode, fn) {
+          try {
+            const db = await this.open()
+            return await new Promise((res, rej) => {
+              const t = db.transaction('imgs', mode),
+                q = fn(t.objectStore('imgs'))
+              t.oncomplete = () => res(q && q.result)
+              t.onerror = () => rej(t.error)
+            })
+          } catch (e) {
+            return null
+          }
+        },
+        put(k, v) {
+          return this.tx('readwrite', s => s.put(v, k))
+        },
+        get(k) {
+          return this.tx('readonly', s => s.get(k))
+        },
+        del(k) {
+          return this.tx('readwrite', s => s.delete(k))
+        },
+      }
+      async function makeThumb(file) {
+        try {
+          const bmp = await loadBitmap(file),
+            W = bw(bmp),
+            H = bh(bmp),
+            s = Math.min(1, 720 / W)
+          const c = document.createElement('canvas')
+          c.width = Math.round(W * s)
+          c.height = Math.round(H * s)
+          c.getContext('2d').drawImage(bmp, 0, 0, c.width, c.height)
+          bmp.close && bmp.close()
+          return await new Promise(r => c.toBlob(r, 'image/jpeg', 0.6))
+        } catch (e) {
+          return null
+        }
+      }
+
+      /* ============================================================
+   ร่างรอบ (Draft) — รูปที่ใส่แล้วแต่ยังไม่บันทึก
+   ============================================================ */
+      let drafts = [],
+        ocrQueue = Promise.resolve()
+      const nextNo = () =>
+        Math.max(0, ...S.sessions.map(s => s.no), ...drafts.map(d => d.no)) + 1
+      const memById = id => S.members.find(m => m.id === id)
+      const draftPts = d =>
+        d.mode === 'fixed'
+          ? d.pts
+          : d.mode === 'normal'
+            ? S.cfg.normal
+            : d.mode === 'bonus'
+              ? S.cfg.bonus
+              : autoPts(d.time)
+      // สมาชิกที่สร้างอัตโนมัติจากรูป (tmp) จะถูกลบถ้ารูปนั้นไม่ถูกบันทึก
+      function gcTmp() {
+        const used = new Set()
+        drafts.forEach(d => d.found.forEach(f => used.add(f.mid)))
+        S.sessions.forEach(x => x.att.forEach(i => used.add(i)))
+        const n = S.members.length
+        S.members = S.members.filter(m => !m.tmp || used.has(m.id))
+        return n !== S.members.length
+      }
+      // อ่านวันเวลาจากชื่อไฟล์ เช่น Screenshot_20261109-013045.png, IMG_20261109_013045.jpg,
+      // Screenshot 2026-11-09 at 1.30.45 AM.png
+      function nameTime(name) {
+        const m = String(name || '').match(
+          /(20\d{2})\D?(\d{2})\D?(\d{2})\D{0,4}(\d{1,2})\D?(\d{2})\D?(\d{2})(?!\d)(.{0,6})/
+        )
+        if (!m) return null
+        let [, y, mo, da, h, mi, se, tail] = m
+        ;[y, mo, da, h, mi, se] = [y, mo, da, h, mi, se].map(Number)
+        if (/pm/i.test(tail) && h < 12) h += 12
+        if (/am/i.test(tail) && h === 12) h = 0
+        if (
+          mo < 1 ||
+          mo > 12 ||
+          da < 1 ||
+          da > 31 ||
+          h > 23 ||
+          mi > 59 ||
+          se > 59
+        )
+          return null
+        const t = new Date(y, mo - 1, da, h, mi, se).getTime()
+        return t > Date.now() + 864e5 ? null : t
+      }
+      const isJunkLine = t =>
+        !/\p{L}/u.test(t) || t.length > 40 || /^\d{1,2}[:.]\d{2}/.test(t)
+
+      async function addFiles(files) {
+        files = [...files]
+          .filter(f => f.type.startsWith('image/'))
+          .sort((a, b) => a.lastModified - b.lastModified)
+        if (!files.length) return toast('ไม่พบไฟล์รูป')
+        for (const f of files) {
+          const exif = await exifTime(f),
+            nt = exif == null ? nameTime(f.name) : null,
+            ex = exif ?? nt,
+            exSrc = exif != null ? 'EXIF' : 'ชื่อไฟล์',
+            hash = await fileHash(f),
+            dupS = S.sessions.find(s => s.hash === hash)
+          const d = {
+            id: uid(),
+            file: f,
+            url: URL.createObjectURL(f),
+            hash,
+            time: ex ?? f.lastModified ?? Date.now(),
+            timeSrc: ex ? exSrc : 'ไฟล์',
+            mode: 'auto',
+            label: '',
+            no: nextNo(),
+            status: 'idle',
+            prog: 0,
+            msg: '',
+            found: [],
+            unk: [],
+            dup: dupS ? dupS.no : null,
+            crop: null,
+          }
+          drafts.push(d)
+          if (S.cfg.autoOcr) queueOcr(d)
+        }
+        renderDrafts()
+        showTab('add')
+      }
+      function addManualDraft() {
+        drafts.push({
+          id: uid(),
+          file: null,
+          url: null,
+          hash: null,
+          time: Date.now(),
+          timeSrc: 'เอง',
+          mode: 'auto',
+          label: '',
+          no: nextNo(),
+          status: 'manual',
+          prog: 0,
+          msg: '',
+          found: [],
+          unk: [],
+          dup: null,
+          crop: null,
+        })
+        renderDrafts()
+      }
+      function queueOcr(d) {
+        if (!d.file) return
+        d.status = 'queued'
+        d.msg = 'รอคิว...'
+        d.prog = 0
+        ocrQueue = ocrQueue.then(() => runOcr(d)).catch(() => {})
+        renderCard(d)
+        updateOcrStatus()
+      }
+      const aiKey = () => localStorage.getItem('twok_gemini_key') || ''
+      const aiModel = () =>
+        localStorage.getItem('twok_gemini_model') || 'gemini-2.5-flash'
+      const aiOn = () => localStorage.getItem('twok_ai_on') === '1' && !!aiKey()
+      async function geminiRead(file, crop) {
+        const bmp = await loadBitmap(file),
+          W = bw(bmp),
+          H = bh(bmp)
+        let sx = 0,
+          sy = 0,
+          sw = W,
+          sh = H
+        if (crop) {
+          sx = Math.round(crop.x * W)
+          sy = Math.round(crop.y * H)
+          sw = Math.max(20, Math.round(crop.w * W))
+          sh = Math.max(20, Math.round(crop.h * H))
+        }
+        const k = Math.min(1, 2000 / Math.max(sw, sh)),
+          c = document.createElement('canvas')
+        c.width = Math.round(sw * k)
+        c.height = Math.round(sh * k)
+        c.getContext('2d').drawImage(
+          bmp,
+          sx,
+          sy,
+          sw,
+          sh,
+          0,
+          0,
+          c.width,
+          c.height
+        )
+        bmp.close && bmp.close()
+        const b64 = c.toDataURL('image/jpeg', 0.9).split(',')[1]
+        const prompt =
+          'นี่คือภาพแคปรายชื่อผู้เล่นในเกม พิมพ์ชื่อผู้เล่นทุกบรรทัดตามที่เห็น บรรทัดละ 1 คน เรียงจากบนลงล่าง ' +
+          'คงป้ายกิลด์ในวงเล็บเหลี่ยมไว้ตามที่เห็น ถ้าชื่อลงท้ายด้วยเลข 2-4 หลักติดกับชื่อ ให้คงเลขนั้นไว้ติดกับชื่อ ส่วนเลขเลเวลที่อยู่ห่างออกไปท้ายบรรทัดให้ตัดทิ้ง ' +
+          'ห้ามเดาตัวอักษรที่มองไม่ชัด ให้ใส่ ? แทนตัวนั้น ตอบเฉพาะรายชื่อ ไม่ต้องมีคำอธิบายหรือหมายเลขลำดับ'
+        const res = await fetch(
+          `https://generativelanguage.googleapis.com/v1beta/models/${encodeURIComponent(aiModel())}:generateContent`,
+          {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              'x-goog-api-key': aiKey(),
+            },
+            body: JSON.stringify({
+              contents: [
+                {
+                  parts: [
+                    { text: prompt },
+                    { inline_data: { mime_type: 'image/jpeg', data: b64 } },
+                  ],
+                },
+              ],
+              generationConfig: { temperature: 0 },
+            }),
+          }
+        )
+        if (!res.ok)
+          throw new Error(
+            res.status === 429
+              ? 'โควตาฟรีหมด/ถี่เกินไป รอสักพัก'
+              : res.status === 400 || res.status === 403
+                ? 'คีย์หรือชื่อโมเดลไม่ถูกต้อง'
+                : 'HTTP ' + res.status
+          )
+        const j = await res.json()
+        const txt = (j.candidates?.[0]?.content?.parts || [])
+          .map(p => p.text || '')
+          .join('')
+        if (!txt.trim()) throw new Error('AI ไม่ตอบข้อความกลับมา')
+        return txt.replace(/```[a-z]*/g, '')
+      }
+      async function runOcr(d) {
+        if (!drafts.includes(d)) return
+        d.status = 'running'
+        d.prog = 0
+        d.msg = 'เตรียมระบบอ่านรูป...'
+        curDraft = d
+        renderCard(d)
+        updateOcrStatus()
+        if (aiOn()) {
+          try {
+            const txt = await geminiRead(
+              d.file,
+              d.crop || (S.cfg.sameCrop ? S.cfg.crop : null)
+            )
+            if (!drafts.includes(d)) return
+            applyText(d, txt, true)
+            d.status = 'done'
+            curDraft = null
+            renderCard(d)
+            updateOcrStatus()
+            return
+          } catch (e) {
+            console.error(e)
+            toast(
+              'AI อ่านไม่สำเร็จ (' + (e.message || e) + ') — ใช้ระบบเดิมแทน'
+            )
+          }
+        }
+        try {
+          const w = await ensureOcr()
+          const crop = d.crop || (S.cfg.sameCrop ? S.cfg.crop : null)
+          const base = await preprocess(d.file, crop, 1)
+          const sp = splitRows(base)
+          let text = ''
+          if (sp.ok) {
+            // 🔧 อ่านทีละบรรทัด: ลำดับตรงกับรูป และไม่ถูกไอคอน/ป้ายกิลด์รบกวนข้ามบรรทัด
+            const lines = []
+            rowMode = true
+            try {
+              await w.setParameters({ tessedit_pageseg_mode: '7' })
+              for (let i = 0; i < sp.rows.length; i++) {
+                if (!drafts.includes(d)) return
+                d.prog = i / sp.rows.length
+                d.msg = `กำลังอ่านชื่อ ${i + 1}/${sp.rows.length}`
+                const bar = document.querySelector(`[data-d="${d.id}"] .bar i`),
+                  tx = document.querySelector(`[data-d="${d.id}"] .ocrmsg`)
+                if (bar) bar.style.width = Math.round(d.prog * 100) + '%'
+                if (tx) tx.textContent = d.msg
+                const r = await w.recognize(rowCanvas(base, sp.rows[i], sp.med))
+                lines.push((r.data.text || '').replace(/\s*\n\s*/g, ' ').trim())
+              }
+            } finally {
+              rowMode = false
+              await w.setParameters({ tessedit_pageseg_mode: '6' })
+            }
+            text = lines.join('\n')
+          } else {
+            const canvas = await preprocess(d.file, crop)
+            const { data } = await w.recognize(canvas)
+            text = data.text || ''
+          }
+          applyText(d, text, true)
+          d.status = 'done'
+        } catch (e) {
+          console.error(e)
+          d.status = 'error'
+          d.msg = String(e.message || e)
+        }
+        curDraft = null
+        renderCard(d)
+        updateOcrStatus()
+      }
+      function applyText(d, text, fromOcr) {
+        // แปลงข้อความ → จับคู่ → ใส่ในร่าง (คงคนที่เลือกเองไว้)
+        if (fromOcr) d.raw = text
+        const skip = String(S.cfg.skipTags || '')
+          .split(/[,\s]+/)
+          .map(x => x.trim().toLowerCase())
+          .filter(Boolean)
+        const lines = text
+          .split(/\r?\n/)
+          .filter(
+            ln => !skip.some(tg => ln.toLowerCase().includes('[' + tg + ']'))
+          )
+          .map(nameFromLine)
+        const { found, unk } = matchLines(lines, S.cfg.thr / 100)
+        const keep = d.found.filter(f => f.manual)
+        const have = new Set(keep.map(f => f.mid))
+        d.found = [...keep, ...found.filter(f => !have.has(f.mid))]
+        const gotText = new Set(d.found.map(f => skel(f.text)))
+        d.unk = unk.filter(
+          u =>
+            !gotText.has(skel(u.text)) &&
+            !d.found.some(f => f.mid && sim(skel(f.text), skel(u.text)) === 1)
+        )
+        // ✨ ชื่อที่ไม่ตรงกับสมาชิกเดิม → เพิ่มเป็นสมาชิกใหม่ + นับแต้มให้เลย
+        if (S.cfg.autoNew) {
+          const rest = []
+          for (const u of d.unk) {
+            const k = skel(u.text)
+            const dupInDraft = d.found.some(f => sim(skel(f.text), k) >= 0.85)
+            if (isJunkLine(u.text) || dupInDraft) continue
+            if (u.sugg.some(x => x.score >= 0.6)) {
+              rest.push(u) // คล้ายสมาชิกเดิมมาก → ให้คนตรวจเอง กันชื่อซ้ำ
+              continue
+            }
+            const m = { id: uid(), name: u.text, aliases: [], tmp: true }
+            S.members.push(m)
+            d.found.push({
+              mid: m.id,
+              conf: 1,
+              text: u.text,
+              isNew: true,
+              ord: u.li,
+            })
+          }
+          d.unk = rest
+        }
+        if (!fromOcr) d.status = d.file ? d.status : 'manual'
+      }
+      function updateOcrStatus() {
+        const run = drafts.filter(d => d.status === 'running').length,
+          q = drafts.filter(d => d.status === 'queued').length
+        $('#ocrStatus').textContent =
+          run + q ? `กำลังอ่านรูป... (เหลือ ${run + q} รูป)` : ''
+      }
+
+      function addFound(d, mid, extra = {}) {
+        if (!d.found.some(f => f.mid === mid))
+          d.found.push({
+            mid,
+            conf: 1,
+            text: '(เลือกเอง)',
+            manual: true,
+            ...extra,
+          })
+      }
+
+      /* ---------- วาดการ์ดร่าง ---------- */
+      function cardHTML(d) {
+        const pts = draftPts(d),
+          isBonus = pts !== S.cfg.normal
+        // เรียงตามลำดับบนลงล่างในรูป (คนที่เลือกเองต่อท้าย)
+        const foundSorted = d.found
+          .slice()
+          .sort((a, b) => (a.ord ?? 1e6) - (b.ord ?? 1e6))
+        const chips = foundSorted
+          .map(f => {
+            const m = memById(f.mid)
+            if (!m) return ''
+            const cls = f.manual
+              ? 'man'
+              : f.isNew
+                ? 'new'
+                : f.conf < 0.88
+                  ? 'warn'
+                  : ''
+            return `<span class="chip ${cls}" title="${f.manual ? 'เลือกเอง' : f.isNew ? 'ชื่อใหม่จากรูป (กดที่ชื่อเพื่อแก้คำที่อ่านผิด)' : `อ่านได้ว่า: ${esc(f.text)} (${Math.round(f.conf * 100)}%)`}"><span data-act="m-ren" data-d="${d.id}" data-mid="${f.mid}" style="cursor:pointer">${esc(m.name)}</span>${!f.manual && f.conf < 0.88 ? ` <small>${Math.round(f.conf * 100)}%</small>` : ''}<button data-act="rmfound" data-d="${d.id}" data-mid="${f.mid}" title="เอาออก">✕</button></span>`
+          })
+          .join('')
+        const unk = d.unk
+          .slice(0, 40)
+          .map(
+            (
+              u,
+              i
+            ) => `<div class="urow"><code title="${esc(u.text)}">${esc(u.text)}</code>
+      ${u.sugg.map(s => `<button class="sug" data-act="sugg" data-d="${d.id}" data-u="${i}" data-mid="${s.mid}">${esc(memById(s.mid)?.name || '?')} ${Math.round(s.score * 100)}%</button>`).join('')}
+      <input type="text" list="dlMembers" data-f="resolve" data-d="${d.id}" data-u="${i}" placeholder="พิมพ์ชื่อสมาชิก...">
+      <button class="btn sm" data-act="newm" data-d="${d.id}" data-u="${i}" title="เพิ่มเป็นสมาชิกใหม่">＋ใหม่</button>
+      <button class="btn sm ghost" data-act="ign" data-d="${d.id}" data-u="${i}" title="ไม่ใช่ชื่อคน (จำไว้ ครั้งหน้าไม่ถามอีก)">ข้าม</button></div>`
+          )
+          .join('')
+        const state =
+          d.status === 'running' || d.status === 'queued'
+            ? `<div class="bar"><i style="width:${Math.round(d.prog * 100)}%"></i></div><div class="hint ocrmsg">${esc(d.msg)}</div>`
+            : d.status === 'error'
+              ? `<div class="warnbox">⚠️ อ่านรูปไม่สำเร็จ: ${esc(d.msg)}<br>ใช้ปุ่ม "เลือกจากรายชื่อ" หรือ "วางรายชื่อ" แทนได้เลย</div>`
+              : ''
+        const dupBox =
+          d.dup != null
+            ? `<div class="warnbox">⚠️ รูปนี้ดูเหมือนเคยบันทึกแล้ว (รูปที่ ${d.dup}) — ถ้าบันทึกซ้ำคนจะได้แต้มซ้ำ</div>`
+            : ''
+        const noImgTxt = d.file
+          ? ''
+          : '<div class="noimg">รอบแบบไม่มีรูป<br>วางรายชื่อ หรือติ๊กเลือกเอง</div>'
+        return `<div class="card ${d.status === 'done' ? 'done' : d.status === 'error' ? 'err' : ''}" data-d="${d.id}">
+    <div class="cthumb" ${d.url ? `data-act="view" data-src="${d.url}"` : ''}>${d.url ? `<img src="${d.url}" alt="">` : noImgTxt}<span class="cno">#${d.no}</span></div>
+    <div>
+      ${dupBox}
+      ${d.timeSrc === 'ไฟล์' ? '<div class="warnbox">🕐 ไม่พบเวลาแคปในรูป (รูปจาก Facebook/แชทมักถูกลบเวลาออก) — ใช้เวลาของไฟล์แทน อาจไม่ตรง ตรวจช่อง "เวลาแคป" หรือกด ➕ +1 แต้มเอง</div>' : ''}
+      <div class="crow">
+        <label>รูปที่ <input type="number" min="1" value="${d.no}" data-f="no" data-d="${d.id}"></label>
+        <label>เวลาแคป (${d.timeSrc}) <input type="datetime-local" value="${toLocalInput(d.time)}" data-f="time" data-d="${d.id}"></label>
+        <label>นับรอบนี้เป็น
+          <span class="seg">
+            <button data-act="ptsadj" data-d="${d.id}" data-delta="-1">−1</button>
+            <button class="on">${pts} ครั้ง</button>
+            <button class="on" data-act="ptsadj" data-d="${d.id}" data-delta="1">➕ +1 ครั้ง</button>
+            <button class="${d.mode === 'auto' ? 'on' : ''}" data-act="mode" data-d="${d.id}" data-m="auto" title="คิดตามเวลาที่แคป">⏱ ตามเวลา</button>
+          </span></label>
+        <span class="pts ${isBonus ? '' : 'p1'}">${isBonus ? '🌙 ' : '☀️ '}${pts} ครั้ง</span>
+        <label style="flex:1;min-width:150px">บอส/หมายเหตุ <input type="text" value="${esc(d.label)}" data-f="label" data-d="${d.id}" placeholder="เช่น ชื่อบอส (ไม่ใส่ก็ได้)"></label>
+      </div>
+      ${state}
+      <div><b>✅ ตรวจพบ ${d.found.length} คน</b> ${d.unk.length ? `<span class="mute">· ❓ ไม่ตรงกับใคร ${d.unk.length} บรรทัด</span>` : ''}</div>
+      <div class="chips">${chips || '<span class="hint">ยังไม่มีรายชื่อ</span>'}</div>
+      ${d.unk.length ? `<details ${d.unk.length <= 6 ? 'open' : ''}><summary>❓ บรรทัดที่ไม่ตรงกับใคร (${d.unk.length}) — กดเพื่อตรวจ</summary>${unk}${d.unk.length > 1 ? `<div class="urow"><button class="btn sm ghost" data-act="ignall" data-d="${d.id}">ข้ามทั้งหมด (ไม่ใช่ชื่อคน)</button></div>` : ''}</details>` : ''}
+      ${d.raw ? `<details><summary>🔍 ดูข้อความดิบที่ระบบอ่านได้ (ไว้ตรวจว่าอ่านผิดตรงไหน)</summary><pre style="white-space:pre-wrap;font-size:13px;background:var(--base);border:1px solid var(--line);padding:8px;max-height:260px;overflow:auto">${esc(d.raw)}</pre></details>` : ''}
+      <details><summary>วางรายชื่อเพิ่ม (พิมพ์/คัดลอกมา 1 บรรทัด = 1 คน)</summary>
+        <textarea data-f="paste" data-d="${d.id}" placeholder="ชื่อ1&#10;ชื่อ2"></textarea><button class="btn sm" data-act="paste" data-d="${d.id}" style="margin-top:6px">จับคู่ชื่อที่วาง</button></details>
+      <div class="cact">
+        <button class="btn gold" data-act="save" data-d="${d.id}">✅ บันทึกเป็นรูปที่ ${d.no} (${pts} ครั้ง)</button>
+        <button class="btn" data-act="pick" data-d="${d.id}">☑️ เลือกจากรายชื่อ</button>
+        ${d.file ? `<button class="btn" data-act="crop" data-d="${d.id}">✂️ เลือกพื้นที่รายชื่อ</button><button class="btn" data-act="ocr" data-d="${d.id}">🔁 อ่านใหม่</button>` : ''}
+        <button class="btn ghost" data-act="drop" data-d="${d.id}">🗑 ทิ้ง</button>
+      </div>
+    </div></div>`
+      }
+      function renderDrafts() {
+        if (gcTmp()) renderHeader()
+        $('#drafts').innerHTML = drafts.map(cardHTML).join('')
+        $('#bulk').classList.toggle('hide', !drafts.length)
+        $('#addTip').classList.toggle('hide', drafts.length > 0)
+      }
+      function renderCard(d) {
+        gcTmp()
+        const el = document.querySelector(`.card[data-d="${d.id}"]`)
+        if (!el) return renderDrafts()
+        const keep = el.querySelector('[data-f=paste]')?.value || ''
+        el.outerHTML = cardHTML(d)
+        const ta = document.querySelector(
+          `.card[data-d="${d.id}"] [data-f=paste]`
+        )
+        if (ta && keep) ta.value = keep
+      }
+
+      /* ---------- บันทึกร่าง → รอบ ---------- */
+      async function saveDraft(d, quiet) {
+        if (S.sessions.some(s => s.no === d.no)) {
+          toast(`รูปที่ ${d.no} ถูกใช้แล้ว — เปลี่ยนเลขก่อนบันทึก`)
+          return false
+        }
+        if (
+          !quiet &&
+          d.dup != null &&
+          !confirm(`รูปนี้เคยบันทึกแล้ว (รูปที่ ${d.dup}) บันทึกซ้ำจริงไหม?`)
+        )
+          return false
+        if (
+          !quiet &&
+          !d.found.length &&
+          !confirm('ยังไม่มีผู้เข้าร่วมเลย บันทึกรอบว่างไหม?')
+        )
+          return false
+        const s = {
+          id: uid(),
+          no: d.no,
+          label: d.label.trim(),
+          time: d.time,
+          auto: d.mode === 'auto',
+          pts: draftPts(d),
+          att: [...new Set(d.found.map(f => f.mid))],
+          hash: d.hash,
+          img: !!d.file,
+        }
+        logAct(
+          'บันทึกรอบ',
+          `รูปที่ ${s.no} · ${s.att.length} คน · นับ ${s.pts} ครั้ง ${s.label ? '· ' + s.label : ''}`
+        )
+        for (const f of d.found) {
+          // 🔧 ระบบ "จำ" ชื่อที่ผู้ใช้แก้เอง → ครั้งหน้าจับคู่ได้เลย
+          if (!f.learn) continue
+          const m = memById(f.mid),
+            k = skel(f.text)
+          if (m && k.length >= 2 && !variants(m).includes(k))
+            (m.aliases = m.aliases || []).push(k)
+        }
+        s.att.forEach(i => {
+          const m = memById(i)
+          if (m) delete m.tmp
+        })
+        S.sessions.push(s)
+        S.sessions.sort((a, b) => a.no - b.no)
+        save()
+        if (d.file) {
+          const th = await makeThumb(d.file)
+          if (th) {
+            idb.put(s.id, th).then(r => {
+              if (r === null)
+                toast(
+                  '⚠️ เก็บรูปย่อไม่ได้ (พื้นที่เบราว์เซอร์เต็ม) — แต้มบันทึกแล้ว แต่รูปจะไม่แสดง'
+                )
+            })
+          }
+        }
+        if (d.url) URL.revokeObjectURL(d.url)
+        drafts = drafts.filter(x => x !== d)
+        renderAll()
+        if (!quiet)
+          toast(
+            `✅ บันทึกรูปที่ ${s.no} แล้ว — ${s.att.length} คน × ${s.pts} ครั้ง`
+          )
+        return true
+      }
+
+      /* ============================================================
+   ตาราง / รอบ / สมาชิก
+   ============================================================ */
+      function calcRows() {
+        const map = new Map(
+          S.members.map(m => [m.id, { m, nos: [], cnt: 0, base: 0 }])
+        )
+        for (const s of S.sessions) {
+          const p = sesPts(s)
+          for (const mid of s.att) {
+            const r = map.get(mid)
+            if (r) {
+              r.nos.push({ no: s.no, p })
+              r.cnt++
+              r.base += p
+            }
+          }
+        }
+        const rows = [...map.values()]
+        rows.forEach(r => {
+          r.nos.sort((a, b) => a.no - b.no)
+          r.units = Math.max(0, r.base + (+r.m.adjU || 0)) // ครั้งที่นับ (หลังเที่ยงคืน = 2)
+          r.pts = Math.max(0, Math.floor(r.units / per()) + (+r.m.adjP || 0)) // 5 ครั้ง = 1 แต้ม
+        })
+        return rows
+      }
+      function sortedRows() {
+        const q = $('#tSearch').value.trim().toLowerCase(),
+          sort = $('#tSort').value
+        let rows = calcRows().filter(
+          r => !q || r.m.name.toLowerCase().includes(q)
+        )
+        rows.sort((a, b) =>
+          sort === 'name'
+            ? a.m.name.localeCompare(b.m.name, 'th')
+            : sort === 'cnt'
+              ? b.cnt - a.cnt || b.pts - a.pts
+              : b.pts - a.pts ||
+                b.units - a.units ||
+                b.cnt - a.cnt ||
+                a.m.name.localeCompare(b.m.name, 'th')
+        )
+        return rows
+      }
+      function renderTable() {
+        const rows = sortedRows(),
+          total = S.sessions.length
+        $('#tBody').innerHTML = rows.length
+          ? rows
+              .map(
+                (r, i) => `<tr><td class="rk">${i + 1}</td>
+      <td>${esc(r.m.name)} <button class="btn sm ghost" data-act="m-ren" data-mid="${r.m.id}" title="แก้ชื่อ">✏️</button></td>
+      <td>${r.nos.map(x => `<span class="${x.p !== S.cfg.normal ? 'n2' : 'n1'}">${x.no}</span>`).join(',') || '<span class="mute">—</span>'}</td>
+      <td class="num">${r.cnt}</td>
+      <td class="num">${r.units}<input type="number" class="adj" data-adj="adjU" data-mid="${r.m.id}" value="${+r.m.adjU || 0}" title="ปรับจำนวนครั้งเอง (+/−)"></td>
+      <td class="num pts">${r.pts}<input type="number" class="adj" data-adj="adjP" data-mid="${r.m.id}" value="${+r.m.adjP || 0}" title="ปรับแต้มเอง (+/−)"></td>
+      <td class="num mute">อีก ${per() - (r.units % per())} ครั้ง</td>
+      <td class="num">${total ? Math.round((r.cnt / total) * 100) : 0}%</td></tr>`
+              )
+              .join('')
+          : '<tr><td colspan="8" class="mute" style="padding:30px;text-align:center">ยังไม่มีข้อมูล</td></tr>'
+      }
+      const imgUrlCache = new Map()
+      async function sesImg(s) {
+        if (imgUrlCache.has(s.id)) return imgUrlCache.get(s.id)
+        const b = await idb.get(s.id)
+        if (!b) return null
+        const u = URL.createObjectURL(b)
+        imgUrlCache.set(s.id, u)
+        return u
+      }
+      function renderSessions() {
+        $('#sBody').innerHTML = S.sessions.length
+          ? S.sessions
+              .map(s => {
+                const p = sesPts(s)
+                return `<tr><td class="rk">#${s.no}</td><td>${s.img ? `<img class="thumb" data-sid="${s.id}" data-act="s-view" alt="">` : '<span class="mute">ไม่มีรูป</span>'}</td>
+      <td>${fmtTime(s.time)}${s.auto ? '' : ' <span class="mute">(กำหนดเอง)</span>'}</td><td>${esc(s.label || '')}</td>
+      <td><span class="tag ${p !== S.cfg.normal ? 'b' : 'n'}">${p !== S.cfg.normal ? '🌙' : '☀️'} ${p}</span></td><td class="num">${s.att.length}</td>
+      <td style="white-space:nowrap"><button class="btn sm" data-act="s-edit" data-sid="${s.id}">✏️ แก้ไข</button> <button class="btn sm ghost" data-act="s-del" data-sid="${s.id}">🗑</button></td></tr>`
+              })
+              .join('')
+          : `<tr><td colspan="7" class="mute" style="padding:30px;text-align:center">ยังไม่มีรอบที่บันทึก</td></tr>`
+        $$('#sBody img[data-sid]').forEach(async im => {
+          const s = S.sessions.find(x => x.id === im.dataset.sid),
+            u = s && (await sesImg(s))
+          if (u) im.src = u
+          else
+            im.replaceWith(
+              Object.assign(document.createElement('span'), {
+                className: 'mute',
+                textContent: 'ไม่มีรูป',
+              })
+            )
+        })
+      }
+      function renderMembers() {
+        const q = $('#mSearch').value.trim().toLowerCase(),
+          cnt = new Map(calcRows().map(r => [r.m.id, r.cnt]))
+        $('#mCount').textContent = S.members.length + ' คน'
+        const list = S.members
+          .slice()
+          .sort((a, b) => a.name.localeCompare(b.name, 'th'))
+          .filter(m => !q || m.name.toLowerCase().includes(q))
+        $('#mBody').innerHTML =
+          list
+            .map(
+              m => `<tr><td>${esc(m.name)}${codeBadge(m)}${(m.aliases || []).length ? ` <span class="mute" title="ชื่อที่ระบบจำไว้จากการแก้ไข ${(m.aliases || []).length} แบบ">🧠${m.aliases.length}</span>` : ''}</td>
+    <td class="num">${cnt.get(m.id) || 0} ครั้ง</td><td style="white-space:nowrap"><button class="btn sm" data-act="m-ren" data-mid="${m.id}">✏️</button> <button class="btn sm ghost" data-act="m-del" data-mid="${m.id}">🗑</button></td></tr>`
+            )
+            .join('') ||
+          `<tr><td class="mute" style="padding:20px">ยังไม่มีสมาชิก — วางรายชื่อด้านบน หรือนำเข้าจากชีตเดิม</td></tr>`
+      }
+      function renderSettings() {
+        const c = S.cfg
+        $('#cNormal').value = c.normal
+        $('#cBonus').value = c.bonus
+        $('#cFrom').value = c.from
+        $('#cTo').value = c.to
+        $('#cPer').value = c.per || 5
+        $('#cUseCode').checked = !!c.useCode
+        $('#cThr').value = c.thr
+        $('#cThrV').textContent = c.thr + '%'
+        $('#cAuto').checked = c.autoOcr
+        $('#cAutoNew').checked = c.autoNew
+        $('#cSkip').value = c.skipTags || ''
+        $('#cSameCrop').checked = c.sameCrop
+        $('#cRuleHint').textContent = ruleText()
+      }
+      function renderHeader() {
+        $('#hsMem').textContent = S.members.length
+        $('#hsSes').textContent = S.sessions.length
+        $('#hsPts').textContent = calcRows().reduce((t, r) => t + r.pts, 0)
+        $('#ruleBanner').innerHTML =
+          '⏰ กติกาแต้ม: ' +
+          esc(ruleText()) +
+          ' <span class="hint">(แก้ได้ที่แท็บ สมาชิก & ตั้งค่า · ปรับรายรูปได้ที่การ์ดแต่ละใบ)</span>'
+        $('#dlMembers').innerHTML = S.members
+          .map(m => `<option value="${esc(m.name)}">`)
+          .join('')
+      }
+      function renderAll() {
+        renderHeader()
+        renderTable()
+        renderSessions()
+        renderMembers()
+        renderSettings()
+        renderLog()
+        if (drafts.length) renderDrafts()
+      }
+
+      /* ============================================================
+   Modals
+   ============================================================ */
+      const openM = id => $('#' + id).classList.remove('hide'),
+        closeM = id => $('#' + id).classList.add('hide')
+      document.addEventListener('click', e => {
+        const c = e.target.closest('[data-close]')
+        if (c) closeM(c.dataset.close)
+        if (e.target.classList.contains('modal')) e.target.classList.add('hide')
+      })
+      document.addEventListener('keydown', e => {
+        if (e.key === 'Escape')
+          $$('.modal').forEach(m => m.classList.add('hide'))
+      })
+      function viewImage(src) {
+        $('#viewerImg').src = src
+        openM('viewer')
+      }
+
+      let pickState = null
+      function openPicker(title, selected, cb) {
+        pickState = { sel: new Set(selected), cb }
+        $('#pickTitle').textContent = title
+        $('#pickSearch').value = ''
+        renderPick()
+        openM('pickModal')
+        setTimeout(() => $('#pickSearch').focus(), 50)
+      }
+      function renderPick() {
+        const q = $('#pickSearch').value.trim().toLowerCase()
+        const list = S.members
+          .slice()
+          .sort((a, b) => a.name.localeCompare(b.name, 'th'))
+          .filter(m => !q || m.name.toLowerCase().includes(q))
+        $('#pickList').innerHTML =
+          list
+            .map(
+              m =>
+                `<label><input type="checkbox" value="${m.id}" ${pickState.sel.has(m.id) ? 'checked' : ''}> ${esc(m.name)}</label>`
+            )
+            .join('') || '<div class="mute" style="padding:16px">ไม่พบ</div>'
+        $('#pickCount').textContent = `เลือกแล้ว ${pickState.sel.size} คน`
+      }
+      $('#pickSearch').addEventListener('input', renderPick)
+      $('#pickList').addEventListener('change', e => {
+        if (e.target.type === 'checkbox') {
+          e.target.checked
+            ? pickState.sel.add(e.target.value)
+            : pickState.sel.delete(e.target.value)
+          $('#pickCount').textContent = `เลือกแล้ว ${pickState.sel.size} คน`
+        }
+      })
+      $('#pickAll').onclick = () => {
+        $$('#pickList input').forEach(i => {
+          i.checked = true
+          pickState.sel.add(i.value)
+        })
+        $('#pickCount').textContent = `เลือกแล้ว ${pickState.sel.size} คน`
+      }
+      $('#pickNone').onclick = () => {
+        pickState.sel.clear()
+        renderPick()
+      }
+      $('#pickOk').onclick = () => {
+        const cb = pickState.cb,
+          sel = pickState.sel
+        closeM('pickModal')
+        cb(sel)
+      }
+
+      /* ---------- ตัดภาพ ---------- */
+      let cropState = null
+      function openCrop(d) {
+        cropState = { d, rect: d.crop || (S.cfg.sameCrop ? S.cfg.crop : null) }
+        $('#cropImg').src = d.url
+        openM('cropModal')
+        const showSel = () => {
+          const r = cropState.rect,
+            el = $('#cropSel')
+          if (!r) {
+            el.style.display = 'none'
+            return
+          }
+          Object.assign(el.style, {
+            display: 'block',
+            left: r.x * 100 + '%',
+            top: r.y * 100 + '%',
+            width: r.w * 100 + '%',
+            height: r.h * 100 + '%',
+          })
+        }
+        $('#cropImg').onload = showSel
+        showSel()
+      }
+      ;(() => {
+        const box = $('#cropBox')
+        let start = null
+        const pos = e => {
+          const b = $('#cropImg').getBoundingClientRect()
+          return {
+            x: Math.min(1, Math.max(0, (e.clientX - b.left) / b.width)),
+            y: Math.min(1, Math.max(0, (e.clientY - b.top) / b.height)),
+          }
+        }
+        box.addEventListener('pointerdown', e => {
+          start = pos(e)
+          box.setPointerCapture(e.pointerId)
+        })
+        box.addEventListener('pointermove', e => {
+          if (!start) return
+          const p = pos(e),
+            r = {
+              x: Math.min(start.x, p.x),
+              y: Math.min(start.y, p.y),
+              w: Math.abs(p.x - start.x),
+              h: Math.abs(p.y - start.y),
+            }
+          cropState.rect = r
+          Object.assign($('#cropSel').style, {
+            display: 'block',
+            left: r.x * 100 + '%',
+            top: r.y * 100 + '%',
+            width: r.w * 100 + '%',
+            height: r.h * 100 + '%',
+          })
+        })
+        box.addEventListener('pointerup', () => {
+          start = null
+        })
+      })()
+      $('#cropOk').onclick = () => {
+        const { d, rect } = cropState,
+          ok = rect && rect.w > 0.03 && rect.h > 0.03
+        closeM('cropModal')
+        d.crop = ok ? rect : null
+        if (ok && S.cfg.sameCrop) {
+          S.cfg.crop = rect
+          save()
+        }
+        queueOcr(d)
+      }
+      $('#cropClear').onclick = () => {
+        const { d } = cropState
+        closeM('cropModal')
+        d.crop = null
+        S.cfg.crop = null
+        save()
+        queueOcr(d)
+      }
+
+      /* ---------- แก้ไขรอบ ---------- */
+      let editSes = null
+      function openSesEdit(s) {
+        editSes = { s, att: new Set(s.att) }
+        $('#seNo').value = s.no
+        $('#seTime').value = s.time != null ? toLocalInput(s.time) : ''
+        $('#seMode').value = s.auto ? 'auto' : 'fixed'
+        $('#sePts').value = s.pts
+        $('#seLabel').value = s.label || ''
+        renderSesChips()
+        openM('sesModal')
+      }
+      function renderSesChips() {
+        $('#seCount').textContent = `(${editSes.att.size} คน)`
+        $('#seChips').innerHTML =
+          [...editSes.att]
+            .map(id => memById(id))
+            .filter(Boolean)
+            .sort((a, b) => a.name.localeCompare(b.name, 'th'))
+            .map(
+              m =>
+                `<span class="chip">${esc(m.name)}<button data-act="se-rm" data-mid="${m.id}">✕</button></span>`
+            )
+            .join('') || '<span class="hint">ไม่มีผู้เข้าร่วม</span>'
+      }
+      $('#seEditAtt').onclick = () =>
+        openPicker(
+          `ผู้เข้าร่วมรูปที่ ${$('#seNo').value}`,
+          editSes.att,
+          sel => {
+            editSes.att = new Set(sel)
+            renderSesChips()
+          }
+        )
+      $('#seOk').onclick = () => {
+        const s = editSes.s,
+          no = Math.max(1, Math.floor(+$('#seNo').value || 1))
+        if (S.sessions.some(x => x !== s && x.no === no))
+          return toast(`รูปที่ ${no} ถูกใช้แล้ว`)
+        const t = $('#seTime').value
+            ? fromLocalInput($('#seTime').value)
+            : null,
+          auto = $('#seMode').value === 'auto'
+        logAct(
+          'แก้ไขรอบ',
+          `รูปที่ ${s.no}→${no} · ${s.att.length}→${editSes.att.size} คน`
+        )
+        s.no = no
+        s.time = t
+        s.auto = auto && t != null
+        s.pts = Math.max(0, Math.floor(+$('#sePts').value || 0))
+        s.label = $('#seLabel').value.trim()
+        s.att = [...editSes.att]
+        S.sessions.sort((a, b) => a.no - b.no)
+        save()
+        closeM('sesModal')
+        renderAll()
+        toast('บันทึกการแก้ไขแล้ว')
+      }
+
+      /* ============================================================
+   อีเวนต์หลัก
+   ============================================================ */
+      function showTab(t) {
+        $$('.tab').forEach(b => b.classList.toggle('on', b.dataset.tab === t))
+        $$('main .sec').forEach(s =>
+          s.classList.toggle('hide', s.id !== 'tab-' + t)
+        )
+      }
+      $('#tabs').addEventListener('click', e => {
+        const b = e.target.closest('.tab')
+        if (b) showTab(b.dataset.tab)
+      })
+
+      const getD = id => drafts.find(d => d.id === id)
+      document.addEventListener('click', async e => {
+        const b = e.target.closest('[data-act]')
+        if (!b) return
+        const act = b.dataset.act,
+          d = getD(b.dataset.d),
+          mid = b.dataset.mid
+        if (act === 'view') return viewImage(b.dataset.src)
+        if (act === 's-view') {
+          const s = S.sessions.find(x => x.id === b.dataset.sid),
+            u = s && (await sesImg(s))
+          return u ? viewImage(u) : toast('ไม่พบรูป')
+        }
+        if (act === 's-edit')
+          return openSesEdit(S.sessions.find(x => x.id === b.dataset.sid))
+        if (act === 's-del') {
+          const s = S.sessions.find(x => x.id === b.dataset.sid)
+          if (
+            s &&
+            confirm(
+              `ลบรูปที่ ${s.no} (${s.att.length} คน)? แต้มของรอบนี้จะหายไป`
+            )
+          ) {
+            logAct('ลบรอบ', `รูปที่ ${s.no} (${s.att.length} คน)`)
+            S.sessions = S.sessions.filter(x => x !== s)
+            idb.del(s.id)
+            save()
+            renderAll()
+          }
+          return
+        }
+        if (act === 'se-rm') {
+          editSes.att.delete(mid)
+          return renderSesChips()
+        }
+        if (act === 'm-ren') {
+          const m = memById(mid),
+            v = prompt('แก้ชื่อสมาชิก', m.name)
+          if (v && v.trim()) {
+            // 🔧 จำคำที่ระบบอ่านผิด → ครั้งหน้าอ่านผิดแบบเดิมก็จับเป็นคนนี้ได้เลย
+            if (d) {
+              const fo = d.found.find(x => x.mid === mid),
+                k = fo && skel(fo.text)
+              if (k && k.length >= 2 && k !== skel(v))
+                (m.aliases = m.aliases || []).push(k)
+            }
+            logAct('แก้ชื่อสมาชิก', `${m.name} → ${v.trim()}`)
+            m.name = v.trim()
+            save()
+            renderAll()
+          }
+          return
+        }
+        if (act === 'm-del') {
+          const m = memById(mid)
+          if (confirm(`ลบ "${m.name}" ? (จะถูกเอาออกจากทุกรอบด้วย)`)) {
+            logAct('ลบสมาชิก', m.name)
+            S.members = S.members.filter(x => x !== m)
+            S.sessions.forEach(s => (s.att = s.att.filter(i => i !== mid)))
+            drafts.forEach(x => {
+              x.found = x.found.filter(f => f.mid !== mid)
+            })
+            save()
+            renderAll()
+          }
+          return
+        }
+        if (!d) return
+        if (act === 'mode') {
+          d.mode = b.dataset.m
+          return renderCard(d)
+        }
+        if (act === 'ptsadj') {
+          const base = draftPts(d)
+          d.pts = Math.max(0, Math.min(99, base + +b.dataset.delta))
+          d.mode = 'fixed'
+          return renderCard(d)
+        }
+        if (act === 'rmfound') {
+          d.found = d.found.filter(f => f.mid !== mid)
+          renderHeader()
+          return renderCard(d)
+        }
+        if (act === 'sugg') {
+          const u = d.unk[+b.dataset.u]
+          if (u) {
+            addFound(d, mid, { text: u.text, learn: true, ord: u.li })
+            d.unk.splice(+b.dataset.u, 1)
+          }
+          return renderCard(d)
+        }
+        if (act === 'newm') {
+          const u = d.unk[+b.dataset.u]
+          if (!u) return
+          const nm = u.text.trim()
+          const ex = S.members.find(
+              m => m.name.toLowerCase() === nm.toLowerCase()
+            ),
+            m = ex || { id: uid(), name: nm, aliases: [] }
+          if (!ex) S.members.push(m)
+          save()
+          addFound(d, m.id, { text: u.text, ord: u.li })
+          d.unk.splice(+b.dataset.u, 1)
+          renderHeader()
+          return renderCard(d)
+        }
+        if (act === 'ign') {
+          const u = d.unk[+b.dataset.u]
+          if (u) {
+            S.ignore.push(skel(u.text))
+            save()
+            d.unk.splice(+b.dataset.u, 1)
+          }
+          return renderCard(d)
+        }
+        if (act === 'ignall') {
+          d.unk.forEach(u => S.ignore.push(skel(u.text)))
+          save()
+          d.unk = []
+          return renderCard(d)
+        }
+        if (act === 'paste') {
+          const ta = document.querySelector(
+              `.card[data-d="${d.id}"] [data-f=paste]`
+            ),
+            before = d.found.length
+          applyText(d, ta.value, false)
+          ta.value = ''
+          renderCard(d)
+          return toast(`เพิ่มจากรายชื่อที่วาง ${d.found.length - before} คน`)
+        }
+        if (act === 'pick')
+          return openPicker(
+            `ผู้เข้าร่วมรูปที่ ${d.no}`,
+            d.found.map(f => f.mid),
+            sel => {
+              d.found = d.found.filter(f => sel.has(f.mid))
+              sel.forEach(id => addFound(d, id))
+              renderCard(d)
+            }
+          )
+        if (act === 'crop') return openCrop(d)
+        if (act === 'ocr') return queueOcr(d)
+        if (act === 'drop') {
+          if (d.url) URL.revokeObjectURL(d.url)
+          drafts = drafts.filter(x => x !== d)
+          renderHeader()
+          return renderDrafts()
+        }
+        if (act === 'save') {
+          await saveDraft(d)
+          return
+        }
+      })
+      document.addEventListener('change', e => {
+        const t = e.target,
+          f = t.dataset.f,
+          d = getD(t.dataset.d)
+        if (!f || !d) return
+        if (f === 'no') {
+          d.no = Math.max(1, Math.floor(+t.value || 1))
+          return renderCard(d)
+        }
+        if (f === 'time') {
+          const v = fromLocalInput(t.value)
+          if (v != null) {
+            d.time = v
+            d.timeSrc = 'เอง'
+          }
+          return renderCard(d)
+        }
+        if (f === 'label') {
+          d.label = t.value
+          return
+        }
+        if (f === 'resolve') {
+          const nm = t.value.trim().toLowerCase(),
+            u = d.unk[+t.dataset.u],
+            m = S.members.find(x => x.name.toLowerCase() === nm)
+          if (!nm) return
+          if (!m)
+            return toast(
+              'ไม่พบชื่อนี้ในรายชื่อสมาชิก (กด ＋ใหม่ ถ้าเป็นสมาชิกใหม่)'
+            )
+          addFound(d, m.id, { text: u.text, learn: true })
+          d.unk.splice(+t.dataset.u, 1)
+          renderCard(d)
+        }
+      })
+
+      /* ---------- ใส่รูป: ลาก/วาง/เลือกไฟล์ ---------- */
+      const dropEl = $('#drop')
+      ;['dragenter', 'dragover'].forEach(ev =>
+        document.addEventListener(ev, e => {
+          if (e.dataTransfer && [...e.dataTransfer.types].includes('Files')) {
+            e.preventDefault()
+            dropEl.classList.add('over')
+          }
+        })
+      )
+      ;['dragleave', 'drop'].forEach(ev =>
+        document.addEventListener(ev, e => {
+          if (ev === 'drop' || e.target === document || !e.relatedTarget)
+            dropEl.classList.remove('over')
+        })
+      )
+      document.addEventListener('drop', e => {
+        e.preventDefault()
+        if (e.dataTransfer.files.length) addFiles(e.dataTransfer.files)
+      })
+      document.addEventListener('paste', e => {
+        const fs = [...(e.clipboardData?.files || [])].filter(f =>
+          f.type.startsWith('image/')
+        )
+        if (fs.length) {
+          e.preventDefault()
+          addFiles(fs)
+        }
+      })
+      $('#btnPick').onclick = () => $('#picFile').click()
+      $('#picFile').onchange = e => {
+        addFiles(e.target.files)
+        e.target.value = ''
+      }
+      $('#btnManual').onclick = addManualDraft
+      $('#bOcrAll').onclick = () =>
+        drafts
+          .filter(d => d.file && !['running', 'queued'].includes(d.status))
+          .forEach(queueOcr)
+      $$('[data-bulkmode]').forEach(
+        b =>
+          (b.onclick = () => {
+            drafts.forEach(d => (d.mode = b.dataset.bulkmode))
+            renderDrafts()
+          })
+      )
+      $('#bBulkPlus').onclick = () => {
+        drafts.forEach(d => {
+          d.pts = Math.min(99, draftPts(d) + 1)
+          d.mode = 'fixed'
+        })
+        renderDrafts()
+      }
+      $('#bClearDrafts').onclick = () => {
+        if (
+          drafts.length &&
+          confirm(`ทิ้งรูปที่ยังไม่บันทึก ${drafts.length} รูป?`)
+        ) {
+          drafts.forEach(d => d.url && URL.revokeObjectURL(d.url))
+          drafts = []
+          renderDrafts()
+          renderHeader()
+        }
+      }
+      $('#bSaveAll').onclick = async () => {
+        const list = drafts.slice().sort((a, b) => a.no - b.no)
+        let ok = 0
+        if (
+          list.some(d => ['running', 'queued'].includes(d.status)) &&
+          !confirm('ยังมีรูปที่กำลังอ่านอยู่ บันทึกทั้งหมดตอนนี้เลยไหม?')
+        )
+          return
+        if (
+          list.some(d => !d.found.length) &&
+          !confirm('มีบางรูปยังไม่มีผู้เข้าร่วม บันทึกไปเลยไหม?')
+        )
+          return
+        for (const d of list) if (await saveDraft(d, true)) ok++
+        toast(`บันทึกแล้ว ${ok}/${list.length} รูป`)
+      }
+
+      /* ---------- ตาราง: คัดลอก/ส่งออก ---------- */
+      const tsvRows = () => [
+        ['ชื่อสมาชิก', 'รูปที่เข้าร่วม', 'มา(รอบ)', 'นับรวม(ครั้ง)', 'แต้ม'],
+        ...sortedRows().map(r => [
+          r.m.name,
+          r.nos.map(x => x.no).join(','),
+          r.cnt,
+          r.units,
+          r.pts,
+        ]),
+      ]
+      $('#tSearch').addEventListener('input', renderTable)
+      $('#tSort').addEventListener('change', renderTable)
+      $('#bCopySheet').onclick = () =>
+        copyText(
+          tsvRows()
+            .map(r =>
+              r.map(c => String(c).replace(/[\t\r\n]+/g, ' ')).join('\t')
+            )
+            .join('\n'),
+          'คัดลอกตารางแล้ว — ไปวางในชีตได้เลย (Ctrl+V)'
+        )
+      $('#bCsv').onclick = () =>
+        download(
+          'TWOK-attendance.csv',
+          '\ufeff' +
+            tsvRows()
+              .map(r =>
+                r.map(c => `"${String(c).replace(/"/g, '""')}"`).join(',')
+              )
+              .join('\n'),
+          'text/csv'
+        )
+      $('#bTickets').onclick = () => {
+        const rows = calcRows()
+          .filter(r => r.pts > 0)
+          .sort((a, b) => b.pts - a.pts)
+        if (!rows.length) return toast('ยังไม่มีแต้ม')
+        download(
+          'TWOK-tickets-for-raffle.csv',
+          '\ufeff' +
+            'ชื่อ,ตั๋ว\n' +
+            rows
+              .map(r => `"${r.m.name.replace(/"/g, '""')}",${r.pts}`)
+              .join('\n'),
+          'text/csv'
+        )
+        toast(
+          'ได้ไฟล์ชื่อ,ตั๋ว แล้ว — เอาไปใช้กับ "นำเข้ารายชื่อจากไฟล์" ในระบบจับฉลาก'
+        )
+      }
+      $('#bRenum').onclick = () => {
+        if (
+          !S.sessions.length ||
+          !confirm(
+            'เรียงเลขรูปใหม่ (1,2,3...) ตามเวลา? เลขรูปในตารางจะเปลี่ยนตาม'
+          )
+        )
+          return
+        logAct('เรียงเลขรูปใหม่', '')
+        S.sessions
+          .slice()
+          .sort((a, b) => (a.time ?? 0) - (b.time ?? 0) || a.no - b.no)
+          .forEach((s, i) => (s.no = i + 1))
+        S.sessions.sort((a, b) => a.no - b.no)
+        save()
+        renderAll()
+      }
+
+      /* ---------- สมาชิก & ตั้งค่า ---------- */
+      function addMembersFromText(text) {
+        let added = 0,
+          dup = 0
+        for (let n of text.split(/\r?\n/)) {
+          n = n
+            .replace(/\t.*$/, '')
+            .replace(/^"+|"+$/g, '')
+            .replace(/\s+/g, ' ')
+            .trim()
+          if (!n) continue
+          if (/^(ชื่อ|ชื่อสมาชิก|name)$/i.test(n)) continue
+          if (S.members.some(m => m.name.toLowerCase() === n.toLowerCase())) {
+            dup++
+            continue
+          }
+          S.members.push({ id: uid(), name: n.slice(0, 60), aliases: [] })
+          added++
+        }
+        logAct('เพิ่มสมาชิก', `${added} คน`)
+        save()
+        renderAll()
+        toast(`เพิ่มสมาชิก ${added} คน${dup ? ` (ซ้ำ ${dup})` : ''}`)
+      }
+      $('#mBulkAdd').onclick = () => {
+        addMembersFromText($('#mBulk').value)
+        $('#mBulk').value = ''
+      }
+      $('#mSearch').addEventListener('input', renderMembers)
+      for (let h = 0; h < 24; h++) {
+        $('#cFrom').add(new Option(pad(h) + ':00', h))
+        $('#cTo').add(new Option(pad(h) + ':00', h))
+      }
+      const num = (id, lo, hi) =>
+        Math.max(lo, Math.min(hi, Math.floor(+$(id).value || 0)))
+      $('#cNormal').onchange = () => {
+        S.cfg.normal = num('#cNormal', 0, 99)
+        logAct('แก้ตั้งค่า', 'ครั้งกลางวัน = ' + S.cfg.normal)
+        save()
+        renderAll()
+      }
+      $('#cBonus').onchange = () => {
+        S.cfg.bonus = num('#cBonus', 0, 99)
+        logAct('แก้ตั้งค่า', 'ครั้งหลังเที่ยงคืน = ' + S.cfg.bonus)
+        save()
+        renderAll()
+      }
+      $('#cFrom').onchange = () => {
+        S.cfg.from = +$('#cFrom').value
+        logAct('แก้ตั้งค่า', 'ช่วงพิเศษเริ่ม ' + S.cfg.from + ':00')
+        save()
+        renderAll()
+      }
+      $('#cTo').onchange = () => {
+        S.cfg.to = +$('#cTo').value
+        logAct('แก้ตั้งค่า', 'ช่วงพิเศษสิ้นสุด ' + S.cfg.to + ':00')
+        save()
+        renderAll()
+      }
+      $('#cThr').oninput = () => {
+        S.cfg.thr = +$('#cThr').value
+        $('#cThrV').textContent = S.cfg.thr + '%'
+        save()
+      }
+      $('#cAuto').onchange = e => {
+        S.cfg.autoOcr = e.target.checked
+        save()
+      }
+      $('#cSkip').onchange = e => {
+        S.cfg.skipTags = e.target.value.trim()
+        save()
+      }
+      $('#cAutoNew').onchange = e => {
+        S.cfg.autoNew = e.target.checked
+        save()
+      }
+      $('#cSameCrop').onchange = e => {
+        S.cfg.sameCrop = e.target.checked
+        save()
+      }
+      $('#bClearCrop').onclick = () => {
+        S.cfg.crop = null
+        save()
+        toast('ล้างพื้นที่ตัดภาพแล้ว')
+      }
+      $('#bClearIgnore').onclick = () => {
+        S.ignore = []
+        save()
+        toast('ล้างรายการข้ามแล้ว')
+      }
+      $('#cPer').onchange = () => {
+        S.cfg.per = num('#cPer', 1, 99)
+        logAct('แก้ตั้งค่า', 'เข้าร่วมครบ ' + S.cfg.per + ' ครั้ง = 1 แต้ม')
+        save()
+        renderAll()
+      }
+      $('#cUseCode').onchange = () => {
+        S.cfg.useCode = $('#cUseCode').checked
+        logAct('แก้ตั้งค่า', 'บังคับเลขท้ายชื่อ = ' + S.cfg.useCode)
+        save()
+        renderAll()
+      }
+      $('#tBody').addEventListener('change', e => {
+        const i = e.target.closest('input[data-adj]')
+        if (!i) return
+        const m = memById(i.dataset.mid),
+          k = i.dataset.adj,
+          v = Math.round(+i.value || 0),
+          old = +m[k] || 0
+        if (v === old) return
+        m[k] = v
+        logAct(
+          'ปรับคะแนนเอง',
+          `${m.name}: ${k === 'adjU' ? 'ครั้ง' : 'แต้ม'} ${old} → ${v}`
+        )
+        save()
+        renderAll()
+      })
+      $('#cAi').checked = localStorage.getItem('twok_ai_on') === '1'
+      $('#cAiKey').value = aiKey()
+      $('#cAiModel').value = localStorage.getItem('twok_gemini_model') || ''
+      $('#cAi').onchange = () =>
+        localStorage.setItem('twok_ai_on', $('#cAi').checked ? '1' : '0')
+      $('#cAiKey').onchange = () => {
+        localStorage.setItem('twok_gemini_key', $('#cAiKey').value.trim())
+        toast('บันทึกคีย์ในเครื่องนี้แล้ว')
+      }
+      $('#cAiModel').onchange = () =>
+        localStorage.setItem('twok_gemini_model', $('#cAiModel').value.trim())
+      $('#bResetAll').onclick = () => {
+        if (
+          !confirm(
+            'ล้างข้อมูลทั้งหมด (สมาชิก รอบ แต้ม รูป)? กู้คืนไม่ได้ — แนะนำให้กดสำรองข้อมูลก่อน'
+          )
+        )
+          return
+        S.sessions.forEach(s => idb.del(s.id))
+        logAct('ล้างข้อมูลทั้งหมด', '')
+        const keepLogs = S.logs
+        S = defState()
+        S.logs = keepLogs
+        drafts = []
+        save()
+        renderAll()
+        renderDrafts()
+      }
+
+      /* ---------- นำเข้าจากชีตเดิม ---------- */
+      function parseDelimited(text) {
+        // อ่าน CSV/TSV ที่มีช่องในเครื่องหมายคำพูด/ขึ้นบรรทัดใหม่ในช่อง (แบบที่ Google Sheets ส่งออก)
+        text = text.replace(/^\uFEFF/, '')
+        const rows = []
+        let row = [],
+          cur = '',
+          q = false
+        const d = (text.split('\n')[0] || '').includes('\t') ? '\t' : ','
+        for (let i = 0; i < text.length; i++) {
+          const ch = text[i]
+          if (q) {
+            if (ch === '"') {
+              if (text[i + 1] === '"') {
+                cur += '"'
+                i++
+              } else q = false
+            } else cur += ch
+          } else if (ch === '"') q = true
+          else if (ch === d) {
+            row.push(cur)
+            cur = ''
+          } else if (ch === '\n') {
+            row.push(cur)
+            rows.push(row)
+            row = []
+            cur = ''
+          } else if (ch !== '\r') cur += ch
+        }
+        if (cur || row.length) {
+          row.push(cur)
+          rows.push(row)
+        }
+        return rows
+      }
+      function legacyParse(text) {
+        const rows = parseDelimited(text),
+          out = []
+        rows.forEach((r, i) => {
+          const name = (r[0] || '').replace(/\s+/g, ' ').trim()
+          if (!name) return
+          if (i === 0 && /^(ชื่อ|name)/i.test(name)) return
+          const nos = [
+            ...new Set(
+              ((r[1] || '').match(/\d+/g) || [])
+                .map(Number)
+                .filter(n => n > 0 && n < 100000)
+            ),
+          ]
+          out.push({ name, nos })
+        })
+        return out
+      }
+      $('#bLegacy').onclick = () => {
+        $('#lgText').value = ''
+        $('#lgPreview').textContent = ''
+        openM('legacyModal')
+      }
+      $('#lgFile').onchange = async e => {
+        const f = e.target.files[0]
+        if (!f) return
+        $('#lgText').value = await f.text()
+        $('#lgText').dispatchEvent(new Event('input'))
+        e.target.value = ''
+      }
+      $('#lgText').addEventListener('input', () => {
+        const rows = legacyParse($('#lgText').value),
+          sessions = new Set(rows.flatMap(r => r.nos))
+        $('#lgPreview').textContent = rows.length
+          ? `พบสมาชิก ${rows.length} คน · ${sessions.size} รอบ (รูปที่ ${Math.min(...sessions, Infinity) === Infinity ? '-' : Math.min(...sessions)}–${sessions.size ? Math.max(...sessions) : '-'})`
+          : ''
+      })
+      $('#lgOk').onclick = () => {
+        const rows = legacyParse($('#lgText').value)
+        if (!rows.length) return toast('ไม่พบข้อมูลให้นำเข้า')
+        if ($('#lgMode').value === 'replace') {
+          if (
+            S.sessions.length &&
+            !confirm('จะแทนที่รอบที่บันทึกไว้ทั้งหมด ยืนยันไหม?')
+          )
+            return
+          S.sessions.forEach(s => idb.del(s.id))
+          S.sessions = []
+        }
+        const byNo = new Map(S.sessions.map(s => [s.no, s]))
+        for (const r of rows) {
+          let m = S.members.find(
+            x => x.name.toLowerCase() === r.name.toLowerCase()
+          )
+          if (!m) {
+            m = { id: uid(), name: r.name, aliases: [] }
+            S.members.push(m)
+          }
+          for (const n of r.nos) {
+            let s = byNo.get(n)
+            if (!s) {
+              s = {
+                id: uid(),
+                no: n,
+                label: 'นำเข้าจากชีตเดิม',
+                time: null,
+                auto: false,
+                pts: 1,
+                att: [],
+                hash: null,
+                img: false,
+              }
+              byNo.set(n, s)
+              S.sessions.push(s)
+            }
+            if (!s.att.includes(m.id)) s.att.push(m.id)
+          }
+        }
+        S.sessions.sort((a, b) => a.no - b.no)
+        save()
+        closeM('legacyModal')
+        renderAll()
+        showTab('table')
+        toast(`นำเข้าแล้ว: ${rows.length} คน · ${S.sessions.length} รอบ`)
+      }
+
+      /* ---------- สำรอง / โหลด ---------- */
+      $('#btnBackup').onclick = () =>
+        download(
+          `TWOK-attendance-backup-${new Date().toISOString().slice(0, 10)}.json`,
+          JSON.stringify(S, null, 2),
+          'application/json'
+        )
+      $('#btnRestore').onclick = () => $('#restoreFile').click()
+      $('#restoreFile').onchange = e => {
+        const f = e.target.files[0]
+        if (!f) return
+        const r = new FileReader()
+        r.onload = () => {
+          try {
+            const d = JSON.parse(r.result)
+            if (!Array.isArray(d.members) || !Array.isArray(d.sessions)) throw 0
+            S = { ...defState(), ...d, cfg: { ...defState().cfg, ...d.cfg } }
+            logAct(
+              'โหลดข้อมูลจากไฟล์สำรอง',
+              `${d.members.length} คน · ${d.sessions.length} รอบ`
+            )
+            save()
+            renderAll()
+            toast('โหลดข้อมูลสำเร็จ (รูปไม่รวมในไฟล์สำรอง)')
+          } catch {
+            toast('ไฟล์ไม่ถูกต้อง')
+          }
+        }
+        r.readAsText(f)
+        e.target.value = ''
+      }
+
+      /* ---------- โลโก้ ---------- */
+      const LOGO_URL =
+        'https://i1.dpic.cc/2026/10/13/836043093_2273613863460907_5220698642116715766_n.jpg'
+      ;(() => {
+        const im = $('#logo')
+        im.dataset.s = 'f'
+        im.onerror = () => {
+          if (im.dataset.s === 'f') {
+            im.dataset.s = 'u'
+            im.src = LOGO_URL
+          } else im.style.display = 'none'
+        }
+        im.src = 'logo.jpg'
+      })()
+
+      try {
+        navigator.storage &&
+          navigator.storage.persist &&
+          navigator.storage.persist()
+      } catch (e) {}
+      if (gcTmp()) save()
+      renderAll()
+      renderDrafts()
+    </script>
+    <script type="module">
+      /* ===== Firebase: วางค่า config ของคุณตรงนี้ (ดูวิธีหาในคำอธิบาย) ===== */
+      const FIREBASE_CONFIG = {
+        apiKey: '',
+        authDomain: '',
+        projectId: '',
+        appId: '',
+      }
+      const V = '10.14.1',
+        G = 'https://www.gstatic.com/firebasejs/' + V
+      const $ = s => document.querySelector(s)
+      const banner = $('#cloudBanner')
+      if (!FIREBASE_CONFIG.apiKey) {
+        banner.textContent =
+          '⚠️ โหมดในเครื่อง — ยังไม่ได้ตั้งค่า Firebase (ข้อมูลอยู่แค่ในเบราว์เซอร์นี้ ไม่มีล็อกอิน)'
+      } else {
+        const { initializeApp } = await import(G + '/firebase-app.js')
+        const {
+          getAuth,
+          onAuthStateChanged,
+          signInWithEmailAndPassword,
+          signOut,
+        } = await import(G + '/firebase-auth.js')
+        const {
+          getFirestore,
+          doc,
+          getDoc,
+          setDoc,
+          onSnapshot,
+          collection,
+          addDoc,
+          query,
+          orderBy,
+          limit,
+          serverTimestamp,
+        } = await import(G + '/firebase-firestore.js')
+        const app = initializeApp(FIREBASE_CONFIG),
+          auth = getAuth(app),
+          db = getFirestore(app)
+        const ref = doc(db, 'twok', 'state'),
+          logs = collection(db, 'twok', 'state', 'logs')
+        let unsubs = [],
+          timer,
+          last = ''
+        $('#auth').classList.remove('hide') // ล็อกหน้าจอจนกว่าจะล็อกอิน
+        const push = async () => {
+          last = JSON.stringify(S)
+          try {
+            await setDoc(ref, {
+              json: last,
+              by: window.CUR_USER,
+              at: serverTimestamp(),
+            })
+            banner.textContent = '☁️ ซิงก์แล้ว · ' + window.CUR_USER
+          } catch (e) {
+            banner.textContent = '❌ บันทึกขึ้น Firebase ไม่สำเร็จ: ' + e.code
+          }
+        }
+        const login = async () => {
+          $('#authMsg').textContent = ''
+          try {
+            await signInWithEmailAndPassword(
+              auth,
+              $('#authEmail').value.trim(),
+              $('#authPass').value
+            )
+          } catch (e) {
+            $('#authMsg').textContent = 'อีเมลหรือรหัสผ่านไม่ถูกต้อง'
+          }
+        }
+        $('#authGo').onclick = login
+        $('#authPass').onkeydown = e => e.key === 'Enter' && login()
+        $('#btnLogout').onclick = async () => {
+          await signOut(auth)
+          localStorage.removeItem('twok_attend_v1')
+          location.reload()
+        }
+        onAuthStateChanged(auth, async u => {
+          unsubs.forEach(f => f())
+          unsubs = []
+          if (!u) {
+            window.cloudSave = window.cloudLog = null
+            window.CUR_USER = null
+            $('#auth').classList.remove('hide')
+            $('#btnLogout').hidden = true
+            return
+          }
+          try {
+            const snap = await getDoc(ref)
+            window.CUR_USER = u.email
+            if (snap.exists()) {
+              last = snap.data().json
+              applyRemote(last)
+            } else await push() // Firebase ว่าง → อัปโหลดข้อมูลในเครื่องขึ้นไป
+          } catch (e) {
+            $('#authMsg').textContent =
+              'บัญชีนี้ไม่มีสิทธิ์เข้าใช้งาน (' + (e.code || e.message) + ')'
+            return signOut(auth)
+          }
+          window.cloudSave = () => {
+            clearTimeout(timer)
+            timer = setTimeout(push, 800)
+          }
+          window.cloudLog = e => addDoc(logs, e).catch(() => {})
+          unsubs.push(
+            onSnapshot(ref, s => {
+              if (s.metadata.hasPendingWrites || !s.exists()) return
+              const j = s.data().json
+              if (j !== last) {
+                last = j
+                applyRemote(j)
+              }
+            })
+          )
+          unsubs.push(
+            onSnapshot(query(logs, orderBy('t', 'desc'), limit(300)), s =>
+              renderLog(s.docs.map(d => d.data()))
+            )
+          )
+          $('#auth').classList.add('hide')
+          $('#btnLogout').hidden = false
+          $('#who').textContent = u.email
+          banner.textContent = '☁️ เชื่อม Firebase แล้ว · ' + u.email
+          window.logAct && logAct('เข้าสู่ระบบ', '')
+        })
+      }
+    </script>
+  </body>
+</html>
