@@ -755,6 +755,7 @@
       <input type="email" id="authEmail" placeholder="อีเมล" autocomplete="username" />
       <input type="password" id="authPass" placeholder="รหัสผ่าน" autocomplete="current-password" />
       <button class="btn red" id="authGo">เข้าสู่ระบบ</button>
+      <button class="btn" id="authGoogle">🔑 เข้าสู่ระบบด้วย Google (Gmail)</button>
       <div id="authMsg"></div>
     </div></div>
     <div id="cloudBanner" class="hint" style="padding:4px 14px"></div>
@@ -3252,7 +3253,7 @@
         banner.textContent = '⚠️ โหมดในเครื่อง — ยังไม่ได้ตั้งค่า Firebase (ข้อมูลอยู่แค่ในเบราว์เซอร์นี้ ไม่มีล็อกอิน)'
       } else {
         const { initializeApp } = await import(G + '/firebase-app.js')
-        const { getAuth, onAuthStateChanged, signInWithEmailAndPassword, signOut } = await import(G + '/firebase-auth.js')
+        const { getAuth, onAuthStateChanged, signInWithEmailAndPassword, signOut, GoogleAuthProvider, signInWithPopup } = await import(G + '/firebase-auth.js')
         const { getFirestore, doc, getDoc, setDoc, onSnapshot, collection, addDoc, query, orderBy, limit, serverTimestamp } = await import(G + '/firebase-firestore.js')
         const app = initializeApp(FIREBASE_CONFIG), auth = getAuth(app), db = getFirestore(app)
         const ref = doc(db, 'twok', 'state'), logs = collection(db, 'twok', 'state', 'logs')
@@ -3269,6 +3270,14 @@
           catch (e) { $('#authMsg').textContent = 'อีเมลหรือรหัสผ่านไม่ถูกต้อง' }
         }
         $('#authGo').onclick = login
+        $('#authGoogle').onclick = async () => {
+          $('#authMsg').textContent = ''
+          try { await signInWithPopup(auth, new GoogleAuthProvider()) }
+          catch (e) {
+            if (e.code === 'auth/popup-closed-by-user' || e.code === 'auth/cancelled-popup-request') return
+            $('#authMsg').textContent = e.code === 'auth/operation-not-allowed' ? 'ยังไม่ได้เปิด Google sign-in ใน Firebase' : e.code === 'auth/unauthorized-domain' ? 'โดเมนนี้ยังไม่ได้เพิ่มใน Authorized domains' : 'เข้าสู่ระบบด้วย Google ไม่สำเร็จ (' + (e.code || e.message) + ')'
+          }
+        }
         $('#authPass').onkeydown = e => e.key === 'Enter' && login()
         $('#btnLogout').onclick = async () => { await signOut(auth); localStorage.removeItem('twok_attend_v1'); location.reload() }
         onAuthStateChanged(auth, async u => {
