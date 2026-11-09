@@ -1154,32 +1154,36 @@
                   ชื่อที่อ่านได้แต่ไม่มีในรายชื่อ →
                   เพิ่มเป็นสมาชิกใหม่ให้เลย</label
                 >
-                <label
-                  style="
-                    margin-top: 6px;
-                    display: flex;
-                    gap: 8px;
-                    align-items: center;
-                  "
-                  >ไม่นับคนที่มีป้าย (คั่นด้วยคอมมา เช่น ALIT)
+                <div style="margin-top: 10px">
+                  <b>🚫 ข้ามคนที่มีป้ายกิลด์ (ไม่นับแต้ม)</b>
                   <input
                     type="text"
                     id="cSkip"
-                    placeholder="เว้นว่าง = นับทุกคน"
-                /></label>
-                <label
-                  style="
-                    margin-top: 6px;
-                    display: flex;
-                    gap: 8px;
-                    align-items: center;
-                  "
-                  ><input type="checkbox" id="cSameCrop" />
-                  ใช้พื้นที่ตัดภาพเดิมกับทุกรูป (แนะนำ)</label
-                >
+                    placeholder="พิมพ์ชื่อป้าย เช่น ALIT (เว้นว่าง = นับทุกคน)"
+                    style="margin-top: 4px"
+                  />
+                  <div class="hint">
+                    ป้ายคือคำในวงเล็บเหลี่ยมหน้าชื่อในเกม เช่น
+                    <b>[ALIT]</b> Player1 → ใส่ <b>ALIT</b> ระบบจะไม่นับคนที่มี
+                    [ALIT] นำหน้า · ใส่หลายป้ายคั่นด้วย , เช่น
+                    <b>ALIT,XYZ</b> · ไม่ต้องพิมพ์วงเล็บ ตัวพิมพ์เล็กใหญ่ได้
+                  </div>
+                </div>
+                <div style="margin-top: 10px">
+                  <label style="display: flex; gap: 8px; align-items: center">
+                    <input type="checkbox" id="cSameCrop" />
+                    <b>✂️ จำกรอบตัดภาพไว้ใช้กับทุกรูป (แนะนำ)</b>
+                  </label>
+                  <div class="hint">
+                    "ตัดภาพ" = ลากกรอบครอบเฉพาะรายชื่อคนในห้อง (ตัดแชท/หน้าต่างอื่นทิ้ง)
+                    จะอ่านเร็วและแม่นขึ้น · ตัดครั้งเดียว รูปถัดไปจะใช้กรอบเดิมให้เอง
+                    เหมาะกับรูปที่แคปขนาดหน้าจอเท่ากัน · ถ้าปิดข้อนี้
+                    ต้องตัดใหม่ทีละรูป
+                  </div>
+                </div>
                 <div class="row" style="margin-top: 6px">
                   <button class="btn sm" id="bClearCrop">
-                    ล้างพื้นที่ตัดภาพที่จำไว้</button
+                    ล้างกรอบที่จำไว้ (ตัดใหม่)</button
                   ><button class="btn sm" id="bClearIgnore">
                     ล้างบรรทัดที่เคยกด "ข้าม"
                   </button>
@@ -1282,7 +1286,7 @@
         <h3>✂️ ลากเลือกพื้นที่ "รายชื่อคนในห้อง"</h3>
         <div class="hint">
           ลากกรอบครอบเฉพาะรายชื่อ (ไม่ต้องเอาแชท/หน้าต่างอื่น) จะอ่านแม่นขึ้นมาก
-          ระบบจะจำพื้นที่นี้ไว้ใช้กับรูปถัดไป
+          ระบบจะจำกรอบนี้ไว้ใช้กับรูปถัดไป (ถ้าเปิด "จำกรอบตัดภาพ" ในตั้งค่า)
         </div>
         <div style="text-align: center">
           <div id="cropBox">
