@@ -848,7 +848,14 @@
             autocorrect="off"
             spellcheck="false"
           />
-          <button type="button" id="authEye" aria-label="แสดง/ซ่อนรหัสผ่าน" title="แสดง/ซ่อนรหัสผ่าน">👁</button>
+          <button
+            type="button"
+            id="authEye"
+            aria-label="แสดง/ซ่อนรหัสผ่าน"
+            title="แสดง/ซ่อนรหัสผ่าน"
+          >
+            👁
+          </button>
         </div>
         <button class="btn red" id="authGo" type="submit">เข้าสู่ระบบ</button>
         <button class="btn" id="authGoogle" type="button">
@@ -1215,35 +1222,47 @@
                 </div>
                 <div class="hint">
                   กด "💾 บันทึกการตั้งค่า" แล้วคีย์จะถูกเก็บบน Firebase
-                  ทีมงานทุกคนทุกเครื่องใช้ AI ร่วมกันได้เลย (ไม่ต้องวางทีละเครื่อง)
-                  — แนะนำให้ใช้คีย์เฉพาะงานนี้และจำกัดโควตาใน AI Studio
+                  ทีมงานทุกคนทุกเครื่องใช้ AI ร่วมกันได้เลย
+                  (ไม่ต้องวางทีละเครื่อง) —
+                  แนะนำให้ใช้คีย์เฉพาะงานนี้และจำกัดโควตาใน AI Studio
                 </div>
               </div>
               <div id="roleBox" class="panel hide">
                 <b>🔑 สิทธิ์ผู้ใช้งาน</b>
                 <div class="hint" style="margin: 4px 0 8px">
                   แอดมิน = ทำได้ทุกอย่าง · ทีมงาน = ใส่รูป/เช็คชื่อได้อย่างเดียว
-                  (มองไม่เห็นหน้าสมาชิก/ตั้งค่า/Log). ใส่ Gmail
-                  แล้วให้เขากด "เข้าสู่ระบบด้วย Google" ได้เลย
-                  (ถ้าใช้อีเมล+รหัสผ่าน ต้องสร้างบัญชีใน Firebase → Authentication ก่อน)
+                  (มองไม่เห็นหน้าสมาชิก/ตั้งค่า/Log). ใส่ Gmail แล้วให้เขากด
+                  "เข้าสู่ระบบด้วย Google" ได้เลย (ถ้าใช้อีเมล+รหัสผ่าน
+                  ต้องสร้างบัญชีใน Firebase → Authentication ก่อน)
                 </div>
                 <div class="row">
-                  <input type="email" id="rEmail" placeholder="อีเมลของทีมงาน" style="flex: 1; min-width: 160px" />
+                  <input
+                    type="email"
+                    id="rEmail"
+                    placeholder="อีเมลของทีมงาน"
+                    style="flex: 1; min-width: 160px"
+                  />
                   <select id="rRole">
                     <option value="staff">ทีมงาน (อัปรูป/เช็คชื่อ)</option>
                     <option value="admin">แอดมิน (ทุกอย่าง)</option>
                   </select>
-                  <button class="btn sm gold" id="rAdd" type="button">เพิ่ม / อัปเดต</button>
+                  <button class="btn sm gold" id="rAdd" type="button">
+                    เพิ่ม / อัปเดต
+                  </button>
                 </div>
                 <div class="tw" style="max-height: 28vh; margin-top: 8px">
-                  <table class="tbl"><tbody id="rBody"></tbody></table>
+                  <table class="tbl">
+                    <tbody id="rBody"></tbody>
+                  </table>
                 </div>
               </div>
               <div>
                 <button class="btn gold" id="bSaveCfg">
                   💾 บันทึกการตั้งค่า
                 </button>
-                <span id="cfgDirty" class="hide">● มีการแก้ไขที่ยังไม่ได้กดบันทึก</span>
+                <span id="cfgDirty" class="hide"
+                  >● มีการแก้ไขที่ยังไม่ได้กดบันทึก</span
+                >
                 <div class="hint">
                   ตั้งค่าเก็บอัตโนมัติเมื่อแก้
                   แต่กดปุ่มนี้เพื่อยืนยันและดูผลว่าซิงก์ขึ้น Firebase แล้ว
@@ -2205,7 +2224,10 @@
       const geminiDetail = async res => {
         try {
           const j = await res.clone().json()
-          return (j.error && j.error.message ? j.error.message : '').slice(0, 140)
+          return (j.error && j.error.message ? j.error.message : '').slice(
+            0,
+            140
+          )
         } catch (e) {
           return ''
         }
@@ -2320,8 +2342,7 @@
                 ? 'คีย์หรือชื่อโมเดลไม่ถูกต้อง'
                 : res.status === 404
                   ? 'ไม่พบโมเดลที่ใช้ได้ — ดูชื่อรุ่นใน AI Studio แล้วใส่ช่องชื่อโมเดล'
-                  : 'HTTP ' + res.status) +
-              (det ? ' [' + det + ']' : '')
+                  : 'HTTP ' + res.status) + (det ? ' [' + det + ']' : '')
           )
         }
         const j = await res.json()
@@ -2346,7 +2367,9 @@
         renderCard(d)
         updateOcrStatus()
         if (aiCfg().on && !aiKey())
-          toast('เปิด AI ไว้แต่ยังไม่มี API key — ใช้ระบบเดิมแทน (ให้แอดมินใส่คีย์แล้วกดบันทึก)')
+          toast(
+            'เปิด AI ไว้แต่ยังไม่มี API key — ใช้ระบบเดิมแทน (ให้แอดมินใส่คีย์แล้วกดบันทึก)'
+          )
         if (aiOn()) {
           try {
             const txt = await geminiRead(
@@ -3520,7 +3543,10 @@
             `https://generativelanguage.googleapis.com/v1beta/models/${encodeURIComponent(model)}:generateContent`,
             {
               method: 'POST',
-              headers: { 'Content-Type': 'application/json', 'x-goog-api-key': key },
+              headers: {
+                'Content-Type': 'application/json',
+                'x-goog-api-key': key,
+              },
               body: JSON.stringify({
                 contents: [{ parts: [{ text: 'ตอบคำเดียวว่า OK' }] }],
                 generationConfig: { maxOutputTokens: 20 },
@@ -3528,7 +3554,13 @@
             }
           )
           if (r.ok) toast('✅ AI ใช้งานได้ (' + model + ')')
-          else toast('❌ AI ใช้ไม่ได้: HTTP ' + r.status + ' ' + (await geminiDetail(r)))
+          else
+            toast(
+              '❌ AI ใช้ไม่ได้: HTTP ' +
+                r.status +
+                ' ' +
+                (await geminiDetail(r))
+            )
         } catch (e) {
           toast('❌ เชื่อมต่อ Google ไม่ได้: ' + (e.message || e))
         }
@@ -3570,7 +3602,9 @@
         toast(
           ok
             ? '✅ บันทึกการตั้งค่าแล้ว' +
-                (cloud ? ' (ซิงก์ขึ้น Firebase เรียบร้อย — ทุกเครื่องได้ค่าใหม่)' : ' (เก็บในเครื่อง)')
+                (cloud
+                  ? ' (ซิงก์ขึ้น Firebase เรียบร้อย — ทุกเครื่องได้ค่าใหม่)'
+                  : ' (เก็บในเครื่อง)')
             : '❌ บันทึกขึ้น Firebase ไม่สำเร็จ ลองอีกครั้ง'
         )
       }
@@ -3898,7 +3932,8 @@
         $('#authReset').onclick = async () => {
           const em = $('#authEmail').value.trim()
           if (!em) {
-            $('#authMsg').textContent = 'กรอกอีเมลก่อน แล้วกดลืมรหัสผ่านอีกครั้ง'
+            $('#authMsg').textContent =
+              'กรอกอีเมลก่อน แล้วกดลืมรหัสผ่านอีกครั้ง'
             return
           }
           try {
@@ -3962,7 +3997,13 @@
             })
             $('#rEmail').value = ''
             logAct('ตั้งสิทธิ์', em + ' = ' + role)
-            toast('✅ ตั้งสิทธิ์ ' + em + ' เป็น ' + (role === 'admin' ? 'แอดมิน' : 'ทีมงาน') + ' แล้ว')
+            toast(
+              '✅ ตั้งสิทธิ์ ' +
+                em +
+                ' เป็น ' +
+                (role === 'admin' ? 'แอดมิน' : 'ทีมงาน') +
+                ' แล้ว'
+            )
           } catch (e) {
             toast('❌ ตั้งสิทธิ์ไม่สำเร็จ: ' + (e.code || e.message))
           }
@@ -3985,7 +4026,12 @@
         $('#rBody').onclick = async e => {
           const b = e.target.closest('button[data-rdel]')
           if (!b) return
-          if (!confirm('ลบสิทธิ์ของ ' + b.dataset.rdel + ' ? (เขาจะเข้าระบบไม่ได้อีก)')) return
+          if (
+            !confirm(
+              'ลบสิทธิ์ของ ' + b.dataset.rdel + ' ? (เขาจะเข้าระบบไม่ได้อีก)'
+            )
+          )
+            return
           try {
             await deleteDoc(doc(db, 'roles', b.dataset.rdel))
             logAct('ลบสิทธิ์', b.dataset.rdel)
@@ -4023,7 +4069,9 @@
                 code: 'bad-role',
                 hint:
                   'พบเอกสารแล้ว แต่ field role = "' +
-                  (rs.data().role === undefined ? '(ไม่มี field role)' : rs.data().role) +
+                  (rs.data().role === undefined
+                    ? '(ไม่มี field role)'
+                    : rs.data().role) +
                   '" ต้องเป็น admin หรือ staff',
               }
             window.ROLE = rv
@@ -4037,7 +4085,10 @@
             } else await push() // Firebase ว่าง → อัปโหลดข้อมูลในเครื่องขึ้นไป
           } catch (e) {
             $('#authMsg').textContent =
-              'เข้าใช้งานไม่ได้ (' + u.email + '): ' + (e.hint || e.code || e.message)
+              'เข้าใช้งานไม่ได้ (' +
+              u.email +
+              '): ' +
+              (e.hint || e.code || e.message)
             return signOut(auth)
           }
           window.cloudSave = () => {
