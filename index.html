@@ -1934,12 +1934,26 @@
         const prompt = 'นี่คือภาพแคปรายชื่อผู้เล่นในเกม พิมพ์ชื่อผู้เล่นทุกบรรทัดตามที่เห็น บรรทัดละ 1 คน เรียงจากบนลงล่าง ' +
           'คงป้ายกิลด์ในวงเล็บเหลี่ยมไว้ตามที่เห็น ถ้าชื่อลงท้ายด้วยเลข 2-4 หลักติดกับชื่อ ให้คงเลขนั้นไว้ติดกับชื่อ ส่วนเลขเลเวลที่อยู่ห่างออกไปท้ายบรรทัดให้ตัดทิ้ง ' +
           'ห้ามเดาตัวอักษรที่มองไม่ชัด ให้ใส่ ? แทนตัวนั้น ตอบเฉพาะรายชื่อ ไม่ต้องมีคำอธิบายหรือหมายเลขลำดับ'
-        const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${encodeURIComponent(aiModel())}:generateContent`, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json', 'x-goog-api-key': aiKey() },
-          body: JSON.stringify({ contents: [{ parts: [{ text: prompt }, { inline_data: { mime_type: 'image/jpeg', data: b64 } }] }], generationConfig: { temperature: 0 } }),
+        const body = JSON.stringify({ contents: [{ parts: [{ text: prompt }, { inline_data: { mime_type: 'image/jpeg', data: b64 } }] }], generationConfig: { temperature: 0 } })
+        const call = m => fetch(`https://generativelanguage.googleapis.com/v1beta/models/${encodeURIComponent(m)}:generateContent`, {
+          method: 'POST', headers: { 'Content-Type': 'application/json', 'x-goog-api-key': aiKey() }, body,
         })
-        if (!res.ok) throw new Error(res.status === 429 ? 'โควตาฟรีหมด/ถี่เกินไป รอสักพัก' : res.status === 400 || res.status === 403 ? 'คีย์หรือชื่อโมเดลไม่ถูกต้อง' : 'HTTP ' + res.status)
+        let res = await call(aiModel())
+        if (res.status === 404) {
+          // โมเดลที่ตั้งไว้ถูกปิดแล้ว → ถาม Google ว่าตอนนี้มีรุ่นไหนใช้ได้ แล้วลองทีละรุ่น
+          const lr = await fetch('https://generativelanguage.googleapis.com/v1beta/models?pageSize=200', { headers: { 'x-goog-api-key': aiKey() } })
+          if (lr.ok) {
+            const names = ((await lr.json()).models || [])
+              .filter(m => (m.supportedGenerationMethods || []).includes('generateContent') && /flash/.test(m.name) && !/image|tts|live|audio|embed|robot|computer|exp/.test(m.name))
+              .map(m => m.name.replace('models/', ''))
+              .sort((x, y) => /preview/.test(x) - /preview/.test(y) || /lite/.test(x) - /lite/.test(y) || (x < y ? 1 : -1))
+            for (const n of names.slice(0, 5)) {
+              res = await call(n)
+              if (res.ok) { localStorage.setItem('twok_gemini_model', n); $('#cAiModel').value = n; toast('เปลี่ยนไปใช้โมเดล ' + n + ' ให้อัตโนมัติ'); break }
+            }
+          }
+        }
+        if (!res.ok) throw new Error(res.status === 429 ? 'โควตาฟรีหมด/ถี่เกินไป รอสักพัก' : res.status === 400 || res.status === 403 ? 'คีย์หรือชื่อโมเดลไม่ถูกต้อง' : res.status === 404 ? 'ไม่พบโมเดลที่ใช้ได้ — ดูชื่อรุ่นใน AI Studio แล้วใส่ช่องชื่อโมเดล' : 'HTTP ' + res.status)
         const j = await res.json()
         const txt = (j.candidates?.[0]?.content?.parts || []).map(p => p.text || '').join('')
         if (!txt.trim()) throw new Error('AI ไม่ตอบข้อความกลับมา')
