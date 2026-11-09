@@ -718,36 +718,11 @@
         padding: 10px;
         margin-top: 12px;
       }
-      #auth {
-        position: fixed;
-        inset: 0;
-        z-index: 9999;
-        background: var(--base);
-        display: flex;
-        align-items: center;
-        justify-content: center;
-      }
-      #auth .box {
-        width: min(360px, 92vw);
-        display: grid;
-        gap: 10px;
-        padding: 22px;
-        border: 1px solid var(--line);
-        border-radius: 10px;
-      }
-      #auth.hide {
-        display: none;
-      }
-      #authMsg {
-        color: #ff6b6b;
-        min-height: 1.2em;
-        font-size: 14px;
-      }
-      input.adj {
-        width: 56px;
-        margin-left: 6px;
-        padding: 2px 4px;
-      }
+      #auth{position:fixed;inset:0;z-index:9999;background:var(--base);display:flex;align-items:center;justify-content:center}
+      #auth .box{width:min(360px,92vw);display:grid;gap:10px;padding:22px;border:1px solid var(--line);border-radius:10px}
+      #auth.hide{display:none}
+      #authMsg{color:#ff6b6b;min-height:1.2em;font-size:14px}
+      input.adj{width:56px;margin-left:6px;padding:2px 4px}
     </style>
   </head>
   <body>
@@ -771,26 +746,14 @@
       </div>
     </header>
 
-    <div id="auth" class="hide">
-      <div class="box">
-        <b style="font-size: 20px">🔐 TWOK — เข้าสู่ระบบ</b>
-        <input
-          type="email"
-          id="authEmail"
-          placeholder="อีเมล"
-          autocomplete="username"
-        />
-        <input
-          type="password"
-          id="authPass"
-          placeholder="รหัสผ่าน"
-          autocomplete="current-password"
-        />
-        <button class="btn red" id="authGo">เข้าสู่ระบบ</button>
-        <div id="authMsg"></div>
-      </div>
-    </div>
-    <div id="cloudBanner" class="hint" style="padding: 4px 14px"></div>
+    <div id="auth" class="hide"><div class="box">
+      <b style="font-size:20px">🔐 TWOK — เข้าสู่ระบบ</b>
+      <input type="email" id="authEmail" placeholder="อีเมล" autocomplete="username" />
+      <input type="password" id="authPass" placeholder="รหัสผ่าน" autocomplete="current-password" />
+      <button class="btn red" id="authGo">เข้าสู่ระบบ</button>
+      <div id="authMsg"></div>
+    </div></div>
+    <div id="cloudBanner" class="hint" style="padding:4px 14px"></div>
     <nav id="tabs">
       <button class="tab on" data-tab="add">📥 ใส่รูปเช็คชื่อ</button>
       <button class="tab" data-tab="table">📊 ตารางคะแนน</button>
@@ -842,9 +805,7 @@
         <div class="hint" id="addTip" style="margin-top: 10px">
           วิธีใช้: ① ใส่รูป → ② ระบบอ่านชื่อให้ แล้วจับคู่กับรายชื่อสมาชิก → ③
           ตรวจสีเหลือง/ชื่อที่ไม่ตรง แก้ได้ → ④ กดบันทึก<br />
-          ไม่ต้องใส่รายชื่อไว้ก่อน —
-          ชื่อที่อ่านได้จากรูปจะถูกเพิ่มเป็นสมาชิกและนับแต้มให้เอง<br />กด
-          <b>➕ +1 แต้ม</b> ที่การ์ดรูปไหน คนในรูปนั้นจะได้แต้มเพิ่ม (1 → 2)
+          ไม่ต้องใส่รายชื่อไว้ก่อน — ชื่อที่อ่านได้จากรูปจะถูกเพิ่มเป็นสมาชิกและนับแต้มให้เอง<br />กด <b>➕ +1 แต้ม</b> ที่การ์ดรูปไหน คนในรูปนั้นจะได้แต้มเพิ่ม (1 → 2)
         </div>
       </section>
 
@@ -884,12 +845,8 @@
                 <th>ชื่อสมาชิก</th>
                 <th>รูปที่เข้าร่วม</th>
                 <th style="text-align: right">มา (รอบ)</th>
-                <th style="text-align: right">
-                  นับรวม (ครั้ง)<small class="mute"> / ปรับ</small>
-                </th>
-                <th style="text-align: right">
-                  แต้ม<small class="mute"> / ปรับ</small>
-                </th>
+                <th style="text-align: right">นับรวม (ครั้ง)<small class="mute"> / ปรับ</small></th>
+                <th style="text-align: right">แต้ม<small class="mute"> / ปรับ</small></th>
                 <th style="text-align: right">อีกกี่ครั้งได้แต้มต่อไป</th>
                 <th style="text-align: right">เข้าร่วม</th>
               </tr>
@@ -929,19 +886,10 @@
 
       <section class="sec hide" id="tab-log">
         <h2>📜 Log การใช้งานทั้งหมด</h2>
-        <div class="tw">
-          <table class="tbl">
-            <thead>
-              <tr>
-                <th>เวลา</th>
-                <th>ผู้ใช้</th>
-                <th>การกระทำ</th>
-                <th>รายละเอียด</th>
-              </tr>
-            </thead>
-            <tbody id="logBody"></tbody>
-          </table>
-        </div>
+        <div class="tw"><table class="tbl">
+          <thead><tr><th>เวลา</th><th>ผู้ใช้</th><th>การกระทำ</th><th>รายละเอียด</th></tr></thead>
+          <tbody id="logBody"></tbody>
+        </table></div>
       </section>
 
       <!-- ============ TAB: สมาชิก ============ -->
@@ -1012,29 +960,10 @@
                     <select id="cTo"></select
                   ></label>
                 </div>
-                <div class="row" style="margin-top: 6px">
-                  <label
-                    >เข้าร่วมครบ
-                    <input
-                      type="number"
-                      id="cPer"
-                      min="1"
-                      max="99"
-                      style="width: 70px"
-                    />
-                    ครั้ง = 1 แต้ม</label
-                  >
+                <div class="row" style="margin-top:6px">
+                  <label>เข้าร่วมครบ <input type="number" id="cPer" min="1" max="99" style="width:70px" /> ครั้ง = 1 แต้ม</label>
                 </div>
-                <label
-                  style="
-                    margin-top: 6px;
-                    display: flex;
-                    gap: 8px;
-                    align-items: center;
-                  "
-                  ><input type="checkbox" id="cUseCode" /> บังคับเลขท้ายชื่อ 2–4
-                  หลัก (ใช้ยืนยันตัวตนตอนอ่านรูป)</label
-                >
+                <label style="margin-top:6px;display:flex;gap:8px;align-items:center"><input type="checkbox" id="cUseCode" /> บังคับเลขท้ายชื่อ 2–4 หลัก (ใช้ยืนยันตัวตนตอนอ่านรูป)</label>
                 <div class="hint" id="cRuleHint"></div>
               </div>
               <div>
@@ -1077,8 +1006,7 @@
                     align-items: center;
                   "
                   ><input type="checkbox" id="cAutoNew" />
-                  ชื่อที่อ่านได้แต่ไม่มีในรายชื่อ →
-                  เพิ่มเป็นสมาชิกใหม่ให้เลย</label
+                  ชื่อที่อ่านได้แต่ไม่มีในรายชื่อ → เพิ่มเป็นสมาชิกใหม่ให้เลย</label
                 >
                 <label
                   style="
@@ -1088,11 +1016,8 @@
                     align-items: center;
                   "
                   >ไม่นับคนที่มีป้าย (คั่นด้วยคอมมา เช่น ALIT)
-                  <input
-                    type="text"
-                    id="cSkip"
-                    placeholder="เว้นว่าง = นับทุกคน"
-                /></label>
+                  <input type="text" id="cSkip" placeholder="เว้นว่าง = นับทุกคน" /></label
+                >
                 <label
                   style="
                     margin-top: 6px;
@@ -1113,35 +1038,10 @@
               </div>
               <div>
                 <b>🤖 อ่านชื่อด้วย AI (Gemini)</b>
-                <label
-                  style="
-                    margin-top: 6px;
-                    display: flex;
-                    gap: 8px;
-                    align-items: center;
-                  "
-                  ><input type="checkbox" id="cAi" /> ใช้ AI อ่านรูปแทนระบบเดิม
-                  (ถ้า AI พลาดจะกลับไปใช้ระบบเดิมเอง)</label
-                >
-                <label style="margin-top: 6px; display: block"
-                  >API key
-                  <input
-                    type="password"
-                    id="cAiKey"
-                    placeholder="วางคีย์จาก aistudio.google.com"
-                    autocomplete="off"
-                /></label>
-                <label style="margin-top: 6px; display: block"
-                  >ชื่อโมเดล
-                  <input
-                    type="text"
-                    id="cAiModel"
-                    placeholder="gemini-2.5-flash"
-                /></label>
-                <div class="hint">
-                  คีย์เก็บในเบราว์เซอร์เครื่องนี้เท่านั้น ไม่ขึ้น Firebase —
-                  ต้องวางทีละเครื่อง
-                </div>
+                <label style="margin-top:6px;display:flex;gap:8px;align-items:center"><input type="checkbox" id="cAi" /> ใช้ AI อ่านรูปแทนระบบเดิม (ถ้า AI พลาดจะกลับไปใช้ระบบเดิมเอง)</label>
+                <label style="margin-top:6px;display:block">API key <input type="password" id="cAiKey" placeholder="วางคีย์จาก aistudio.google.com" autocomplete="off" /></label>
+                <label style="margin-top:6px;display:block">ชื่อโมเดล <input type="text" id="cAiModel" placeholder="gemini-2.5-flash" /></label>
+                <div class="hint">คีย์เก็บในเบราว์เซอร์เครื่องนี้เท่านั้น ไม่ขึ้น Firebase — ต้องวางทีละเครื่อง</div>
               </div>
               <div class="dangerzone">
                 <b style="color: var(--blood)">โซนอันตราย</b>
@@ -1397,49 +1297,27 @@
       }
       const sesPts = s => (s.auto ? autoPts(s.time) : s.pts) // = "จำนวนครั้งที่นับ" ของรอบนั้น
       const per = () => Math.max(1, S.cfg.per || 5)
-      const codeOf = s =>
-        (String(s)
-          .replace(/[^\p{L}\p{N}]+$/u, '')
-          .match(/(\d{2,4})$/) || [])[1] || ''
+      const codeOf = s => (String(s).replace(/[^\p{L}\p{N}]+$/u, '').match(/(\d{2,4})$/) || [])[1] || ''
       const stripCode = s => String(s).replace(/\s*\d{2,4}\s*$/, '')
-      const codeBadge = m =>
-        S.cfg.useCode && !codeOf(m.name)
-          ? ' <span class="mute" title="ไม่มีเลขท้ายชื่อ 2-4 หลัก">⚠️ไม่มีเลข</span>'
-          : ''
+      const codeBadge = m => S.cfg.useCode && !codeOf(m.name) ? ' <span class="mute" title="ไม่มีเลขท้ายชื่อ 2-4 หลัก">⚠️ไม่มีเลข</span>' : ''
       function logAct(act, detail = '') {
-        const e = {
-          t: Date.now(),
-          u: window.CUR_USER || 'ในเครื่อง',
-          act,
-          detail: String(detail).slice(0, 300),
-        }
+        const e = { t: Date.now(), u: window.CUR_USER || 'ในเครื่อง', act, detail: String(detail).slice(0, 300) }
         if (window.cloudLog) window.cloudLog(e)
-        else {
-          ;(S.logs = S.logs || []).unshift(e)
-          S.logs.length = Math.min(S.logs.length, 500)
-        }
+        else { (S.logs = S.logs || []).unshift(e); S.logs.length = Math.min(S.logs.length, 500) }
       }
       let LOGS = null
       function renderLog(list) {
         if (list) LOGS = list
         const rows = LOGS || S.logs || []
         $('#logBody').innerHTML = rows.length
-          ? rows
-              .map(
-                e =>
-                  `<tr><td style="white-space:nowrap">${new Date(e.t).toLocaleString('th-TH')}</td><td>${esc(e.u || '')}</td><td>${esc(e.act)}</td><td>${esc(e.detail || '')}</td></tr>`
-              )
-              .join('')
+          ? rows.map(e => `<tr><td style="white-space:nowrap">${new Date(e.t).toLocaleString('th-TH')}</td><td>${esc(e.u || '')}</td><td>${esc(e.act)}</td><td>${esc(e.detail || '')}</td></tr>`).join('')
           : '<tr><td colspan="4" class="mute" style="padding:30px;text-align:center">ยังไม่มี Log</td></tr>'
       }
       function applyRemote(j) {
         try {
-          const d = JSON.parse(j),
-            s = defState()
+          const d = JSON.parse(j), s = defState()
           S = { ...s, ...d, cfg: { ...s.cfg, ...d.cfg } }
-          try {
-            localStorage.setItem(KEY, JSON.stringify(S))
-          } catch (e) {}
+          try { localStorage.setItem(KEY, JSON.stringify(S)) } catch (e) {}
           renderAll()
         } catch (e) {}
       }
@@ -1515,19 +1393,13 @@
         t = String(t)
         t = t.replace(/^[^\[【\]】]{0,5}?(?=[\[【])/, '')
         // ป้ายที่ตัวเปิด [ หายไป เช่น "ฝีมือ][TWOK] ชื่อ" → ตัดถึง ] ตัวแรก
-        if (/^[^\[【\]】]{0,25}[\]】]/.test(t))
-          t = t.replace(/^[^\[【\]】]{0,25}[\]】]/, '')
+        if (/^[^\[【\]】]{0,25}[\]】]/.test(t)) t = t.replace(/^[^\[【\]】]{0,25}[\]】]/, '')
         t = t
           .replace(/^(?:\s*[\[【][^\]】]*[\]】])+/, '')
           .replace(/^[^\p{L}\p{N}]+/u, '')
         // ตัดขยะท้ายบรรทัด (ไอคอนที่ถูกอ่านเป็นตัวอักษร) แล้วค่อยตัดเลเวล
         t = t.replace(/[^\p{L}\p{M}\p{N}+]+$/u, '')
-        t = t.replace(
-          S.cfg.useCode
-            ? /[\s\/]+\d{1,2}\+?\s*$/
-            : /(?:[\s\/]+|(?<=[\u0E00-\u0E7F]))\d{1,2}\+?\s*$/,
-          ''
-        )
+        t = t.replace(S.cfg.useCode ? /[\s\/]+\d{1,2}\+?\s*$/ : /(?:[\s\/]+|(?<=[\u0E00-\u0E7F]))\d{1,2}\+?\s*$/, '')
         t = t.replace(/\d{1,2}\+\s*$/, '')
         return t.replace(/[\s\/]+$/, '')
       }
@@ -1557,14 +1429,10 @@
               }
             }
             if (S.cfg.useCode) {
-              const lc = codeOf(l.text),
-                mc = codeOf(m.name)
+              const lc = codeOf(l.text), mc = codeOf(m.name)
               if (lc && mc) {
                 if (lc === mc) {
-                  if (
-                    sim(skel(stripCode(l.text)), skel(stripCode(m.name))) >= 0.3
-                  )
-                    best = Math.max(best, 0.95)
+                  if (sim(skel(stripCode(l.text)), skel(stripCode(m.name))) >= 0.3) best = Math.max(best, 0.95)
                 } else best *= 0.6 // เลขไม่ตรง = น่าจะคนละคน
               }
             }
@@ -1580,12 +1448,7 @@
           if (usedL.has(p.li) || usedM.has(p.mid)) continue
           usedL.add(p.li)
           usedM.add(p.mid)
-          found.push({
-            mid: p.mid,
-            conf: p.score,
-            text: L[p.li].text,
-            ord: p.li,
-          })
+          found.push({ mid: p.mid, conf: p.score, text: L[p.li].text, ord: p.li })
         }
         const unk = []
         L.forEach((l, li) => {
@@ -1681,9 +1544,7 @@
       function splitRows(c) {
         const W = c.width,
           H = c.height
-        const d = c
-          .getContext('2d', { willReadFrequently: true })
-          .getImageData(0, 0, W, H).data
+        const d = c.getContext('2d', { willReadFrequently: true }).getImageData(0, 0, W, H).data
         const xa = Math.round(W * 0.08),
           xb = Math.round(W * 0.78),
           th = Math.max(2, Math.round((xb - xa) * 0.004))
@@ -1692,9 +1553,7 @@
         for (let y = 0; y <= H; y++) {
           let n = 0
           // นับเฉพาะช่วงกลางภาพ (ข้ามไอคอนซ้าย/ขวาที่คร่อมระหว่างบรรทัด)
-          if (y < H)
-            for (let x = xa, p = (y * W + xa) * 4; x < xb; x++, p += 4)
-              if (d[p] < 150) n++
+          if (y < H) for (let x = xa, p = (y * W + xa) * 4; x < xb; x++, p += 4) if (d[p] < 150) n++
           const on = y < H && n > th
           if (on && st < 0) st = y
           if (!on && st >= 0) {
@@ -1703,9 +1562,7 @@
           }
         }
         if (!bands.length) return { ok: false }
-        let med = bands.map(b => b[1] - b[0]).sort((a, b) => a - b)[
-          bands.length >> 1
-        ]
+        let med = bands.map(b => b[1] - b[0]).sort((a, b) => a - b)[bands.length >> 1]
         const gap = Math.max(1, Math.round(med * 0.12)),
           m = []
         for (const b of bands) {
@@ -1715,10 +1572,7 @@
         }
         med = m.map(b => b[1] - b[0]).sort((a, b) => a - b)[m.length >> 1]
         const rows = m.filter(b => b[1] - b[0] >= med * 0.4)
-        const ok =
-          rows.length >= 2 &&
-          rows.length <= 80 &&
-          rows.every(b => b[1] - b[0] <= med * 2.2)
+        const ok = rows.length >= 2 && rows.length <= 80 && rows.every(b => b[1] - b[0] <= med * 2.2)
         return { ok, rows, med }
       }
       function rowCanvas(base, band, med) {
@@ -1728,9 +1582,7 @@
           h = y1 - y0,
           W = base.width
         // 🔧 ตัดไอคอนหน้าบรรทัด (วงกลมทึบ) และไอคอนท้ายบรรทัด (อยู่ห่างตัวหนังสือมาก) ออก
-        const d = base
-          .getContext('2d', { willReadFrequently: true })
-          .getImageData(0, band[0], W, band[1] - band[0]).data
+        const d = base.getContext('2d', { willReadFrequently: true }).getImageData(0, band[0], W, band[1] - band[0]).data
         const bh = band[1] - band[0],
           col = new Uint8Array(W),
           cnt = new Int32Array(W)
@@ -1740,7 +1592,7 @@
               col[x] = 1
               cnt[x]++
             }
-        const clusters = gap => {
+        const clusters = (gap) => {
           const out = []
           for (let x = 0; x < W; x++)
             if (col[x]) {
@@ -1758,12 +1610,9 @@
             w1 = f[1] - f[0]
           let ink = 0
           for (let x = f[0]; x < f[1]; x++) ink += cnt[x]
-          if (w1 <= med * 1.8 && ink / (w1 * bh) > 0.5)
-            sx = Math.max(0, f[1] - 1)
+          if (w1 <= med * 1.8 && ink / (w1 * bh) > 0.5) sx = Math.max(0, f[1] - 1)
         }
-        const c2 = clusters(Math.max(2, Math.round(med * 2.2))).filter(
-          c => c[1] > sx
-        )
+        const c2 = clusters(Math.max(2, Math.round(med * 2.2))).filter(c => c[1] > sx)
         if (c2.length) ex = Math.min(W, c2[0][1] + 2)
         const cw = Math.max(8, ex - sx)
         const k = Math.max(1, Math.min(6, 90 / h)),
@@ -1775,17 +1624,7 @@
         ctx.fillStyle = '#fff'
         ctx.fillRect(0, 0, c.width, c.height)
         ctx.imageSmoothingQuality = 'high'
-        ctx.drawImage(
-          base,
-          sx,
-          y0,
-          cw,
-          h,
-          B,
-          B,
-          c.width - B * 2,
-          c.height - B * 2
-        )
+        ctx.drawImage(base, sx, y0, cw, h, B, B, c.width - B * 2, c.height - B * 2)
         return c
       }
       function loadScript(src) {
@@ -2001,15 +1840,7 @@
         ;[y, mo, da, h, mi, se] = [y, mo, da, h, mi, se].map(Number)
         if (/pm/i.test(tail) && h < 12) h += 12
         if (/am/i.test(tail) && h === 12) h = 0
-        if (
-          mo < 1 ||
-          mo > 12 ||
-          da < 1 ||
-          da > 31 ||
-          h > 23 ||
-          mi > 59 ||
-          se > 59
-        )
+        if (mo < 1 || mo > 12 || da < 1 || da > 31 || h > 23 || mi > 59 || se > 59)
           return null
         const t = new Date(y, mo - 1, da, h, mi, se).getTime()
         return t > Date.now() + 864e5 ? null : t
@@ -2084,77 +1915,28 @@
         updateOcrStatus()
       }
       const aiKey = () => localStorage.getItem('twok_gemini_key') || ''
-      const aiModel = () =>
-        localStorage.getItem('twok_gemini_model') || 'gemini-2.5-flash'
+      const aiModel = () => localStorage.getItem('twok_gemini_model') || 'gemini-2.5-flash'
       const aiOn = () => localStorage.getItem('twok_ai_on') === '1' && !!aiKey()
       async function geminiRead(file, crop) {
-        const bmp = await loadBitmap(file),
-          W = bw(bmp),
-          H = bh(bmp)
-        let sx = 0,
-          sy = 0,
-          sw = W,
-          sh = H
-        if (crop) {
-          sx = Math.round(crop.x * W)
-          sy = Math.round(crop.y * H)
-          sw = Math.max(20, Math.round(crop.w * W))
-          sh = Math.max(20, Math.round(crop.h * H))
-        }
-        const k = Math.min(1, 2000 / Math.max(sw, sh)),
-          c = document.createElement('canvas')
-        c.width = Math.round(sw * k)
-        c.height = Math.round(sh * k)
-        c.getContext('2d').drawImage(
-          bmp,
-          sx,
-          sy,
-          sw,
-          sh,
-          0,
-          0,
-          c.width,
-          c.height
-        )
+        const bmp = await loadBitmap(file), W = bw(bmp), H = bh(bmp)
+        let sx = 0, sy = 0, sw = W, sh = H
+        if (crop) { sx = Math.round(crop.x * W); sy = Math.round(crop.y * H); sw = Math.max(20, Math.round(crop.w * W)); sh = Math.max(20, Math.round(crop.h * H)) }
+        const k = Math.min(1, 2000 / Math.max(sw, sh)), c = document.createElement('canvas')
+        c.width = Math.round(sw * k); c.height = Math.round(sh * k)
+        c.getContext('2d').drawImage(bmp, sx, sy, sw, sh, 0, 0, c.width, c.height)
         bmp.close && bmp.close()
         const b64 = c.toDataURL('image/jpeg', 0.9).split(',')[1]
-        const prompt =
-          'นี่คือภาพแคปรายชื่อผู้เล่นในเกม พิมพ์ชื่อผู้เล่นทุกบรรทัดตามที่เห็น บรรทัดละ 1 คน เรียงจากบนลงล่าง ' +
+        const prompt = 'นี่คือภาพแคปรายชื่อผู้เล่นในเกม พิมพ์ชื่อผู้เล่นทุกบรรทัดตามที่เห็น บรรทัดละ 1 คน เรียงจากบนลงล่าง ' +
           'คงป้ายกิลด์ในวงเล็บเหลี่ยมไว้ตามที่เห็น ถ้าชื่อลงท้ายด้วยเลข 2-4 หลักติดกับชื่อ ให้คงเลขนั้นไว้ติดกับชื่อ ส่วนเลขเลเวลที่อยู่ห่างออกไปท้ายบรรทัดให้ตัดทิ้ง ' +
           'ห้ามเดาตัวอักษรที่มองไม่ชัด ให้ใส่ ? แทนตัวนั้น ตอบเฉพาะรายชื่อ ไม่ต้องมีคำอธิบายหรือหมายเลขลำดับ'
-        const res = await fetch(
-          `https://generativelanguage.googleapis.com/v1beta/models/${encodeURIComponent(aiModel())}:generateContent`,
-          {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-              'x-goog-api-key': aiKey(),
-            },
-            body: JSON.stringify({
-              contents: [
-                {
-                  parts: [
-                    { text: prompt },
-                    { inline_data: { mime_type: 'image/jpeg', data: b64 } },
-                  ],
-                },
-              ],
-              generationConfig: { temperature: 0 },
-            }),
-          }
-        )
-        if (!res.ok)
-          throw new Error(
-            res.status === 429
-              ? 'โควตาฟรีหมด/ถี่เกินไป รอสักพัก'
-              : res.status === 400 || res.status === 403
-                ? 'คีย์หรือชื่อโมเดลไม่ถูกต้อง'
-                : 'HTTP ' + res.status
-          )
+        const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${encodeURIComponent(aiModel())}:generateContent`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json', 'x-goog-api-key': aiKey() },
+          body: JSON.stringify({ contents: [{ parts: [{ text: prompt }, { inline_data: { mime_type: 'image/jpeg', data: b64 } }] }], generationConfig: { temperature: 0 } }),
+        })
+        if (!res.ok) throw new Error(res.status === 429 ? 'โควตาฟรีหมด/ถี่เกินไป รอสักพัก' : res.status === 400 || res.status === 403 ? 'คีย์หรือชื่อโมเดลไม่ถูกต้อง' : 'HTTP ' + res.status)
         const j = await res.json()
-        const txt = (j.candidates?.[0]?.content?.parts || [])
-          .map(p => p.text || '')
-          .join('')
+        const txt = (j.candidates?.[0]?.content?.parts || []).map(p => p.text || '').join('')
         if (!txt.trim()) throw new Error('AI ไม่ตอบข้อความกลับมา')
         return txt.replace(/```[a-z]*/g, '')
       }
@@ -2168,10 +1950,7 @@
         updateOcrStatus()
         if (aiOn()) {
           try {
-            const txt = await geminiRead(
-              d.file,
-              d.crop || (S.cfg.sameCrop ? S.cfg.crop : null)
-            )
+            const txt = await geminiRead(d.file, d.crop || (S.cfg.sameCrop ? S.cfg.crop : null))
             if (!drafts.includes(d)) return
             applyText(d, txt, true)
             d.status = 'done'
@@ -2181,9 +1960,7 @@
             return
           } catch (e) {
             console.error(e)
-            toast(
-              'AI อ่านไม่สำเร็จ (' + (e.message || e) + ') — ใช้ระบบเดิมแทน'
-            )
+            toast('AI อ่านไม่สำเร็จ (' + (e.message || e) + ') — ใช้ระบบเดิมแทน')
           }
         }
         try {
@@ -2240,7 +2017,8 @@
         const lines = text
           .split(/\r?\n/)
           .filter(
-            ln => !skip.some(tg => ln.toLowerCase().includes('[' + tg + ']'))
+            ln =>
+              !skip.some(tg => ln.toLowerCase().includes('[' + tg + ']'))
           )
           .map(nameFromLine)
         const { found, unk } = matchLines(lines, S.cfg.thr / 100)
@@ -2258,7 +2036,9 @@
           const rest = []
           for (const u of d.unk) {
             const k = skel(u.text)
-            const dupInDraft = d.found.some(f => sim(skel(f.text), k) >= 0.85)
+            const dupInDraft = d.found.some(
+              f => sim(skel(f.text), k) >= 0.85
+            )
             if (isJunkLine(u.text) || dupInDraft) continue
             if (u.sugg.some(x => x.score >= 0.6)) {
               rest.push(u) // คล้ายสมาชิกเดิมมาก → ให้คนตรวจเอง กันชื่อซ้ำ
@@ -2266,13 +2046,7 @@
             }
             const m = { id: uid(), name: u.text, aliases: [], tmp: true }
             S.members.push(m)
-            d.found.push({
-              mid: m.id,
-              conf: 1,
-              text: u.text,
-              isNew: true,
-              ord: u.li,
-            })
+            d.found.push({ mid: m.id, conf: 1, text: u.text, isNew: true, ord: u.li })
           }
           d.unk = rest
         }
@@ -2308,13 +2082,7 @@
           .map(f => {
             const m = memById(f.mid)
             if (!m) return ''
-            const cls = f.manual
-              ? 'man'
-              : f.isNew
-                ? 'new'
-                : f.conf < 0.88
-                  ? 'warn'
-                  : ''
+            const cls = f.manual ? 'man' : f.isNew ? 'new' : f.conf < 0.88 ? 'warn' : ''
             return `<span class="chip ${cls}" title="${f.manual ? 'เลือกเอง' : f.isNew ? 'ชื่อใหม่จากรูป (กดที่ชื่อเพื่อแก้คำที่อ่านผิด)' : `อ่านได้ว่า: ${esc(f.text)} (${Math.round(f.conf * 100)}%)`}"><span data-act="m-ren" data-d="${d.id}" data-mid="${f.mid}" style="cursor:pointer">${esc(m.name)}</span>${!f.manual && f.conf < 0.88 ? ` <small>${Math.round(f.conf * 100)}%</small>` : ''}<button data-act="rmfound" data-d="${d.id}" data-mid="${f.mid}" title="เอาออก">✕</button></span>`
           })
           .join('')
@@ -2424,10 +2192,7 @@
           hash: d.hash,
           img: !!d.file,
         }
-        logAct(
-          'บันทึกรอบ',
-          `รูปที่ ${s.no} · ${s.att.length} คน · นับ ${s.pts} ครั้ง ${s.label ? '· ' + s.label : ''}`
-        )
+        logAct('บันทึกรอบ', `รูปที่ ${s.no} · ${s.att.length} คน · นับ ${s.pts} ครั้ง ${s.label ? '· ' + s.label : ''}`)
         for (const f of d.found) {
           // 🔧 ระบบ "จำ" ชื่อที่ผู้ใช้แก้เอง → ครั้งหน้าจับคู่ได้เลย
           if (!f.learn) continue
@@ -2448,9 +2213,7 @@
           if (th) {
             idb.put(s.id, th).then(r => {
               if (r === null)
-                toast(
-                  '⚠️ เก็บรูปย่อไม่ได้ (พื้นที่เบราว์เซอร์เต็ม) — แต้มบันทึกแล้ว แต่รูปจะไม่แสดง'
-                )
+                toast('⚠️ เก็บรูปย่อไม่ได้ (พื้นที่เบราว์เซอร์เต็ม) — แต้มบันทึกแล้ว แต่รูปจะไม่แสดง')
             })
           }
         }
@@ -2468,18 +2231,12 @@
    ตาราง / รอบ / สมาชิก
    ============================================================ */
       function calcRows() {
-        const map = new Map(
-          S.members.map(m => [m.id, { m, nos: [], cnt: 0, base: 0 }])
-        )
+        const map = new Map(S.members.map(m => [m.id, { m, nos: [], cnt: 0, base: 0 }]))
         for (const s of S.sessions) {
           const p = sesPts(s)
           for (const mid of s.att) {
             const r = map.get(mid)
-            if (r) {
-              r.nos.push({ no: s.no, p })
-              r.cnt++
-              r.base += p
-            }
+            if (r) { r.nos.push({ no: s.no, p }); r.cnt++; r.base += p }
           }
         }
         const rows = [...map.values()]
@@ -2509,21 +2266,16 @@
         return rows
       }
       function renderTable() {
-        const rows = sortedRows(),
-          total = S.sessions.length
+        const rows = sortedRows(), total = S.sessions.length
         $('#tBody').innerHTML = rows.length
-          ? rows
-              .map(
-                (r, i) => `<tr><td class="rk">${i + 1}</td>
+          ? rows.map((r, i) => `<tr><td class="rk">${i + 1}</td>
       <td>${esc(r.m.name)} <button class="btn sm ghost" data-act="m-ren" data-mid="${r.m.id}" title="แก้ชื่อ">✏️</button></td>
       <td>${r.nos.map(x => `<span class="${x.p !== S.cfg.normal ? 'n2' : 'n1'}">${x.no}</span>`).join(',') || '<span class="mute">—</span>'}</td>
       <td class="num">${r.cnt}</td>
       <td class="num">${r.units}<input type="number" class="adj" data-adj="adjU" data-mid="${r.m.id}" value="${+r.m.adjU || 0}" title="ปรับจำนวนครั้งเอง (+/−)"></td>
       <td class="num pts">${r.pts}<input type="number" class="adj" data-adj="adjP" data-mid="${r.m.id}" value="${+r.m.adjP || 0}" title="ปรับแต้มเอง (+/−)"></td>
       <td class="num mute">อีก ${per() - (r.units % per())} ครั้ง</td>
-      <td class="num">${total ? Math.round((r.cnt / total) * 100) : 0}%</td></tr>`
-              )
-              .join('')
+      <td class="num">${total ? Math.round((r.cnt / total) * 100) : 0}%</td></tr>`).join('')
           : '<tr><td colspan="8" class="mute" style="padding:30px;text-align:center">ยังไม่มีข้อมูล</td></tr>'
       }
       const imgUrlCache = new Map()
@@ -2808,10 +2560,7 @@
             ? fromLocalInput($('#seTime').value)
             : null,
           auto = $('#seMode').value === 'auto'
-        logAct(
-          'แก้ไขรอบ',
-          `รูปที่ ${s.no}→${no} · ${s.att.length}→${editSes.att.size} คน`
-        )
+        logAct('แก้ไขรอบ', `รูปที่ ${s.no}→${no} · ${s.att.length}→${editSes.att.size} คน`)
         s.no = no
         s.time = t
         s.auto = auto && t != null
@@ -3272,42 +3021,28 @@
       $('#cPer').onchange = () => {
         S.cfg.per = num('#cPer', 1, 99)
         logAct('แก้ตั้งค่า', 'เข้าร่วมครบ ' + S.cfg.per + ' ครั้ง = 1 แต้ม')
-        save()
-        renderAll()
+        save(); renderAll()
       }
       $('#cUseCode').onchange = () => {
         S.cfg.useCode = $('#cUseCode').checked
         logAct('แก้ตั้งค่า', 'บังคับเลขท้ายชื่อ = ' + S.cfg.useCode)
-        save()
-        renderAll()
+        save(); renderAll()
       }
       $('#tBody').addEventListener('change', e => {
         const i = e.target.closest('input[data-adj]')
         if (!i) return
-        const m = memById(i.dataset.mid),
-          k = i.dataset.adj,
-          v = Math.round(+i.value || 0),
-          old = +m[k] || 0
+        const m = memById(i.dataset.mid), k = i.dataset.adj, v = Math.round(+i.value || 0), old = +m[k] || 0
         if (v === old) return
         m[k] = v
-        logAct(
-          'ปรับคะแนนเอง',
-          `${m.name}: ${k === 'adjU' ? 'ครั้ง' : 'แต้ม'} ${old} → ${v}`
-        )
-        save()
-        renderAll()
+        logAct('ปรับคะแนนเอง', `${m.name}: ${k === 'adjU' ? 'ครั้ง' : 'แต้ม'} ${old} → ${v}`)
+        save(); renderAll()
       })
       $('#cAi').checked = localStorage.getItem('twok_ai_on') === '1'
       $('#cAiKey').value = aiKey()
       $('#cAiModel').value = localStorage.getItem('twok_gemini_model') || ''
-      $('#cAi').onchange = () =>
-        localStorage.setItem('twok_ai_on', $('#cAi').checked ? '1' : '0')
-      $('#cAiKey').onchange = () => {
-        localStorage.setItem('twok_gemini_key', $('#cAiKey').value.trim())
-        toast('บันทึกคีย์ในเครื่องนี้แล้ว')
-      }
-      $('#cAiModel').onchange = () =>
-        localStorage.setItem('twok_gemini_model', $('#cAiModel').value.trim())
+      $('#cAi').onchange = () => localStorage.setItem('twok_ai_on', $('#cAi').checked ? '1' : '0')
+      $('#cAiKey').onchange = () => { localStorage.setItem('twok_gemini_key', $('#cAiKey').value.trim()); toast('บันทึกคีย์ในเครื่องนี้แล้ว') }
+      $('#cAiModel').onchange = () => localStorage.setItem('twok_gemini_model', $('#cAiModel').value.trim())
       $('#bResetAll').onclick = () => {
         if (
           !confirm(
@@ -3464,10 +3199,7 @@
             const d = JSON.parse(r.result)
             if (!Array.isArray(d.members) || !Array.isArray(d.sessions)) throw 0
             S = { ...defState(), ...d, cfg: { ...defState().cfg, ...d.cfg } }
-            logAct(
-              'โหลดข้อมูลจากไฟล์สำรอง',
-              `${d.members.length} คน · ${d.sessions.length} รอบ`
-            )
+            logAct('โหลดข้อมูลจากไฟล์สำรอง', `${d.members.length} คน · ${d.sessions.length} รอบ`)
             save()
             renderAll()
             toast('โหลดข้อมูลสำเร็จ (รูปไม่รวมในไฟล์สำรอง)')
@@ -3495,9 +3227,7 @@
       })()
 
       try {
-        navigator.storage &&
-          navigator.storage.persist &&
-          navigator.storage.persist()
+        navigator.storage && navigator.storage.persist && navigator.storage.persist()
       } catch (e) {}
       if (gcTmp()) save()
       renderAll()
@@ -3506,125 +3236,57 @@
     <script type="module">
       /* ===== Firebase: วางค่า config ของคุณตรงนี้ (ดูวิธีหาในคำอธิบาย) ===== */
       const FIREBASE_CONFIG = {
-        apiKey: '',
-        authDomain: '',
-        projectId: '',
-        appId: '',
+        apiKey: 'AIzaSyC6GupbkoLqT__2Xp_ztAK5wOhuxDxq4ZY',
+        authDomain: 'twok-3a569.firebaseapp.com',
+        projectId: 'twok-3a569',
+        appId: '1:486045733897:web:74d2781ae9d3fe10f114d8',
       }
-      const V = '10.14.1',
-        G = 'https://www.gstatic.com/firebasejs/' + V
+      const V = '10.14.1', G = 'https://www.gstatic.com/firebasejs/' + V
       const $ = s => document.querySelector(s)
       const banner = $('#cloudBanner')
       if (!FIREBASE_CONFIG.apiKey) {
-        banner.textContent =
-          '⚠️ โหมดในเครื่อง — ยังไม่ได้ตั้งค่า Firebase (ข้อมูลอยู่แค่ในเบราว์เซอร์นี้ ไม่มีล็อกอิน)'
+        banner.textContent = '⚠️ โหมดในเครื่อง — ยังไม่ได้ตั้งค่า Firebase (ข้อมูลอยู่แค่ในเบราว์เซอร์นี้ ไม่มีล็อกอิน)'
       } else {
         const { initializeApp } = await import(G + '/firebase-app.js')
-        const {
-          getAuth,
-          onAuthStateChanged,
-          signInWithEmailAndPassword,
-          signOut,
-        } = await import(G + '/firebase-auth.js')
-        const {
-          getFirestore,
-          doc,
-          getDoc,
-          setDoc,
-          onSnapshot,
-          collection,
-          addDoc,
-          query,
-          orderBy,
-          limit,
-          serverTimestamp,
-        } = await import(G + '/firebase-firestore.js')
-        const app = initializeApp(FIREBASE_CONFIG),
-          auth = getAuth(app),
-          db = getFirestore(app)
-        const ref = doc(db, 'twok', 'state'),
-          logs = collection(db, 'twok', 'state', 'logs')
-        let unsubs = [],
-          timer,
-          last = ''
+        const { getAuth, onAuthStateChanged, signInWithEmailAndPassword, signOut } = await import(G + '/firebase-auth.js')
+        const { getFirestore, doc, getDoc, setDoc, onSnapshot, collection, addDoc, query, orderBy, limit, serverTimestamp } = await import(G + '/firebase-firestore.js')
+        const app = initializeApp(FIREBASE_CONFIG), auth = getAuth(app), db = getFirestore(app)
+        const ref = doc(db, 'twok', 'state'), logs = collection(db, 'twok', 'state', 'logs')
+        let unsubs = [], timer, last = ''
         $('#auth').classList.remove('hide') // ล็อกหน้าจอจนกว่าจะล็อกอิน
         const push = async () => {
           last = JSON.stringify(S)
-          try {
-            await setDoc(ref, {
-              json: last,
-              by: window.CUR_USER,
-              at: serverTimestamp(),
-            })
-            banner.textContent = '☁️ ซิงก์แล้ว · ' + window.CUR_USER
-          } catch (e) {
-            banner.textContent = '❌ บันทึกขึ้น Firebase ไม่สำเร็จ: ' + e.code
-          }
+          try { await setDoc(ref, { json: last, by: window.CUR_USER, at: serverTimestamp() }); banner.textContent = '☁️ ซิงก์แล้ว · ' + window.CUR_USER }
+          catch (e) { banner.textContent = '❌ บันทึกขึ้น Firebase ไม่สำเร็จ: ' + e.code }
         }
         const login = async () => {
           $('#authMsg').textContent = ''
-          try {
-            await signInWithEmailAndPassword(
-              auth,
-              $('#authEmail').value.trim(),
-              $('#authPass').value
-            )
-          } catch (e) {
-            $('#authMsg').textContent = 'อีเมลหรือรหัสผ่านไม่ถูกต้อง'
-          }
+          try { await signInWithEmailAndPassword(auth, $('#authEmail').value.trim(), $('#authPass').value) }
+          catch (e) { $('#authMsg').textContent = 'อีเมลหรือรหัสผ่านไม่ถูกต้อง' }
         }
         $('#authGo').onclick = login
         $('#authPass').onkeydown = e => e.key === 'Enter' && login()
-        $('#btnLogout').onclick = async () => {
-          await signOut(auth)
-          localStorage.removeItem('twok_attend_v1')
-          location.reload()
-        }
+        $('#btnLogout').onclick = async () => { await signOut(auth); localStorage.removeItem('twok_attend_v1'); location.reload() }
         onAuthStateChanged(auth, async u => {
-          unsubs.forEach(f => f())
-          unsubs = []
-          if (!u) {
-            window.cloudSave = window.cloudLog = null
-            window.CUR_USER = null
-            $('#auth').classList.remove('hide')
-            $('#btnLogout').hidden = true
-            return
-          }
+          unsubs.forEach(f => f()); unsubs = []
+          if (!u) { window.cloudSave = window.cloudLog = null; window.CUR_USER = null; $('#auth').classList.remove('hide'); $('#btnLogout').hidden = true; return }
           try {
             const snap = await getDoc(ref)
             window.CUR_USER = u.email
-            if (snap.exists()) {
-              last = snap.data().json
-              applyRemote(last)
-            } else await push() // Firebase ว่าง → อัปโหลดข้อมูลในเครื่องขึ้นไป
+            if (snap.exists()) { last = snap.data().json; applyRemote(last) } else await push() // Firebase ว่าง → อัปโหลดข้อมูลในเครื่องขึ้นไป
           } catch (e) {
-            $('#authMsg').textContent =
-              'บัญชีนี้ไม่มีสิทธิ์เข้าใช้งาน (' + (e.code || e.message) + ')'
+            $('#authMsg').textContent = 'บัญชีนี้ไม่มีสิทธิ์เข้าใช้งาน (' + (e.code || e.message) + ')'
             return signOut(auth)
           }
-          window.cloudSave = () => {
-            clearTimeout(timer)
-            timer = setTimeout(push, 800)
-          }
+          window.cloudSave = () => { clearTimeout(timer); timer = setTimeout(push, 800) }
           window.cloudLog = e => addDoc(logs, e).catch(() => {})
-          unsubs.push(
-            onSnapshot(ref, s => {
-              if (s.metadata.hasPendingWrites || !s.exists()) return
-              const j = s.data().json
-              if (j !== last) {
-                last = j
-                applyRemote(j)
-              }
-            })
-          )
-          unsubs.push(
-            onSnapshot(query(logs, orderBy('t', 'desc'), limit(300)), s =>
-              renderLog(s.docs.map(d => d.data()))
-            )
-          )
-          $('#auth').classList.add('hide')
-          $('#btnLogout').hidden = false
-          $('#who').textContent = u.email
+          unsubs.push(onSnapshot(ref, s => {
+            if (s.metadata.hasPendingWrites || !s.exists()) return
+            const j = s.data().json
+            if (j !== last) { last = j; applyRemote(j) }
+          }))
+          unsubs.push(onSnapshot(query(logs, orderBy('t', 'desc'), limit(300)), s => renderLog(s.docs.map(d => d.data()))))
+          $('#auth').classList.add('hide'); $('#btnLogout').hidden = false; $('#who').textContent = u.email
           banner.textContent = '☁️ เชื่อม Firebase แล้ว · ' + u.email
           window.logAct && logAct('เข้าสู่ระบบ', '')
         })
