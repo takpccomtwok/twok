@@ -4005,12 +4005,28 @@
             return
           }
           try {
-            const rs = await getDoc(
-              doc(db, 'roles', (u.email || '').toLowerCase())
-            )
-            if (!rs.exists() || !['admin', 'staff'].includes(rs.data().role))
-              throw { code: 'no-role' }
-            window.ROLE = rs.data().role
+            const em = (u.email || '').trim().toLowerCase()
+            const rs = await getDoc(doc(db, 'roles', em))
+            if (!rs.exists())
+              throw {
+                code: 'no-role',
+                hint:
+                  'ไม่พบเอกสาร roles/' +
+                  em +
+                  ' ใน Firestore (เช็ค Document ID ให้เป็นอีเมลนี้ตัวพิมพ์เล็ก)',
+              }
+            const rv = String(rs.data().role || '')
+              .trim()
+              .toLowerCase()
+            if (!['admin', 'staff'].includes(rv))
+              throw {
+                code: 'bad-role',
+                hint:
+                  'พบเอกสารแล้ว แต่ field role = "' +
+                  (rs.data().role === undefined ? '(ไม่มี field role)' : rs.data().role) +
+                  '" ต้องเป็น admin หรือ staff',
+              }
+            window.ROLE = rv
             document.body.classList.toggle('staff', window.ROLE !== 'admin')
             const snap = await getDoc(ref)
             window.CUR_USER = u.email
@@ -4021,7 +4037,7 @@
             } else await push() // Firebase ว่าง → อัปโหลดข้อมูลในเครื่องขึ้นไป
           } catch (e) {
             $('#authMsg').textContent =
-              'บัญชีนี้ไม่มีสิทธิ์เข้าใช้งาน (' + (e.code || e.message) + ')'
+              'เข้าใช้งานไม่ได้ (' + u.email + '): ' + (e.hint || e.code || e.message)
             return signOut(auth)
           }
           window.cloudSave = () => {
