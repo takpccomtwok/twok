@@ -463,6 +463,121 @@
         color: #ff8a8a;
         border-color: #7a3b3b;
       }
+      .nl summary {
+        cursor: pointer;
+        color: var(--gold);
+        font-weight: 600;
+      }
+      .nl .nms {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 4px;
+        margin-top: 6px;
+        max-width: 560px;
+      }
+      .nl .nms span {
+        background: var(--base);
+        border: 1px solid var(--line);
+        padding: 1px 8px;
+        font-size: 13px;
+      }
+      .nl .nms span.hit {
+        background: var(--gold);
+        border-color: var(--gold);
+        color: #111;
+        font-weight: 700;
+      }
+      .btn.warn[data-act='m-clear'] {
+        color: #ffcf6b;
+        border-color: #7a6a3b;
+      }
+      .tbl.pretty tbody tr:nth-child(even) td {
+        background: rgba(255, 255, 255, 0.025);
+      }
+      .tbl.pretty tbody tr:hover td {
+        background: rgba(255, 210, 63, 0.07);
+      }
+      .tbl.pretty td {
+        vertical-align: middle;
+      }
+      #tab-table .tbl th {
+        white-space: nowrap;
+      }
+      .tbl th.rk,
+      .tbl td.rk,
+      .tbl td.mno {
+        width: 48px;
+        text-align: center;
+      }
+      .tbl td.mno {
+        color: var(--mute);
+        font-family: 'Kanit';
+      }
+      .tbl td.rk.top {
+        color: #111;
+        background: var(--gold) !important;
+        border-radius: 0;
+      }
+      .acts {
+        display: flex;
+        gap: 6px;
+        justify-content: flex-end;
+        flex-wrap: nowrap;
+      }
+      .acts .btn {
+        min-width: 76px;
+        justify-content: center;
+        text-align: center;
+        padding: 4px 8px;
+      }
+      .tbl th.acth,
+      .tbl td.actc {
+        width: 180px;
+        text-align: right;
+        white-space: nowrap;
+      }
+      .tin.nm {
+        width: 100%;
+        min-width: 150px;
+        border-color: transparent;
+        background: transparent;
+      }
+      .tin.nm:hover,
+      .tin.nm:focus {
+        border-color: var(--line);
+        background: var(--base);
+      }
+      .mtools {
+        display: flex;
+        gap: 6px;
+        flex-wrap: wrap;
+        margin-bottom: 8px;
+      }
+      #bulkEdit textarea {
+        width: 100%;
+        min-height: 300px;
+        font-family: ui-monospace, Consolas, monospace;
+        line-height: 1.5;
+        white-space: pre;
+      }
+      #beSum {
+        margin: 8px 0;
+        font-size: 14px;
+      }
+      #beSum .bd {
+        padding: 2px 8px;
+        margin: 2px 0;
+        border-left: 3px solid var(--line);
+      }
+      #beSum .bd.ren {
+        border-color: var(--gold);
+      }
+      #beSum .bd.add {
+        border-color: #5cc98a;
+      }
+      #beSum .bd.del {
+        border-color: #ff8a8a;
+      }
       .srow {
         display: grid;
         grid-template-columns: 28px minmax(80px, 1fr) minmax(130px, 1.4fr) auto;
@@ -627,6 +742,9 @@
         font-weight: 600;
       }
       .tbl td.pts {
+        display: table-cell;
+        background: transparent;
+        padding: 7px 10px;
         color: var(--gold);
         font-size: 18px;
         font-family: 'Kanit';
@@ -1023,10 +1141,10 @@
           <span class="hint">เลขรูปที่มีพื้นหลังทอง = รอบที่ได้แต้มพิเศษ</span>
         </div>
         <div class="tw">
-          <table class="tbl">
+          <table class="tbl pretty">
             <thead>
               <tr>
-                <th>#</th>
+                <th class="rk">#</th>
                 <th>ชื่อสมาชิก</th>
                 <th>
                   รูปที่เข้าร่วม (แก้ได้)
@@ -1037,6 +1155,7 @@
                 <th style="text-align: right">แต้ม (แก้ได้)</th>
                 <th style="text-align: right">อีกกี่ครั้งได้แต้มต่อไป</th>
                 <th style="text-align: right">เข้าร่วม</th>
+                <th class="acth adminonly">จัดการ</th>
               </tr>
             </thead>
             <tbody id="tBody"></tbody>
@@ -1047,15 +1166,20 @@
       <!-- ============ TAB: รอบ ============ -->
       <section class="sec hide" id="tab-sessions">
         <h2>
-          รอบที่บันทึก
-          <span class="row"
-            ><button class="btn sm" id="bRenum">
-              เรียงเลขรูปใหม่ตามเวลา
-            </button></span
-          >
+          รอบที่บันทึก <span class="hint" id="sCount"></span>
+          <span class="row">
+            <input
+              type="search"
+              id="sSearch"
+              placeholder="ค้นหาชื่อว่าอยู่รอบไหน..."
+              style="width: 220px"
+            />
+            <button class="btn sm" id="sExpand">ขยายรายชื่อทั้งหมด</button>
+            <button class="btn sm" id="bRenum">เรียงเลขรูปใหม่ตามเวลา</button>
+          </span>
         </h2>
         <div class="tw">
-          <table class="tbl">
+          <table class="tbl pretty">
             <thead>
               <tr>
                 <th>รูปที่</th>
@@ -1064,6 +1188,7 @@
                 <th>บอส/หมายเหตุ</th>
                 <th>นับเป็น (ครั้ง)</th>
                 <th style="text-align: right">มา (คน)</th>
+                <th>รายชื่อที่มา</th>
                 <th></th>
               </tr>
             </thead>
@@ -1094,8 +1219,31 @@
         <div class="grid2">
           <div>
             <h2>รายชื่อสมาชิก <span class="hint" id="mCount"></span></h2>
-            <div class="row" style="margin-bottom: 8px">
+            <div class="mtools">
               <button class="btn red sm" id="bLegacy">นำเข้าจากชีตเดิม</button>
+              <button class="btn sm" id="mCopy">คัดลอกรายชื่อ</button>
+              <button class="btn sm" id="mCsv">ดาวน์โหลด CSV</button>
+              <button class="btn gold sm adminonly" id="mBulkEdit">
+                แก้ไขทั้งหมดทีเดียว
+              </button>
+            </div>
+            <div id="bulkEdit" class="panel hide" style="margin-bottom: 10px">
+              <b>แก้ไขรายชื่อทั้งหมดทีเดียว</b>
+              <div class="hint" style="margin: 4px 0 8px">
+                1 บรรทัด = 1 คน รูปแบบ <b>เลขลำดับ. ชื่อ</b> ·
+                แก้ชื่อหลังเลขลำดับ = เปลี่ยนชื่อคนนั้น · บรรทัดที่ไม่มีเลข =
+                เพิ่มสมาชิกใหม่ · ลบบรรทัดออก = (เลือกได้) ลบสมาชิก ·
+                คัดลอกไปแก้ในชีตแล้ววางกลับมาได้
+              </div>
+              <textarea id="beText" spellcheck="false"></textarea>
+              <div id="beSum"></div>
+              <div class="row">
+                <button class="btn sm" id="beCheck">ตรวจการเปลี่ยนแปลง</button>
+                <button class="btn gold sm hide" id="beApply">
+                  ยืนยันบันทึก
+                </button>
+                <button class="btn sm ghost" id="beCancel">ปิด</button>
+              </div>
             </div>
             <details style="margin-bottom: 10px" open>
               <summary>
@@ -1125,7 +1273,7 @@
               style="margin-bottom: 8px"
             />
             <div class="tw" style="max-height: 52vh">
-              <table class="tbl">
+              <table class="tbl pretty">
                 <tbody id="mBody"></tbody>
               </table>
             </div>
@@ -1353,6 +1501,32 @@
                   แนะนำให้ใช้คีย์เฉพาะงานนี้และจำกัดโควตาใน AI Studio
                 </div>
               </div>
+              <div id="pubBox" class="panel hide">
+                <b>หน้าสาธารณะสำหรับคนในแคลน</b>
+                <label
+                  style="
+                    display: flex;
+                    gap: 8px;
+                    align-items: center;
+                    margin-top: 6px;
+                  "
+                >
+                  <input type="checkbox" id="cPubOn" />
+                  เปิดให้ดู ตารางคะแนน + รอบที่บันทึก โดยไม่ต้องล็อกอิน
+                </label>
+                <div class="hint" style="margin-top: 6px">
+                  ใครมีลิงก์ก็เปิดดูได้ เห็นเฉพาะ ชื่อ แต้ม และรายชื่อในแต่ละรอบ
+                  (ไม่มีรูป ไม่มี Log ไม่มีตั้งค่า) · ปิดช่องนี้ =
+                  หน้าเว็บจะขึ้นว่าปิดอยู่
+                </div>
+                <div class="row" style="margin-top: 6px">
+                  <code id="pubLink" style="word-break: break-all"></code>
+                  <button class="btn sm" id="pubCopy" type="button">
+                    คัดลอกลิงก์
+                  </button>
+                </div>
+                <div class="hint" id="pubStatus"></div>
+              </div>
               <div id="roleBox" class="panel hide">
                 <b>สิทธิ์ผู้ใช้งาน</b>
                 <div class="hint" style="margin: 4px 0 8px">
@@ -1579,6 +1753,7 @@
           autoOcr: true,
           autoNew: true,
           sameCrop: true,
+          pubOn: false,
           crop: null,
         },
       })
@@ -3260,24 +3435,28 @@
             ? `<input type="number" min="0" class="tin" style="width:${w}px;text-align:right" data-ed="${k}" data-mid="${r.m.id}" value="${v}">`
             : v
         const head = ad
-          ? `<tr><td class="rk">＋</td><td colspan="7"><input type="text" list="dlMembers" class="tin" style="width:100%" data-ed="newm" placeholder="เพิ่มสมาชิกใหม่ในตาราง: พิมพ์ชื่อแล้วกด Enter"></td></tr>`
+          ? `<tr><td class="rk">＋</td><td colspan="8"><input type="text" list="dlMembers" class="tin" style="width:100%" data-ed="newm" placeholder="เพิ่มสมาชิกใหม่ในตาราง: พิมพ์ชื่อแล้วกด Enter"></td></tr>`
           : ''
         $('#tBody').innerHTML =
           head +
           (rows.length
             ? rows
                 .map(
-                  (r, i) => `<tr><td class="rk">${i + 1}</td>
-      <td style="white-space:nowrap">${ad ? `<input type="text" class="tin" style="min-width:130px" data-ed="name" data-mid="${r.m.id}" value="${esc(r.m.name)}"> <button class="btn sm ghost" data-act="m-clear" data-mid="${r.m.id}" title="ล้างรอบและแต้มของคนนี้ (เก็บชื่อไว้)">ล้างแต้ม</button> <button class="btn sm ghost" data-act="m-del" data-mid="${r.m.id}" title="ลบสมาชิกคนนี้ออกทั้งหมด">ลบ</button>` : esc(r.m.name)}</td>
+                  (
+                    r,
+                    i
+                  ) => `<tr><td class="rk${i < 3 && r.pts > 0 ? ' top' : ''}">${i + 1}</td>
+      <td>${ad ? `<input type="text" class="tin nm" data-ed="name" data-mid="${r.m.id}" value="${esc(r.m.name)}">` : esc(r.m.name)}</td>
       <td>${ad ? `<input type="text" class="tin" style="min-width:110px" data-ed="nos" data-mid="${r.m.id}" value="${r.nos.map(x => x.no).join(',')}" title="เลขรูปที่เข้าร่วม เช่น 1,2,5-7">` : r.nos.map(x => `<span class="${x.p !== S.cfg.normal ? 'n2' : 'n1'}">${x.no}</span>`).join(',') || '<span class="mute">—</span>'}</td>
       <td class="num">${r.cnt}</td>
       <td class="num">${num(r, 'units', r.units, 64)}</td>
       <td class="num pts">${num(r, 'pts', r.pts, 64)}</td>
       <td class="num mute">อีก ${per() - (r.units % per())} ครั้ง</td>
-      <td class="num">${total ? Math.round((r.cnt / total) * 100) : 0}%</td></tr>`
+      <td class="num">${total ? Math.round((r.cnt / total) * 100) : 0}%</td>
+      <td class="actc adminonly"><div class="acts"><button class="btn sm ghost warn" data-act="m-clear" data-mid="${r.m.id}" title="ล้างรอบและแต้มของคนนี้ (เก็บชื่อไว้)">ล้างแต้ม</button><button class="btn sm ghost danger" data-act="m-del" data-mid="${r.m.id}" title="ลบสมาชิกคนนี้ออกทั้งหมด">ลบ</button></div></td></tr>`
                 )
                 .join('')
-            : '<tr><td colspan="8" class="mute" style="padding:30px;text-align:center">ยังไม่มีข้อมูล</td></tr>')
+            : '<tr><td colspan="9" class="mute" style="padding:30px;text-align:center">ยังไม่มีข้อมูล</td></tr>')
       }
       /* แก้ตารางคะแนนสดๆ: ชื่อ / รอบที่เข้าร่วม / ครั้งรวม / แต้ม / เพิ่มสมาชิก */
       const parseNos = s => {
@@ -3390,17 +3569,38 @@
         return u
       }
       function renderSessions() {
-        $('#sBody').innerHTML = S.sessions.length
-          ? S.sessions
+        const q = ($('#sSearch').value || '').trim().toLowerCase(),
+          hit = q
+            ? new Set(
+                S.members
+                  .filter(m => m.name.toLowerCase().includes(q))
+                  .map(m => m.id)
+              )
+            : null,
+          list = S.sessions.filter(s => !hit || s.att.some(i => hit.has(i)))
+        $('#sCount').textContent = hit
+          ? `${list.length}/${S.sessions.length} รอบ`
+          : S.sessions.length + ' รอบ'
+        $('#sBody').innerHTML = list.length
+          ? list
               .map(s => {
-                const p = sesPts(s)
+                const p = sesPts(s),
+                  names = s.att
+                    .map(i => [i, (memById(i) || {}).name || '?'])
+                    .sort((x, y) => x[1].localeCompare(y[1], 'th'))
+                    .map(
+                      ([i, n]) =>
+                        `<span${hit && hit.has(i) ? ' class="hit"' : ''}>${esc(n)}</span>`
+                    )
+                    .join('')
                 return `<tr><td class="rk">#${s.no}</td><td>${s.img ? `<img class="thumb" data-sid="${s.id}" data-act="s-view" alt="">` : '<span class="mute">ไม่มีรูป</span>'}</td>
       <td>${fmtTime(s.time)}${s.auto ? '' : ' <span class="mute">(กำหนดเอง)</span>'}</td><td>${esc(s.label || '')}</td>
       <td><span class="tag ${p !== S.cfg.normal ? 'b' : 'n'}">${p !== S.cfg.normal ? 'คืน' : 'วัน'} ${p}</span></td><td class="num">${s.att.length}</td>
-      <td style="white-space:nowrap"><button class="btn sm" data-act="s-edit" data-sid="${s.id}">แก้ไข</button> <button class="btn sm ghost" data-act="s-del" data-sid="${s.id}">ลบ</button></td></tr>`
+      <td><details class="nl"${window._sOpen || hit ? ' open' : ''}><summary>ดูรายชื่อ (${s.att.length})</summary><div class="nms">${names || '<span>—</span>'}</div></details></td>
+      <td style="white-space:nowrap"><button class="btn sm" data-act="s-edit" data-sid="${s.id}">แก้ไข</button> <button class="btn sm ghost danger" data-act="s-del" data-sid="${s.id}">ลบ</button></td></tr>`
               })
               .join('')
-          : `<tr><td colspan="7" class="mute" style="padding:30px;text-align:center">ยังไม่มีรอบที่บันทึก</td></tr>`
+          : `<tr><td colspan="8" class="mute" style="padding:30px;text-align:center">${hit ? 'ไม่พบชื่อนี้ในรอบไหนเลย' : 'ยังไม่มีรอบที่บันทึก'}</td></tr>`
         $$('#sBody img[data-sid]').forEach(async im => {
           const s = S.sessions.find(x => x.id === im.dataset.sid),
             u = s && (await sesImg(s))
@@ -3418,18 +3618,20 @@
         const q = $('#mSearch').value.trim().toLowerCase(),
           cnt = new Map(calcRows().map(r => [r.m.id, r.cnt]))
         $('#mCount').textContent = S.members.length + ' คน'
-        const list = S.members
-          .slice()
-          .sort((a, b) => a.name.localeCompare(b.name, 'th'))
-          .filter(m => !q || m.name.toLowerCase().includes(q))
+        const list = memSorted()
+          .map((m, i) => [m, i + 1])
+          .filter(([m]) => !q || m.name.toLowerCase().includes(q))
         $('#mBody').innerHTML =
           list
             .map(
-              m => `<tr><td>${esc(m.name)}${codeBadge(m)}${(m.alts || []).length ? `<div class="mute" style="font-size:12px">อ่านได้ว่า: ${esc(m.alts.join(' · '))}</div>` : ''}${(m.aliases || []).length && !(m.alts || []).length ? ` <span class="mute" title="ชื่อที่ระบบจำไว้จากการแก้ไข ${(m.aliases || []).length} แบบ">จำไว้ ${m.aliases.length}</span>` : ''}</td>
-    <td class="num">${cnt.get(m.id) || 0} ครั้ง</td><td style="white-space:nowrap"><button class="btn sm" data-act="m-ren" data-mid="${m.id}" title="แก้ชื่อ">แก้ไข</button> <button class="btn sm" data-act="m-alts" data-mid="${m.id}" title="แก้ชื่อที่ระบบจำ/มักอ่านผิด">ชื่อที่จำ</button> <button class="btn sm ghost" data-act="m-del" data-mid="${m.id}">ลบ</button></td></tr>`
+              ([
+                m,
+                no,
+              ]) => `<tr><td class="mno">${no}</td><td>${esc(m.name)}${codeBadge(m)}${(m.alts || []).length ? `<div class="mute" style="font-size:12px">อ่านได้ว่า: ${esc(m.alts.join(' · '))}</div>` : ''}${(m.aliases || []).length && !(m.alts || []).length ? ` <span class="mute" title="ชื่อที่ระบบจำไว้จากการแก้ไข ${(m.aliases || []).length} แบบ">จำไว้ ${m.aliases.length}</span>` : ''}</td>
+    <td class="num">${cnt.get(m.id) || 0} ครั้ง</td><td class="actc"><div class="acts"><button class="btn sm" data-act="m-ren" data-mid="${m.id}" title="แก้ชื่อ">แก้ไข</button><button class="btn sm" data-act="m-alts" data-mid="${m.id}" title="แก้ชื่อที่ระบบจำ/มักอ่านผิด">ชื่อที่จำ</button><button class="btn sm ghost danger" data-act="m-del" data-mid="${m.id}">ลบ</button></div></td></tr>`
             )
             .join('') ||
-          `<tr><td class="mute" style="padding:20px">ยังไม่มีสมาชิก — วางรายชื่อด้านบน หรือนำเข้าจากชีตเดิม</td></tr>`
+          `<tr><td colspan="4" class="mute" style="padding:20px">ยังไม่มีสมาชิก — วางรายชื่อด้านบน หรือนำเข้าจากชีตเดิม</td></tr>`
       }
       function renderSettings() {
         const c = S.cfg
@@ -3449,6 +3651,8 @@
         $('#cAutoNew').checked = c.autoNew
         $('#cSkip').value = c.skipTags || ''
         $('#cSameCrop').checked = c.sameCrop
+        $('#cPubOn').checked = !!c.pubOn
+        $('#pubLink').textContent = new URL('view.html', location.href).href
         $('#cRuleHint').textContent = ruleText()
       }
       function renderHeader() {
@@ -4209,12 +4413,156 @@
         renderAll()
         toast(`เพิ่มสมาชิก ${added} คน${dup ? ` (ซ้ำ ${dup})` : ''}`)
       }
+      function memSorted() {
+        return S.members
+          .slice()
+          .sort((a, b) => a.name.localeCompare(b.name, 'th'))
+      }
+      const cleanName = t => String(t).replace(/\s+/g, ' ').trim().slice(0, 60)
+      const csvCell = v => '"' + String(v).replace(/"/g, '""') + '"'
+      $('#mCopy').onclick = () => {
+        const cnt = new Map(calcRows().map(r => [r.m.id, r.cnt]))
+        copyText(
+          'ลำดับ\tชื่อ\tครั้งที่มา\n' +
+            memSorted()
+              .map((m, i) => `${i + 1}\t${m.name}\t${cnt.get(m.id) || 0}`)
+              .join('\n'),
+          'คัดลอกรายชื่อ ' + S.members.length + ' คนแล้ว — วางในชีตได้เลย'
+        )
+      }
+      $('#mCsv').onclick = () => {
+        const cnt = new Map(calcRows().map(r => [r.m.id, r.cnt]))
+        download(
+          'รายชื่อสมาชิก.csv',
+          '\ufeff' +
+            'ลำดับ,ชื่อ,ครั้งที่มา\n' +
+            memSorted()
+              .map(
+                (m, i) => `${i + 1},${csvCell(m.name)},${cnt.get(m.id) || 0}`
+              )
+              .join('\n'),
+          'text/csv;charset=utf-8'
+        )
+        toast('ดาวน์โหลดรายชื่อแล้ว')
+      }
+      /* แก้ไขรายชื่อทีเดียว: เลขลำดับ = ตำแหน่งในรายชื่อที่เรียงตามชื่อ */
+      let bePlan = null
+      $('#mBulkEdit').onclick = () => {
+        if (!isAdminRole()) return toast('สิทธิ์ไม่พอ — เฉพาะแอดมิน')
+        $('#beText').value = memSorted()
+          .map((m, i) => `${i + 1}. ${m.name}`)
+          .join('\n')
+        $('#beSum').innerHTML = ''
+        $('#beApply').classList.add('hide')
+        bePlan = null
+        $('#bulkEdit').classList.remove('hide')
+        $('#beText').focus()
+      }
+      $('#beCancel').onclick = () => $('#bulkEdit').classList.add('hide')
+      $('#beCheck').onclick = () => {
+        const base = memSorted(),
+          seen = new Set(),
+          ren = [],
+          add = [],
+          bad = []
+        const taken = new Map(base.map(m => [m.name.toLowerCase(), m]))
+        for (const raw of $('#beText').value.split(/\r?\n/)) {
+          const t = raw.trim()
+          if (!t) continue
+          const mt = t.match(/^(\d{1,5})(?:\s*[.)]\s*|\t\s*)(.+)$/),
+            m = mt && !seen.has(+mt[1]) ? base[+mt[1] - 1] : null
+          const nm = cleanName(mt ? mt[2] : t)
+          if (!nm) continue
+          if (m) {
+            seen.add(+mt[1])
+            if (nm !== m.name) {
+              const o = taken.get(nm.toLowerCase())
+              if (o && o !== m) bad.push(`"${nm}" ซ้ำกับสมาชิกอื่น (ข้าม)`)
+              else {
+                ren.push({ m, to: nm })
+                taken.delete(m.name.toLowerCase())
+                taken.set(nm.toLowerCase(), m)
+              }
+            }
+          } else if (taken.has(nm.toLowerCase()))
+            bad.push(`"${nm}" มีอยู่แล้ว (ข้าม)`)
+          else {
+            add.push(nm)
+            taken.set(nm.toLowerCase(), {})
+          }
+        }
+        const del = base.filter((_, i) => !seen.has(i + 1))
+        bePlan = { ren, add, del }
+        const L = (c, arr) =>
+          arr.map(x => `<div class="bd ${c}">${x}</div>`).join('')
+        $('#beSum').innerHTML =
+          (ren.length || add.length || del.length || bad.length
+            ? `<b>เปลี่ยนชื่อ ${ren.length} · เพิ่ม ${add.length} · ไม่พบในรายการ ${del.length}</b>`
+            : '<b>ไม่มีการเปลี่ยนแปลง</b>') +
+          L(
+            'ren',
+            ren.map(r => `${esc(r.m.name)} → <b>${esc(r.to)}</b>`)
+          ) +
+          L(
+            'add',
+            add.map(n => `เพิ่ม: <b>${esc(n)}</b>`)
+          ) +
+          L('del', bad.map(esc)) +
+          (del.length
+            ? `<label style="display:flex;gap:8px;margin-top:6px"><input type="checkbox" id="beDel"> <span>ลบสมาชิกที่หายจากรายการ ${del.length} คนด้วย (แต้มและรอบของเขาจะหาย): ${esc(
+                del
+                  .slice(0, 8)
+                  .map(m => m.name)
+                  .join(', ')
+              )}${del.length > 8 ? '...' : ''}</span></label>`
+            : '')
+        $('#beApply').classList.toggle(
+          'hide',
+          !(ren.length || add.length || del.length)
+        )
+      }
+      $('#beApply').onclick = () => {
+        if (!bePlan || !isAdminRole()) return
+        const { ren, add, del } = bePlan,
+          doDel = $('#beDel') && $('#beDel').checked
+        ren.forEach(r => {
+          logAct('แก้ชื่อสมาชิก', `${r.m.name} → ${r.to}`)
+          r.m.name = r.to
+        })
+        add.forEach(n => S.members.push({ id: uid(), name: n, aliases: [] }))
+        if (doDel) {
+          const ids = new Set(del.map(m => m.id))
+          S.members = S.members.filter(m => !ids.has(m.id))
+          S.sessions.forEach(x => (x.att = x.att.filter(i => !ids.has(i))))
+          drafts.forEach(x => (x.found = x.found.filter(f => !ids.has(f.mid))))
+          logAct('ลบสมาชิก (แก้ทีเดียว)', `${ids.size} คน`)
+        }
+        logAct(
+          'แก้รายชื่อทีเดียว',
+          `เปลี่ยน ${ren.length} · เพิ่ม ${add.length}${doDel ? ' · ลบ ' + del.length : ''}`
+        )
+        save()
+        renderAll()
+        $('#bulkEdit').classList.add('hide')
+        bePlan = null
+        toast(
+          `บันทึกแล้ว: เปลี่ยนชื่อ ${ren.length} · เพิ่ม ${add.length}${doDel ? ' · ลบ ' + del.length : ''}`
+        )
+      }
       $('#bDups').onclick = renderDups
       $('#mBulkAdd').onclick = () => {
         addMembersFromText($('#mBulk').value)
         $('#mBulk').value = ''
       }
       $('#mSearch').addEventListener('input', renderMembers)
+      $('#sSearch').addEventListener('input', renderSessions)
+      $('#sExpand').onclick = () => {
+        window._sOpen = !window._sOpen
+        $('#sExpand').textContent = window._sOpen
+          ? 'ย่อรายชื่อทั้งหมด'
+          : 'ขยายรายชื่อทั้งหมด'
+        renderSessions()
+      }
       for (let h = 0; h < 24; h++) {
         $('#cFrom').add(new Option(pad(h) + ':00', h))
         $('#cTo').add(new Option(pad(h) + ':00', h))
@@ -4266,6 +4614,14 @@
         S.cfg.sameCrop = e.target.checked
         save()
       }
+      $('#cPubOn').onchange = e => {
+        if (!isAdminRole()) return toast('สิทธิ์ไม่พอ — เฉพาะแอดมิน')
+        S.cfg.pubOn = e.target.checked
+        logAct('แก้ตั้งค่า', 'หน้าสาธารณะ = ' + (S.cfg.pubOn ? 'เปิด' : 'ปิด'))
+        save()
+      }
+      $('#pubCopy').onclick = () =>
+        copyText($('#pubLink').textContent, 'คัดลอกลิงก์แล้ว')
       $('#bClearCrop').onclick = () => {
         S.cfg.crop = null
         save()
@@ -4725,7 +5081,9 @@
         const ref = doc(db, 'twok', 'state'),
           logs = collection(db, 'twok', 'state', 'logs'),
           aiRef = doc(db, 'twok', 'ai'),
-          rolesCol = collection(db, 'roles')
+          rolesCol = collection(db, 'roles'),
+          pubRef = doc(db, 'public', 'board')
+        let lastPub = ''
         let remoteCfg = null
         const cfgOf = j => {
           try {
@@ -4738,6 +5096,47 @@
           timer,
           last = ''
         $('#auth').classList.remove('hide') // ล็อกหน้าจอจนกว่าจะล็อกอิน
+        /* เผยแพร่ข้อมูลที่จำเป็น (ชื่อ แต้ม รอบ) ให้หน้า view.html ดูได้โดยไม่ต้องล็อกอิน */
+        const pushPublic = async () => {
+          try {
+            const cfg = window.ROLE === 'admin' ? S.cfg : remoteCfg || S.cfg
+            let str
+            if (!cfg.pubOn) str = JSON.stringify({ off: true })
+            else {
+              const idx = new Map(S.members.map((m, i) => [m.id, i]))
+              str = JSON.stringify({
+                names: S.members.map(m => m.name),
+                rows: calcRows().map(r => ({
+                  n: idx.get(r.m.id),
+                  c: r.cnt,
+                  u: r.units,
+                  p: r.pts,
+                  o: r.nos.map(x => x.no),
+                })),
+                ses: S.sessions.map(x => ({
+                  no: x.no,
+                  t: x.time,
+                  p: sesPts(x),
+                  l: x.label || '',
+                  a: x.att.map(i => idx.get(i)).filter(i => i !== undefined),
+                })),
+                per: per(),
+                normal: S.cfg.normal,
+                rule: ruleText(),
+              })
+            }
+            if (str === lastPub) return
+            await setDoc(pubRef, { json: str, at: serverTimestamp() })
+            lastPub = str
+            $('#pubStatus').textContent =
+              'เผยแพร่ล่าสุด ' + new Date().toLocaleTimeString('th-TH')
+          } catch (e) {
+            $('#pubStatus').textContent =
+              'เผยแพร่หน้าสาธารณะไม่สำเร็จ (' +
+              (e.code || e.message) +
+              ') — เช็ค Rules ว่าเพิ่ม public/board แล้ว'
+          }
+        }
         const push = async () => {
           // ทีมงานทั่วไปแก้ตั้งค่าไม่ได้: ตอนบันทึกขึ้นคลาวด์ใช้ cfg เดิมจากแอดมินเสมอ
           const payload =
@@ -4750,6 +5149,7 @@
               at: serverTimestamp(),
             })
             banner.textContent = 'ซิงก์แล้ว · ' + window.CUR_USER
+            pushPublic()
             return true
           } catch (e) {
             banner.textContent =
@@ -5022,6 +5422,7 @@
               )
             )
             $('#roleBox').classList.remove('hide')
+            $('#pubBox').classList.remove('hide')
             unsubs.push(
               onSnapshot(
                 rolesCol,
