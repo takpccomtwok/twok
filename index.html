@@ -1135,6 +1135,10 @@
         <div class="row" style="margin-bottom: 10px">
           <button class="btn red sm" id="bCopySheet">คัดลอกไปวางในชีต</button>
           <button class="btn sm" id="bCsv">ดาวน์โหลด CSV</button>
+          <button class="btn gold sm adminonly" id="bPubView">
+            เผยแพร่ให้สมาชิกดูที่หน้า View
+          </button>
+          <span class="hint" id="pubHint"></span>
           <button class="btn gold sm" id="bTickets">
             ส่งออกเป็นตั๋ว (ชื่อ,ตั๋ว) ไปจับฉลาก
           </button>
@@ -1523,6 +1527,9 @@
                   <code id="pubLink" style="word-break: break-all"></code>
                   <button class="btn sm" id="pubCopy" type="button">
                     คัดลอกลิงก์
+                  </button>
+                  <button class="btn sm" id="pubNow" type="button">
+                    เผยแพร่ตอนนี้
                   </button>
                 </div>
                 <div class="hint" id="pubStatus"></div>
@@ -4620,6 +4627,21 @@
         logAct('แก้ตั้งค่า', 'หน้าสาธารณะ = ' + (S.cfg.pubOn ? 'เปิด' : 'ปิด'))
         save()
       }
+      $('#bPubView').onclick = () => {
+        if (!isAdminRole()) return toast('สิทธิ์ไม่พอ — เฉพาะแอดมิน')
+        if (!window.pubNow) return toast('ยังไม่ได้เชื่อม Firebase — ล็อกอินก่อน')
+        if (!S.cfg.pubOn) {
+          S.cfg.pubOn = true
+          $('#cPubOn').checked = true
+          logAct('แก้ตั้งค่า', 'หน้าสาธารณะ = เปิด')
+          save() // บันทึก แล้วระบบจะเผยแพร่ให้เอง
+        }
+        window.pubNow()
+      }
+      $('#pubNow').onclick = () =>
+        window.pubNow
+          ? window.pubNow()
+          : toast('ยังไม่ได้เชื่อม Firebase — ล็อกอินก่อน')
       $('#pubCopy').onclick = () =>
         copyText($('#pubLink').textContent, 'คัดลอกลิงก์แล้ว')
       $('#bClearCrop').onclick = () => {
@@ -5084,6 +5106,13 @@
           rolesCol = collection(db, 'roles'),
           pubRef = doc(db, 'public', 'board')
         let lastPub = ''
+        const pubSt = {
+          set t(v) {
+            $('#pubStatus').textContent = v
+            const h = $('#pubHint')
+            if (h) h.textContent = v
+          },
+        }
         let remoteCfg = null
         const cfgOf = j => {
           try {
@@ -5101,6 +5130,9 @@
           try {
             const cfg = window.ROLE === 'admin' ? S.cfg : remoteCfg || S.cfg
             let str
+            if (!cfg.pubOn)
+              pubSt.t =
+                'หน้าสาธารณะ "ปิดอยู่" — ติ๊กช่อง "เปิดให้ดู..." ด้านบน แล้วหน้า View ถึงจะแสดงคะแนน'
             if (!cfg.pubOn) str = JSON.stringify({ off: true })
             else {
               const idx = new Map(S.members.map((m, i) => [m.id, i]))
@@ -5128,14 +5160,20 @@
             if (str === lastPub) return
             await setDoc(pubRef, { json: str, at: serverTimestamp() })
             lastPub = str
-            $('#pubStatus').textContent =
-              'เผยแพร่ล่าสุด ' + new Date().toLocaleTimeString('th-TH')
+            pubSt.t =
+              (cfg.pubOn ? 'เผยแพร่ล่าสุด ' : 'อัปเดตสถานะ "ปิด" ล่าสุด ') +
+              new Date().toLocaleTimeString('th-TH')
           } catch (e) {
-            $('#pubStatus').textContent =
+            pubSt.t =
               'เผยแพร่หน้าสาธารณะไม่สำเร็จ (' +
               (e.code || e.message) +
               ') — เช็ค Rules ว่าเพิ่ม public/board แล้ว'
           }
+        }
+        window.pubNow = () => {
+          lastPub = ''
+          pubSt.t = 'กำลังเผยแพร่...'
+          return pushPublic()
         }
         const push = async () => {
           // ทีมงานทั่วไปแก้ตั้งค่าไม่ได้: ตอนบันทึกขึ้นคลาวด์ใช้ cfg เดิมจากแอดมินเสมอ
@@ -5370,6 +5408,7 @@
               (e.hint || e.code || e.message)
             return signOut(auth)
           }
+          pushPublic() // เผยแพร่ข้อมูลที่มีอยู่แล้วทันทีหลังล็อกอิน (ไม่ต้องรอให้มีการแก้ไขก่อน)
           window.cloudSave = () => {
             clearTimeout(timer)
             timer = setTimeout(push, 800)
@@ -5387,6 +5426,7 @@
                 last = j
                 remoteCfg = cfgOf(j)
                 applyRemote(j)
+                pushPublic()
               }
             })
           )
