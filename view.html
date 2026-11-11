@@ -2,14 +2,11 @@
 <html lang="th">
   <head>
     <meta charset="utf-8" />
-    <meta
-      name="viewport"
-      content="width=device-width, initial-scale=1, viewport-fit=cover"
-    />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>TWOK · ตารางคะแนนและรอบที่บันทึก</title>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link
-      href="https://fonts.googleapis.com/css2?family=Kanit:wght@500;700;800&family=Noto+Sans+Thai:wght@400;600&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Kanit:ital,wght@0,400;0,600;0,800;1,800&family=Noto+Sans+Thai:wght@400;600&display=swap"
       rel="stylesheet"
     />
     <style>
@@ -21,8 +18,9 @@
         --bone: #f6f3ee;
         --mute: #b8bece;
         --blood: #e11d2e;
+        --ember: #ff6a1a;
         --gold: #ffc83d;
-        --ok: #3ddc84;
+        --cut: 12px;
       }
       * {
         box-sizing: border-box;
@@ -31,248 +29,338 @@
       }
       body {
         background:
-          radial-gradient(circle at 20% -10%, #3a1218 0, transparent 45%),
+          radial-gradient(
+            1100px 520px at 50% -10%,
+            rgba(225, 29, 46, 0.28),
+            transparent 60%
+          ),
+          repeating-linear-gradient(
+            135deg,
+            rgba(255, 255, 255, 0.018) 0 2px,
+            transparent 2px 14px
+          ),
           var(--base);
         color: var(--bone);
-        font-family: 'Noto Sans Thai', system-ui, sans-serif;
+        font-family:
+          'Noto Sans Thai', system-ui, sans-serif, 'Segoe UI Emoji',
+          'Apple Color Emoji', 'Noto Color Emoji';
+        font-size: 16px;
         line-height: 1.5;
         min-height: 100vh;
+        padding-bottom: 60px;
       }
-      header {
-        padding: 18px 16px 12px;
-        border-bottom: 2px solid var(--blood);
-        display: flex;
-        align-items: baseline;
-        gap: 12px;
-        flex-wrap: wrap;
+      h2 {
+        font-family: 'Kanit', 'Noto Sans Thai', sans-serif;
       }
-      .logo {
-        font-family: 'Kanit';
-        font-weight: 800;
-        font-size: 28px;
-        color: var(--gold);
-        letter-spacing: 1px;
+      button,
+      input,
+      select {
+        font: inherit;
+        color: inherit;
       }
-      header small {
+      :focus-visible {
+        outline: 3px solid var(--gold);
+        outline-offset: 2px;
+      }
+      [hidden] {
+        display: none !important;
+      }
+      .hint {
         color: var(--mute);
-      }
-      main {
-        max-width: 1000px;
-        margin: 0 auto;
-        padding: 14px 12px 60px;
-      }
-      .rule {
-        background: rgba(255, 200, 61, 0.1);
-        border-left: 4px solid var(--gold);
-        padding: 8px 12px;
         font-size: 14px;
-        margin-bottom: 12px;
-      }
-      .stats {
-        display: grid;
-        grid-template-columns: repeat(3, 1fr);
-        gap: 8px;
-        margin-bottom: 12px;
-      }
-      .stat {
-        background: var(--panel);
-        border: 1px solid var(--line);
-        padding: 8px;
-        text-align: center;
-      }
-      .stat b {
-        display: block;
-        font-family: 'Kanit';
-        font-size: 24px;
-        color: var(--gold);
-      }
-      .stat span {
-        font-size: 12px;
-        color: var(--mute);
-      }
-      .bar {
-        display: flex;
-        gap: 8px;
-        flex-wrap: wrap;
-        margin-bottom: 10px;
-      }
-      .bar input {
-        flex: 1;
-        min-width: 180px;
-        background: var(--panel);
-        color: var(--bone);
-        border: 1px solid var(--line);
-        padding: 10px 12px;
-        font: inherit;
-        font-size: 16px;
-      }
-      .tabs {
-        display: flex;
-        gap: 4px;
-      }
-      .tabs button,
-      .xbtn {
-        background: var(--panel2);
-        color: var(--bone);
-        border: 1px solid var(--line);
-        padding: 9px 14px;
-        font: inherit;
-        font-weight: 600;
-        cursor: pointer;
-      }
-      .tabs button.on {
-        background: var(--gold);
-        color: #111;
-        border-color: var(--gold);
-      }
-      .tw {
-        overflow-x: auto;
-        border: 1px solid var(--line);
-        background: var(--panel);
-      }
-      table {
-        width: 100%;
-        border-collapse: collapse;
-        min-width: 520px;
-      }
-      th,
-      td {
-        padding: 9px 10px;
-        border-bottom: 1px solid var(--line);
-        text-align: left;
-        vertical-align: middle;
-      }
-      th {
-        background: var(--panel2);
-        color: var(--gold);
-        font-family: 'Kanit';
-        white-space: nowrap;
-        position: sticky;
-        top: 0;
-      }
-      td.n,
-      th.n {
-        text-align: right;
-        font-family: 'Kanit';
-        font-weight: 700;
-      }
-      td.p {
-        color: var(--gold);
-        font-size: 20px;
-        font-family: 'Kanit';
-        font-weight: 800;
-        text-align: right;
-      }
-      td.rk {
-        width: 48px;
-        text-align: center;
-        font-family: 'Kanit';
-        font-weight: 800;
-        color: var(--gold);
-      }
-      td.rk.top {
-        background: var(--gold);
-        color: #111;
-      }
-      tr.pr {
-        cursor: pointer;
-      }
-      tr.pr:nth-child(4n + 1) td,
-      tr.pr:nth-child(4n + 1) + tr td {
-        background: rgba(255, 255, 255, 0.025);
-      }
-      tr.pr:hover td {
-        background: rgba(255, 200, 61, 0.08);
-      }
-      tr.det td {
-        background: var(--base) !important;
-      }
-      .rounds {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 4px;
-      }
-      .rn {
-        background: var(--panel2);
-        border: 1px solid var(--line);
-        padding: 0 8px;
-        font-size: 13px;
-        cursor: pointer;
-        color: var(--bone);
-      }
-      .rn.b {
-        background: var(--gold);
-        border-color: var(--gold);
-        color: #111;
-        font-weight: 700;
       }
       .mute {
         color: var(--mute);
       }
-      .card {
-        background: var(--panel);
-        border: 1px solid var(--line);
-        margin-bottom: 10px;
-        padding: 10px 12px;
-      }
-      .card.flash {
-        outline: 3px solid var(--gold);
-      }
-      .ch {
+
+      /* ===== Header ===== */
+      header {
         display: flex;
-        gap: 8px 14px;
+        align-items: center;
+        justify-content: space-between;
+        gap: 14px;
         flex-wrap: wrap;
-        align-items: baseline;
+        padding: 12px 24px;
+        border-bottom: 3px solid var(--blood);
+        background: linear-gradient(
+          90deg,
+          rgba(60, 8, 14, 0.95),
+          rgba(20, 22, 28, 0.95) 60%
+        );
+        box-shadow: 0 6px 30px rgba(225, 29, 46, 0.25);
       }
-      .ch .no {
+      .logo {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        flex-wrap: wrap;
+      }
+      .logo b {
         font-family: 'Kanit';
         font-weight: 800;
-        font-size: 20px;
+        font-style: italic;
+        font-size: 40px;
+        letter-spacing: 2px;
+        line-height: 1;
+        background: linear-gradient(
+          180deg,
+          #fff,
+          var(--gold) 35%,
+          var(--ember) 65%,
+          var(--blood)
+        );
+        -webkit-background-clip: text;
+        background-clip: text;
+        color: transparent;
+      }
+      .logo span {
+        color: var(--mute);
+        font-size: 14px;
+      }
+      .hstats {
+        display: flex;
+        gap: 8px;
+        flex-wrap: wrap;
+      }
+      .hs {
+        background: var(--base);
+        border: 1px solid var(--line);
+        padding: 4px 12px;
+        text-align: center;
+        min-width: 86px;
+      }
+      .hs b {
+        display: block;
+        font-family: 'Kanit';
+        font-size: 22px;
+        color: var(--gold);
+        line-height: 1.1;
+      }
+      .hs span {
+        font-size: 12px;
+        color: var(--mute);
+      }
+
+      /* ===== Inputs / buttons ===== */
+      input[type='search'],
+      select {
+        background: var(--base);
+        border: 1px solid var(--line);
+        padding: 8px 10px;
+        min-width: 0;
+      }
+      input[type='search'] {
+        width: 100%;
+      }
+      .btn {
+        cursor: pointer;
+        border: 1px solid var(--line);
+        background: var(--panel2);
+        padding: 4px 10px;
+        font-size: 14px;
+        font-weight: 600;
+        clip-path: polygon(
+          var(--cut) 0,
+          100% 0,
+          100% calc(100% - var(--cut)),
+          calc(100% - var(--cut)) 100%,
+          0 100%,
+          0 var(--cut)
+        );
+        transition:
+          background 0.15s,
+          transform 0.1s;
+      }
+      .btn:hover {
+        background: #343a4a;
+      }
+      .btn:active {
+        transform: scale(0.97);
+      }
+      .row {
+        display: flex;
+        gap: 8px;
+        align-items: center;
+        flex-wrap: wrap;
+      }
+
+      /* ===== Tabs ===== */
+      nav {
+        display: flex;
+        gap: 6px;
+        flex-wrap: wrap;
+        max-width: 1400px;
+        margin: 18px auto 0;
+        padding: 0 20px;
+      }
+      .tab {
+        cursor: pointer;
+        background: var(--panel);
+        border: 1px solid var(--line);
+        border-bottom: none;
+        padding: 10px 20px;
+        font-family: 'Kanit';
+        font-weight: 600;
+        font-size: 18px;
+        color: var(--mute);
+      }
+      .tab.on {
+        background: var(--panel2);
+        color: var(--gold);
+        border-top: 4px solid var(--blood);
+        padding-top: 7px;
+      }
+      main {
+        max-width: 1400px;
+        margin: 0 auto;
+        padding: 0 20px;
+      }
+      .sec {
+        background: var(--panel);
+        border: 1px solid var(--line);
+        padding: 18px;
+        min-height: 300px;
+      }
+      .sec h2 {
+        font-size: 24px;
+        margin-bottom: 10px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 10px;
+        flex-wrap: wrap;
+      }
+      .sec h2 .row input {
+        width: 220px;
+      }
+
+      /* ===== Table ===== */
+      .tw {
+        max-height: 70vh;
+        overflow: auto;
+        border: 1px solid var(--line);
+      }
+      .tbl {
+        width: 100%;
+        border-collapse: collapse;
+      }
+      .tbl th,
+      .tbl td {
+        padding: 7px 10px;
+        border-bottom: 1px solid var(--line);
+        text-align: left;
+        vertical-align: middle;
+      }
+      .tbl th {
+        background: var(--panel2);
+        position: sticky;
+        top: 0;
+        color: var(--gold);
+        font-family: 'Kanit';
+        font-weight: 600;
+        z-index: 1;
+        white-space: nowrap;
+      }
+      .tbl th.r {
+        text-align: right;
+      }
+      .tbl td.num {
+        text-align: right;
+        font-family: 'Kanit';
+        font-weight: 600;
+      }
+      .tbl td.pts {
+        color: var(--gold);
+        font-size: 18px;
+        font-family: 'Kanit';
+        font-weight: 800;
+      }
+      .tbl.pretty tbody tr:nth-child(even) td {
+        background: rgba(255, 255, 255, 0.025);
+      }
+      .tbl.pretty tbody tr:hover td {
+        background: rgba(255, 210, 63, 0.07);
+      }
+      .tbl th.rk,
+      .tbl td.rk {
+        width: 48px;
+        text-align: center;
+      }
+      .rk {
+        font-family: 'Kanit';
+        font-weight: 800;
         color: var(--gold);
       }
+      .tbl td.rk.top {
+        color: #111;
+        background: var(--gold) !important;
+      }
+      .n1,
+      .n2 {
+        display: inline-block;
+        margin: 1px 2px;
+        padding: 0 5px;
+        font-size: 14px;
+      }
+      .n1 {
+        color: var(--mute);
+      }
+      .n2 {
+        background: var(--gold);
+        color: #111;
+        font-weight: 800;
+      }
       .tag {
+        display: inline-block;
         padding: 0 8px;
         font-size: 13px;
-        background: var(--panel2);
-        border: 1px solid var(--line);
+        font-weight: 700;
+      }
+      .tag.n {
+        background: #3a4152;
       }
       .tag.b {
         background: var(--gold);
         color: #111;
-        border-color: var(--gold);
-        font-weight: 700;
       }
-      details summary {
+      .nl summary {
         cursor: pointer;
         color: var(--gold);
         font-weight: 600;
-        margin-top: 6px;
       }
-      .nms {
+      .nl .nms {
         display: flex;
         flex-wrap: wrap;
         gap: 4px;
-        margin-top: 8px;
+        margin-top: 6px;
+        max-width: 560px;
       }
-      .nms span {
+      .nl .nms span {
         background: var(--base);
         border: 1px solid var(--line);
         padding: 1px 8px;
-        font-size: 14px;
+        font-size: 13px;
       }
-      .nms span.hit {
+      .nl .nms span.hit {
         background: var(--gold);
-        color: #111;
         border-color: var(--gold);
+        color: #111;
         font-weight: 700;
+      }
+      #sBody tr.flash td {
+        outline: 2px solid var(--gold);
+        outline-offset: -2px;
       }
       #state {
         text-align: center;
-        padding: 40px 12px;
+        padding: 60px 12px;
         color: var(--mute);
       }
       #state.err {
         color: #ff8a8a;
+      }
+      #rule {
+        margin: 0 0 10px;
       }
       footer {
         text-align: center;
@@ -280,72 +368,120 @@
         font-size: 12px;
         padding: 20px;
       }
-      @media (max-width: 520px) {
-        .logo {
-          font-size: 24px;
+      @media (max-width: 600px) {
+        header {
+          padding: 10px 14px;
         }
-        td.p {
-          font-size: 18px;
+        .logo b {
+          font-size: 32px;
+        }
+        nav,
+        main {
+          padding: 0 8px;
+        }
+        .sec {
+          padding: 12px;
+        }
+        .tab {
+          padding: 8px 14px;
+          font-size: 16px;
+        }
+        .sec h2 .row input {
+          width: 100%;
         }
       }
     </style>
   </head>
   <body>
     <header>
-      <span class="logo">TWOK</span>
-      <span>ตารางคะแนนและรอบที่บันทึก</span>
-      <small id="upd"></small>
+      <div class="logo">
+        <b>TWOK</b><span>ตารางคะแนนและรอบที่บันทึก</span>
+        <small class="hint" id="upd"></small>
+      </div>
+      <div class="hstats" id="hstats" hidden>
+        <div class="hs"><b id="hsMem">0</b><span>สมาชิก</span></div>
+        <div class="hs"><b id="hsSes">0</b><span>รอบ/รูปที่บันทึก</span></div>
+        <div class="hs"><b id="hsPts">0</b><span>แต้มที่แจกแล้ว</span></div>
+      </div>
     </header>
-    <main>
-      <div id="state">กำลังโหลดข้อมูล...</div>
-      <div id="app" hidden>
-        <div class="rule" id="rule"></div>
-        <div class="stats">
-          <div class="stat"><b id="sM">0</b><span>สมาชิก</span></div>
-          <div class="stat"><b id="sS">0</b><span>รอบที่บันทึก</span></div>
-          <div class="stat"><b id="sP">0</b><span>แต้มที่แจกแล้ว</span></div>
-        </div>
-        <div class="bar">
-          <input
-            type="search"
-            id="q"
-            placeholder="ค้นหาชื่อของคุณ..."
-            autocomplete="off"
-          />
-          <div class="tabs">
-            <button class="on" data-t="score">ตารางคะแนน</button>
-            <button data-t="ses">รอบที่บันทึก</button>
+
+    <div id="state">กำลังโหลดข้อมูล...</div>
+
+    <div id="app" hidden>
+      <nav id="tabs">
+        <button class="tab on" data-tab="table">ตารางคะแนน</button>
+        <button class="tab" data-tab="sessions">รอบที่บันทึก</button>
+      </nav>
+
+      <main>
+        <!-- ===== ตารางคะแนน ===== -->
+        <section class="sec" id="tab-table">
+          <h2>
+            ตารางคะแนน
+            <span class="row">
+              <input type="search" id="tSearch" placeholder="ค้นหาชื่อ..." />
+              <select id="tSort">
+                <option value="pts">เรียงตามแต้ม</option>
+                <option value="cnt">เรียงตามจำนวนครั้ง</option>
+                <option value="name">เรียงตามชื่อ</option>
+              </select>
+            </span>
+          </h2>
+          <div class="hint" id="rule" style="margin-bottom: 10px"></div>
+          <div class="row" style="margin-bottom: 10px">
+            <span class="hint">เลขรูปที่มีพื้นหลังทอง = รอบที่ได้แต้มพิเศษ</span>
           </div>
-        </div>
-        <section id="score">
           <div class="tw">
-            <table>
+            <table class="tbl pretty">
               <thead>
                 <tr>
-                  <th>#</th>
-                  <th>ชื่อ</th>
-                  <th class="n">แต้ม</th>
-                  <th class="n">นับรวม (ครั้ง)</th>
-                  <th class="n">มา (รอบ)</th>
-                  <th class="n">อีกกี่ครั้งได้แต้มต่อไป</th>
+                  <th class="rk">#</th>
+                  <th>ชื่อสมาชิก</th>
+                  <th>รูปที่เข้าร่วม</th>
+                  <th class="r">มา (รอบ)</th>
+                  <th class="r">นับรวม (ครั้ง)</th>
+                  <th class="r">แต้ม</th>
+                  <th class="r">อีกกี่ครั้งได้แต้มต่อไป</th>
+                  <th class="r">เข้าร่วม</th>
                 </tr>
               </thead>
-              <tbody id="tb"></tbody>
+              <tbody id="tBody"></tbody>
             </table>
           </div>
-          <p class="mute" style="font-size: 13px; margin-top: 6px">
-            กดที่ชื่อเพื่อดูว่าเข้าร่วมรอบไหนบ้าง (เลขสีทอง =
-            รอบที่ได้ครั้งพิเศษ)
-          </p>
         </section>
-        <section id="ses" hidden>
-          <div style="margin-bottom: 8px">
-            <button class="xbtn" id="xp">ขยายรายชื่อทั้งหมด</button>
+
+        <!-- ===== รอบที่บันทึก ===== -->
+        <section class="sec" id="tab-sessions" hidden>
+          <h2>
+            <span>รอบที่บันทึก <span class="hint" id="sCount"></span></span>
+            <span class="row">
+              <input
+                type="search"
+                id="sSearch"
+                placeholder="ค้นหาชื่อว่าอยู่รอบไหน..."
+              />
+              <button class="btn" id="sExpand">ขยายรายชื่อทั้งหมด</button>
+            </span>
+          </h2>
+          <div class="tw">
+            <table class="tbl pretty">
+              <thead>
+                <tr>
+                  <th>รูปที่</th>
+                  <th>เวลา</th>
+                  <th>บอส/หมายเหตุ</th>
+                  <th>นับเป็น (ครั้ง)</th>
+                  <th class="r">มา (คน)</th>
+                  <th>รายชื่อที่มา</th>
+                </tr>
+              </thead>
+              <tbody id="sBody"></tbody>
+            </table>
           </div>
-          <div id="sl"></div>
         </section>
-      </div>
-    </main>
+      </main>
+    </div>
+
     <footer>ข้อมูลอัปเดตอัตโนมัติ · หน้านี้ดูได้อย่างเดียว</footer>
 
     <script type="module">
@@ -358,7 +494,7 @@
       const G = 'https://www.gstatic.com/firebasejs/10.14.1'
       const $ = s => document.querySelector(s)
       const esc = t =>
-        String(t).replace(
+        String(t ?? '').replace(
           /[&<>"']/g,
           c =>
             ({
@@ -370,119 +506,128 @@
             })[c]
         )
       const fmt = ms =>
-        new Date(ms).toLocaleString('th-TH', {
-          dateStyle: 'short',
-          timeStyle: 'short',
-        })
-      const state = (t, err) => {
+        ms == null
+          ? '—'
+          : new Date(ms).toLocaleString('th-TH', {
+              dateStyle: 'short',
+              timeStyle: 'short',
+            })
+      const showState = (t, err) => {
         $('#state').hidden = false
         $('#state').className = err ? 'err' : ''
         $('#state').textContent = t
         $('#app').hidden = true
+        $('#hstats').hidden = true
       }
-      let D = null,
-        openAll = false,
-        tab = 'score'
-      const hits = q =>
-        q
-          ? new Set(
-              D.names
-                .map((n, i) => (n.toLowerCase().includes(q) ? i : -1))
-                .filter(i => i >= 0)
-            )
-          : null
 
-      function render() {
-        const q = $('#q').value.trim().toLowerCase(),
-          hit = hits(q)
-        const lastNo = new Set(
-          D.ses.filter(s => s.p !== D.normal).map(s => s.no)
-        )
-        $('#rule').textContent = 'กติกาแต้ม: ' + D.rule
-        $('#sM').textContent = D.names.length
-        $('#sS').textContent = D.ses.length
-        $('#sP').textContent = D.rows.reduce((t, r) => t + r.p, 0)
+      let D = null,
+        sOpen = false
+      const nm = i => (D.names && D.names[i]) || '?'
+
+      function renderTable() {
+        const q = $('#tSearch').value.trim().toLowerCase(),
+          sort = $('#tSort').value,
+          total = D.ses.length,
+          bonus = new Set(D.ses.filter(s => s.p !== D.normal).map(s => s.no)),
+          per = Math.max(1, D.per || 5)
         const rows = D.rows
-          .slice()
-          .sort(
-            (a, b) =>
-              b.p - a.p ||
-              b.c - a.c ||
-              D.names[a.n].localeCompare(D.names[b.n], 'th')
+          .filter(r => !q || nm(r.n).toLowerCase().includes(q))
+          .sort((a, b) =>
+            sort === 'name'
+              ? nm(a.n).localeCompare(nm(b.n), 'th')
+              : sort === 'cnt'
+                ? b.c - a.c || b.p - a.p
+                : b.p - a.p ||
+                  b.u - a.u ||
+                  b.c - a.c ||
+                  nm(a.n).localeCompare(nm(b.n), 'th')
           )
-        $('#tb').innerHTML = rows.length
+        $('#tBody').innerHTML = rows.length
           ? rows
-              .map((r, i) => ({ r, i }))
-              .filter(({ r }) => !hit || hit.has(r.n))
               .map(
-                ({ r, i }) => `
-            <tr class="pr" data-i="${r.n}"><td class="rk${i < 3 && r.p > 0 ? ' top' : ''}">${i + 1}</td><td>${esc(D.names[r.n])}</td>
-              <td class="p">${r.p}</td><td class="n">${r.u}</td><td class="n">${r.c}</td><td class="n mute">อีก ${D.per - (r.u % D.per)} ครั้ง</td></tr>
-            <tr class="det" id="d${r.n}" hidden><td></td><td colspan="5"><div class="rounds">${r.o.length ? r.o.map(no => `<button class="rn${lastNo.has(no) ? ' b' : ''}" data-no="${no}">#${no}</button>`).join('') : '<span class="mute">ยังไม่เคยเข้าร่วม</span>'}</div></td></tr>`
+                (r, i) => `<tr>
+        <td class="rk${i < 3 && r.p > 0 && !q && sort === 'pts' ? ' top' : ''}">${i + 1}</td>
+        <td>${esc(nm(r.n))}</td>
+        <td>${
+          (r.o || [])
+            .map(no => `<span class="${bonus.has(no) ? 'n2' : 'n1'}">${no}</span>`)
+            .join(',') || '<span class="mute">—</span>'
+        }</td>
+        <td class="num">${r.c}</td>
+        <td class="num">${r.u}</td>
+        <td class="num pts">${r.p}</td>
+        <td class="num mute">อีก ${per - (r.u % per)} ครั้ง</td>
+        <td class="num">${total ? Math.round((r.c / total) * 100) : 0}%</td></tr>`
               )
-              .join('') ||
-            '<tr><td colspan="6" class="mute" style="padding:24px;text-align:center">ไม่พบชื่อนี้</td></tr>'
-          : '<tr><td colspan="6" class="mute" style="padding:24px;text-align:center">ยังไม่มีข้อมูล</td></tr>'
-        const ses = D.ses
-          .slice()
-          .sort((a, b) => b.t - a.t)
-          .filter(s => !hit || s.a.some(i => hit.has(i)))
-        $('#sl').innerHTML = ses.length
-          ? ses
-              .map(
-                (s, k) => `
-            <div class="card" id="s${s.no}"><div class="ch"><span class="no">#${s.no}</span><span>${fmt(s.t)}</span>
-              <span class="tag${s.p !== D.normal ? ' b' : ''}">นับ ${s.p} ครั้ง</span>${s.l ? `<span>${esc(s.l)}</span>` : ''}<span class="mute">${s.a.length} คน</span></div>
-              <details${openAll || hit || k < 2 ? ' open' : ''}><summary>รายชื่อที่มา (${s.a.length})</summary>
-                <div class="nms">${
-                  s.a
-                    .map(i => [i, D.names[i]])
+              .join('')
+          : `<tr><td colspan="8" class="mute" style="padding:30px;text-align:center">${q ? 'ไม่พบชื่อนี้' : 'ยังไม่มีข้อมูล'}</td></tr>`
+      }
+
+      function renderSessions() {
+        const q = $('#sSearch').value.trim().toLowerCase(),
+          hit = q
+            ? new Set(
+                D.names
+                  .map((n, i) => (n.toLowerCase().includes(q) ? i : -1))
+                  .filter(i => i >= 0)
+              )
+            : null,
+          list = D.ses.filter(s => !hit || s.a.some(i => hit.has(i)))
+        $('#sCount').textContent = hit
+          ? `${list.length}/${D.ses.length} รอบ`
+          : D.ses.length + ' รอบ'
+        $('#sBody').innerHTML = list.length
+          ? list
+              .map(s => {
+                const b = s.p !== D.normal,
+                  names = s.a
+                    .map(i => [i, nm(i)])
                     .sort((x, y) => x[1].localeCompare(y[1], 'th'))
                     .map(
                       ([i, n]) =>
                         `<span${hit && hit.has(i) ? ' class="hit"' : ''}>${esc(n)}</span>`
                     )
-                    .join('') || '<span>—</span>'
-                }</div></details></div>`
-              )
+                    .join('')
+                return `<tr id="s${s.no}"><td class="rk">#${s.no}</td>
+        <td>${fmt(s.t)}</td><td>${esc(s.l || '')}</td>
+        <td><span class="tag ${b ? 'b' : 'n'}">${b ? 'คืน' : 'วัน'} ${s.p}</span></td>
+        <td class="num">${s.a.length}</td>
+        <td><details class="nl"${sOpen || hit ? ' open' : ''}><summary>ดูรายชื่อ (${s.a.length})</summary><div class="nms">${names || '<span>—</span>'}</div></details></td></tr>`
+              })
               .join('')
-          : `<div class="mute" style="padding:24px;text-align:center">${hit ? 'ไม่พบชื่อนี้ในรอบไหนเลย' : 'ยังไม่มีรอบที่บันทึก'}</div>`
+          : `<tr><td colspan="6" class="mute" style="padding:30px;text-align:center">${hit ? 'ไม่พบชื่อนี้ในรอบไหนเลย' : 'ยังไม่มีรอบที่บันทึก'}</td></tr>`
       }
+
+      function render() {
+        $('#hsMem').textContent = D.names.length
+        $('#hsSes').textContent = D.ses.length
+        $('#hsPts').textContent = D.rows.reduce((t, r) => t + (+r.p || 0), 0)
+        $('#rule').textContent = D.rule ? 'กติกาแต้ม: ' + D.rule : ''
+        renderTable()
+        renderSessions()
+      }
+
       const setTab = t => {
-        tab = t
-        $('#score').hidden = t !== 'score'
-        $('#ses').hidden = t !== 'ses'
+        $('#tab-table').hidden = t !== 'table'
+        $('#tab-sessions').hidden = t !== 'sessions'
         document
-          .querySelectorAll('.tabs button')
-          .forEach(b => b.classList.toggle('on', b.dataset.t === t))
+          .querySelectorAll('#tabs .tab')
+          .forEach(b => b.classList.toggle('on', b.dataset.tab === t))
       }
       document
-        .querySelectorAll('.tabs button')
-        .forEach(b => (b.onclick = () => setTab(b.dataset.t)))
-      $('#q').oninput = () => D && render()
-      $('#xp').onclick = () => {
-        openAll = !openAll
-        $('#xp').textContent = openAll
+        .querySelectorAll('#tabs .tab')
+        .forEach(b => (b.onclick = () => setTab(b.dataset.tab)))
+      $('#tSearch').oninput = () => D && renderTable()
+      $('#tSort').onchange = () => D && renderTable()
+      $('#sSearch').oninput = () => D && renderSessions()
+      $('#sExpand').onclick = () => {
+        sOpen = !sOpen
+        $('#sExpand').textContent = sOpen
           ? 'ย่อรายชื่อทั้งหมด'
           : 'ขยายรายชื่อทั้งหมด'
-        render()
+        if (D) renderSessions()
       }
-      $('#tb').onclick = e => {
-        const b = e.target.closest('.rn')
-        if (b) {
-          setTab('ses')
-          const c = $('#s' + b.dataset.no)
-          if (c) {
-            c.querySelector('details').open = true
-            c.scrollIntoView({ behavior: 'smooth', block: 'center' })
-            c.classList.add('flash')
-            setTimeout(() => c.classList.remove('flash'), 2000)
-          }
-          return
-        }
-        const tr = e.target.closest('tr.pr')
-        if (tr) $('#d' + tr.dataset.i).hidden = !$('#d' + tr.dataset.i).hidden
-      }
+
       try {
         const { initializeApp } = await import(G + '/firebase-app.js')
         const { getFirestore, doc, onSnapshot } = await import(
@@ -492,20 +637,30 @@
         onSnapshot(
           doc(db, 'public', 'board'),
           snap => {
-            if (!snap.exists())
-              return state('ยังไม่มีข้อมูล — รอแอดมินเปิดเผยแพร่หน้านี้')
-            const d = JSON.parse(snap.data().json)
-            if (d.off) return state('ผู้ดูแลปิดหน้านี้ไว้ชั่วคราว')
-            D = d
-            $('#state').hidden = true
-            $('#app').hidden = false
-            const at = snap.data().at
-            $('#upd').textContent =
-              at && at.toMillis ? 'อัปเดตล่าสุด ' + fmt(at.toMillis()) : ''
-            render()
+            try {
+              if (!snap.exists())
+                return showState(
+                  'ยังไม่มีข้อมูล — รอแอดมินเปิดเผยแพร่หน้านี้'
+                )
+              const d = JSON.parse(snap.data().json)
+              if (d.off) return showState('ผู้ดูแลปิดหน้านี้ไว้ชั่วคราว')
+              D = d
+              D.names = D.names || []
+              D.rows = D.rows || []
+              D.ses = D.ses || []
+              $('#state').hidden = true
+              $('#app').hidden = false
+              $('#hstats').hidden = false
+              const at = snap.data().at
+              $('#upd').textContent =
+                at && at.toMillis ? 'อัปเดตล่าสุด ' + fmt(at.toMillis()) : ''
+              render()
+            } catch (err) {
+              showState('อ่านข้อมูลไม่สำเร็จ: ' + (err.message || err), true)
+            }
           },
           e =>
-            state(
+            showState(
               e.code === 'permission-denied'
                 ? 'ยังไม่ได้เปิดสิทธิ์อ่านหน้านี้ (ให้แอดมินเพิ่มกฎ public/board ใน Firestore Rules)'
                 : 'โหลดข้อมูลไม่สำเร็จ: ' + (e.code || e.message),
@@ -513,7 +668,7 @@
             )
         )
       } catch (e) {
-        state('เชื่อมต่อไม่ได้ — ตรวจอินเทอร์เน็ตแล้วลองใหม่', true)
+        showState('เชื่อมต่อไม่ได้ — ตรวจอินเทอร์เน็ตแล้วลองใหม่', true)
       }
     </script>
   </body>
