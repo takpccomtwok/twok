@@ -151,6 +151,7 @@
       }
       input[type='search'] {
         width: 100%;
+        font-size: 16px;
       }
       .btn {
         cursor: pointer;
@@ -295,6 +296,38 @@
         color: #111;
         background: var(--gold) !important;
       }
+      #tBody td {
+        padding-top: 10px;
+        padding-bottom: 10px;
+      }
+      .vbox {
+        display: inline-block;
+        background: var(--base);
+        border: 1px solid var(--line);
+        padding: 8px 10px;
+        line-height: 1.35;
+      }
+      .vbox.rounds {
+        display: block;
+        min-width: 320px;
+        max-width: 560px;
+        text-align: left;
+      }
+      #tBody td:nth-child(2) {
+        white-space: nowrap;
+      }
+      .vbox.v {
+        min-width: 64px;
+        text-align: center;
+        font-family: 'Kanit';
+        font-weight: 600;
+      }
+      .tbl td.pts .vbox,
+      .vbox.v.pts {
+        color: var(--gold);
+        font-size: 18px;
+        font-weight: 800;
+      }
       .n1,
       .n2 {
         display: inline-block;
@@ -417,9 +450,9 @@
         <!-- ===== ตารางคะแนน ===== -->
         <section class="sec" id="tab-table">
           <h2>
-            ตารางคะแนน
+            <span>ตารางคะแนน <span class="hint" id="tCount"></span></span>
             <span class="row">
-              <input type="search" id="tSearch" placeholder="ค้นหาชื่อ..." />
+              <input type="search" id="tSearch" placeholder="ค้นหาชื่อของคุณ..." />
               <select id="tSort">
                 <option value="pts">เรียงตามแต้ม</option>
                 <option value="cnt">เรียงตามจำนวนครั้ง</option>
@@ -434,8 +467,12 @@
                 <tr>
                   <th class="rk">#</th>
                   <th>ชื่อสมาชิก</th>
-                  <th>รอบที่มา</th>
+                  <th>รูปที่เข้าร่วม</th>
+                  <th class="r">มา (รอบ)</th>
+                  <th class="r">นับรวม (ครั้ง)</th>
                   <th class="r">แต้ม</th>
+                  <th class="r">อีกกี่ครั้งได้แต้มต่อไป</th>
+                  <th class="r">เข้าร่วม</th>
                 </tr>
               </thead>
               <tbody id="tBody"></tbody>
@@ -475,7 +512,7 @@
       </main>
     </div>
 
-    <footer>ข้อมูลอัปเดตอัตโนมัติ · หน้านี้ดูได้อย่างเดียว · view v4</footer>
+    <footer>ข้อมูลอัปเดตอัตโนมัติ · หน้านี้ดูได้อย่างเดียว · view v6</footer>
 
     <script type="module">
       const CFG = {
@@ -516,11 +553,14 @@
       let D = null,
         sOpen = false
       const nm = i => (D.names && D.names[i]) || '?'
+      // ค้นหาแบบไม่สนตัวพิมพ์เล็ก/ใหญ่ และไม่สนช่องว่าง
+      const norm = t => String(t ?? '').toLowerCase().replace(/\s+/g, '')
 
       function renderTable() {
-        const q = $('#tSearch').value.trim().toLowerCase(),
+        const q = norm($('#tSearch').value),
           sort = $('#tSort').value,
-          x = 0
+          total = D.ses.length,
+          per = Math.max(1, D.per || 5)
         // เลขรอบของแต่ละคน: ดึงจากรายการรอบที่บันทึกโดยตรง (ถ้าไม่มีค่อยใช้ r.o)
         const att = new Map()
         D.ses.forEach(s =>
@@ -534,7 +574,7 @@
           return l.slice().sort((a, b) => a - b)
         }
         const rows = D.rows
-          .filter(r => !q || nm(r.n).toLowerCase().includes(q))
+          .filter(r => !q || norm(nm(r.n)).includes(q))
           .sort((a, b) =>
             sort === 'name'
               ? nm(a.n).localeCompare(nm(b.n), 'th')
@@ -545,25 +585,30 @@
                   b.c - a.c ||
                   nm(a.n).localeCompare(nm(b.n), 'th')
           )
+        $('#tCount').textContent = q ? `พบ ${rows.length} คน` : ''
         $('#tBody').innerHTML = rows.length
           ? rows
               .map(
                 (r, i) => `<tr>
-        <td class="rk${i < 3 && r.p > 0 && !q && sort === 'pts' ? ' top' : ''}">${i + 1}</td>
+        <td class="rk${i < 3 && r.p > 0 ? ' top' : ''}">${i + 1}</td>
         <td>${esc(nm(r.n))}</td>
-        <td>${nosOf(r).join(', ') || '<span class="mute">—</span>'}</td>
-        <td class="num pts">${r.p}</td></tr>`
+        <td><div class="vbox rounds">${nosOf(r).join(',<wbr>') || '<span class="mute">—</span>'}</div></td>
+        <td class="num">${r.c}</td>
+        <td class="num"><span class="vbox v">${r.u}</span></td>
+        <td class="num"><span class="vbox v pts">${r.p}</span></td>
+        <td class="num mute">อีก ${per - (r.u % per)} ครั้ง</td>
+        <td class="num">${total ? Math.round((r.c / total) * 100) : 0}%</td></tr>`
               )
               .join('')
-          : `<tr><td colspan="4" class="mute" style="padding:30px;text-align:center">${q ? 'ไม่พบชื่อนี้' : 'ยังไม่มีข้อมูล'}</td></tr>`
+          : `<tr><td colspan="8" class="mute" style="padding:30px;text-align:center">${q ? 'ไม่พบชื่อนี้' : 'ยังไม่มีข้อมูล'}</td></tr>`
       }
 
       function renderSessions() {
-        const q = $('#sSearch').value.trim().toLowerCase(),
+        const q = norm($('#sSearch').value),
           hit = q
             ? new Set(
                 D.names
-                  .map((n, i) => (n.toLowerCase().includes(q) ? i : -1))
+                  .map((n, i) => (norm(n).includes(q) ? i : -1))
                   .filter(i => i >= 0)
               )
             : null,
@@ -612,9 +657,18 @@
       document
         .querySelectorAll('#tabs .tab')
         .forEach(b => (b.onclick = () => setTab(b.dataset.tab)))
-      $('#tSearch').oninput = () => D && renderTable()
+      const syncSearch = from => {
+        const v = $(from).value
+        $('#tSearch').value = v
+        $('#sSearch').value = v
+        if (D) {
+          renderTable()
+          renderSessions()
+        }
+      }
+      $('#tSearch').oninput = () => syncSearch('#tSearch')
       $('#tSort').onchange = () => D && renderTable()
-      $('#sSearch').oninput = () => D && renderSessions()
+      $('#sSearch').oninput = () => syncSearch('#sSearch')
       $('#sExpand').onclick = () => {
         sOpen = !sOpen
         $('#sExpand').textContent = sOpen
