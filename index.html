@@ -457,6 +457,14 @@
         overflow: hidden;
         margin: 6px 0;
       }
+      .srow { display: grid; grid-template-columns: 28px minmax(80px, 1fr) minmax(130px, 1.4fr) auto; gap: 6px; align-items: center; padding: 4px 2px; border-bottom: 1px solid var(--line); }
+      .srow.warn { background: rgba(255, 200, 0, 0.1); }
+      .srow.unk { background: rgba(255, 80, 80, 0.12); }
+      .srow.new { background: rgba(80, 200, 120, 0.1); }
+      .srow .sn { color: var(--gold); font-weight: 600; text-align: right; }
+      .srow code { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+      .srow input { width: 100%; }
+      .dupr { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; padding: 6px 0; border-bottom: 1px solid var(--line); }
       .ocrmsg {
         font-weight: 600;
         color: var(--gold);
@@ -1048,6 +1056,8 @@
                 เพิ่มทั้งหมด
               </button>
             </details>
+            <button class="btn sm adminonly" id="bDups" style="margin-bottom:8px">🧹 ตรวจชื่อซ้ำ / รวมสมาชิก</button>
+            <div id="dupBox" style="margin-bottom:8px"></div>
             <input
               type="search"
               id="mSearch"
@@ -1642,6 +1652,7 @@
           if (k.length >= 3) out.add(k)
         }
         ;(m.aliases || []).forEach(a => out.add(a))
+        ;(m.alts || []).forEach(a => add(a))
         return [...out]
       }
       // ตัดป้ายกิลด์ [..][..] หน้าชื่อ และเลเวลท้ายชื่อ (เช่น 30, 27+, /31) ออก
@@ -2133,6 +2144,57 @@
       const nextNo = () =>
         Math.max(0, ...S.sessions.map(s => s.no), ...drafts.map(d => d.no)) + 1
       const memById = id => S.members.find(m => m.id === id)
+      // หาสมาชิกจากชื่อที่พิมพ์: ตรงเป๊ะ หรือคล้ายมาก (เลขท้ายต่างกัน = คนละคน) — กันสร้างชื่อซ้ำ
+      const findMember = nm => {
+        const l = String(nm).trim().toLowerCase()
+        const ex = S.members.find(x => x.name.toLowerCase() === l)
+        if (ex) return ex
+        const k = skel(nm)
+        if (k.length < 2) return null
+        let best = null, bs = 0
+        for (const x of S.members) {
+          const c1 = codeOf(nm), c2 = codeOf(x.name)
+          if (c1 && c2 && c1 !== c2) continue
+          const s = Math.max(...variants(x).map(v => sim(k, v)))
+          if (s > bs) { bs = s; best = x }
+        }
+        return bs >= 0.88 ? best : null
+      }
+      function mergeMembers(keepId, dropId) {
+        const a = memById(keepId), b = memById(dropId)
+        if (!a || !b) return
+        a.aliases = [...new Set([...(a.aliases || []), ...(b.aliases || []), skel(b.name)])]
+        a.alts = [...new Set([...(a.alts || []), ...(b.alts || []), b.name])]
+        a.adjU = (+a.adjU || 0) + (+b.adjU || 0)
+        a.adjP = (+a.adjP || 0) + (+b.adjP || 0)
+        S.sessions.forEach(s => { if (s.att.includes(dropId)) s.att = [...new Set(s.att.map(i => (i === dropId ? keepId : i)))] })
+        drafts.forEach(x => { x.found.forEach(f => { if (f.mid === dropId) f.mid = keepId }); x.found = x.found.filter((f, i, arr) => arr.findIndex(g => g.mid === f.mid) === i) })
+        S.members = S.members.filter(x => x !== b)
+        logAct('รวมสมาชิก', `${b.name} → ${a.name}`)
+        save()
+        renderAll()
+      }
+      function renderDups() {
+        const no = new Set(S.notDup || []), cnt = new Map(calcRows().map(r => [r.m.id, r.cnt])), out = []
+        const ms = S.members
+        for (let i = 0; i < ms.length; i++)
+          for (let j = i + 1; j < ms.length; j++) {
+            const a = ms[i], b = ms[j]
+            if (no.has(a.id + '|' + b.id) || no.has(b.id + '|' + a.id)) continue
+            const c1 = codeOf(a.name), c2 = codeOf(b.name)
+            if (c1 && c2 && c1 !== c2) continue
+            const s = sim(skel(a.name), skel(b.name))
+            if (s >= 0.8) out.push({ a, b, s })
+          }
+        out.sort((x, y) => y.s - x.s)
+        $('#dupBox').innerHTML = out.length
+          ? `<div class="hint">พบคู่ที่อาจเป็นคนเดียวกัน ${out.length} คู่ — เลือกว่าจะเก็บชื่อไหน (ประวัติเข้าร่วมจะรวมกัน)</div>` +
+            out.slice(0, 30).map(({ a, b, s }) => `<div class="dupr"><b>${esc(a.name)}</b> (${cnt.get(a.id) || 0}) ⟷ <b>${esc(b.name)}</b> (${cnt.get(b.id) || 0}) <small>${Math.round(s * 100)}%</small>
+              <button class="btn sm" data-act="dup-merge" data-a="${a.id}" data-b="${b.id}">เก็บ "${esc(a.name)}"</button>
+              <button class="btn sm" data-act="dup-merge" data-a="${b.id}" data-b="${a.id}">เก็บ "${esc(b.name)}"</button>
+              <button class="btn sm ghost" data-act="dup-no" data-a="${a.id}" data-b="${b.id}">คนละคน</button></div>`).join('')
+          : '<div class="hint">✅ ไม่พบชื่อที่ซ้ำกัน</div>'
+      }
       const draftPts = d =>
         d.mode === 'fixed'
           ? d.pts
@@ -2301,7 +2363,10 @@
         const prompt =
           'นี่คือภาพแคปรายชื่อผู้เล่นในเกม พิมพ์ชื่อผู้เล่นทุกบรรทัดตามที่เห็น บรรทัดละ 1 คน เรียงจากบนลงล่าง ' +
           'คงป้ายกิลด์ในวงเล็บเหลี่ยมไว้ตามที่เห็น ถ้าชื่อลงท้ายด้วยเลข 2-4 หลักติดกับชื่อ ให้คงเลขนั้นไว้ติดกับชื่อ ส่วนเลขเลเวลที่อยู่ห่างออกไปท้ายบรรทัดให้ตัดทิ้ง ' +
-          'ห้ามเดาตัวอักษรที่มองไม่ชัด ให้ใส่ ? แทนตัวนั้น ตอบเฉพาะรายชื่อ ไม่ต้องมีคำอธิบายหรือหมายเลขลำดับ'
+          'ห้ามเดาตัวอักษรที่มองไม่ชัด ให้ใส่ ? แทนตัวนั้น ตอบเฉพาะรายชื่อ ไม่ต้องมีคำอธิบายหรือหมายเลขลำดับ' +
+          (S.members.length
+            ? ' รายชื่อสมาชิกที่น่าจะอยู่ในรูป: ' + S.members.slice(0, 150).map(m => m.name).join(' | ') + ' — ถ้าชื่อในรูปคล้ายกับรายการนี้อย่างชัดเจน ให้พิมพ์ตามชื่อในรายการ ถ้าไม่ใช่ให้พิมพ์ตามที่เห็นจริง ห้ามเดาให้เป็นชื่อในรายการ'
+            : '')
         const body = JSON.stringify({
           contents: [
             {
@@ -2520,8 +2585,14 @@
             const k = skel(u.text)
             const dupInDraft = d.found.some(f => sim(skel(f.text), k) >= 0.85)
             if (isJunkLine(u.text) || dupInDraft) continue
-            if (u.sugg.some(x => x.score >= 0.6)) {
+            if (u.sugg.length) {
               rest.push(u) // คล้ายสมาชิกเดิมมาก → ให้คนตรวจเอง กันชื่อซ้ำ
+              continue
+            }
+            const ex = findMember(u.text)
+            if (ex) {
+              if (!d.found.some(f => f.mid === ex.id))
+                d.found.push({ mid: ex.id, conf: 0.8, text: u.text, ord: u.li })
               continue
             }
             const m = { id: uid(), name: u.text, aliases: [], tmp: true }
@@ -2601,6 +2672,32 @@
       <button class="btn sm ghost" data-act="ign" data-d="${d.id}" data-u="${i}" title="ไม่ใช่ชื่อคน (จำไว้ ครั้งหน้าไม่ถามอีก)">ข้าม</button></div>`
           )
           .join('')
+        const nameOf = f => memById(f.mid)?.name || ''
+        const rows = [
+          ...d.found.filter(f => memById(f.mid)).map(f => ({ ord: f.ord ?? 1e6, f })),
+          ...d.unk.map((u, i) => ({ ord: u.li ?? 1e6, u, i })),
+        ]
+        rows.sort(
+          d.sortBy === 'name'
+            ? (a, b) => (a.f ? nameOf(a.f) : a.u.text).localeCompare(b.f ? nameOf(b.f) : b.u.text, 'th')
+            : (a, b) => a.ord - b.ord
+        )
+        const rowsHTML = rows.length
+          ? `<div class="hint" style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">ลำดับตามรูป · พิมพ์แก้หรือเลือกชื่อในช่องได้เลย ระบบจะจำคำที่อ่านผิดให้
+              <button class="btn sm ghost" data-act="sortrows" data-d="${d.id}">เรียง: ${d.sortBy === 'name' ? 'ก-ฮ' : 'ตามรูป'} ⇅</button></div>` +
+            rows.map((r, n) => {
+              if (r.f) {
+                const f = r.f, m = memById(f.mid), cls = f.manual ? 'man' : f.isNew ? 'new' : f.conf < 0.88 ? 'warn' : ''
+                return `<div class="srow ${cls}"><span class="sn">${n + 1}</span><code title="ข้อความที่ระบบอ่านได้">${f.manual ? '<span class="mute">เลือกเอง</span>' : esc(f.text)}</code>
+                  <input type="text" list="dlMembers" value="${esc(m.name)}" data-f="fix" data-d="${d.id}" data-k="f:${f.mid}">
+                  <span style="white-space:nowrap">${!f.manual && f.conf < 0.88 ? `<small>${Math.round(f.conf * 100)}%</small> ` : ''}${f.isNew ? '<small>ใหม่</small> ' : ''}<button class="btn sm ghost" data-act="m-ren" data-d="${d.id}" data-mid="${f.mid}" title="แก้ชื่อสมาชิกคนนี้">✏️</button><button class="btn sm ghost" data-act="rmfound" data-d="${d.id}" data-mid="${f.mid}" title="เอาออก">✕</button></span></div>`
+              }
+              const u = r.u, i = r.i
+              return `<div class="srow unk"><span class="sn">${n + 1}</span><code title="${esc(u.text)}">${esc(u.text)}</code>
+                <input type="text" list="dlMembers" placeholder="❓ เลือก/พิมพ์ชื่อสมาชิก" data-f="fix" data-d="${d.id}" data-k="u:${i}">
+                <span>${u.sugg.slice(0, 2).map(s => `<button class="sug" data-act="sugg" data-d="${d.id}" data-u="${i}" data-mid="${s.mid}">${esc(memById(s.mid)?.name || '?')} ${Math.round(s.score * 100)}%</button>`).join('')}<button class="btn sm" data-act="newm" data-d="${d.id}" data-u="${i}" title="เพิ่มเป็นสมาชิกใหม่">＋ใหม่</button><button class="btn sm ghost" data-act="ign" data-d="${d.id}" data-u="${i}" title="ไม่ใช่ชื่อคน (จำไว้)">ข้าม</button></span></div>`
+            }).join('') + (d.unk.length > 1 ? `<div style="margin-top:6px"><button class="btn sm ghost" data-act="ignall" data-d="${d.id}">ข้ามบรรทัดสีแดงทั้งหมด (ไม่ใช่ชื่อคน)</button></div>` : '')
+          : '<span class="hint">ยังไม่มีรายชื่อ</span>'
         const state =
           d.status === 'running' || d.status === 'queued'
             ? `<div class="bar"><i style="width:${Math.round((d.bar || 0) * 100)}%"></i></div><div class="hint ocrmsg">${esc(d.msg)}</div>`
@@ -2634,8 +2731,7 @@
       </div>
       ${state}
       <div><b>✅ ตรวจพบ ${d.found.length} คน</b> ${d.unk.length ? `<span class="mute">· ❓ ไม่ตรงกับใคร ${d.unk.length} บรรทัด</span>` : ''}</div>
-      <div class="chips">${chips || '<span class="hint">ยังไม่มีรายชื่อ</span>'}</div>
-      ${d.unk.length ? `<details ${d.unk.length <= 6 ? 'open' : ''}><summary>❓ บรรทัดที่ไม่ตรงกับใคร (${d.unk.length}) — กดเพื่อตรวจ</summary>${unk}${d.unk.length > 1 ? `<div class="urow"><button class="btn sm ghost" data-act="ignall" data-d="${d.id}">ข้ามทั้งหมด (ไม่ใช่ชื่อคน)</button></div>` : ''}</details>` : ''}
+      ${rowsHTML}
       ${d.raw ? `<details><summary>🔍 ดูข้อความดิบที่ระบบอ่านได้ (ไว้ตรวจว่าอ่านผิดตรงไหน)</summary><pre style="white-space:pre-wrap;font-size:13px;background:var(--base);border:1px solid var(--line);padding:8px;max-height:260px;overflow:auto">${esc(d.raw)}</pre></details>` : ''}
       <details><summary>วางรายชื่อเพิ่ม (พิมพ์/คัดลอกมา 1 บรรทัด = 1 คน)</summary>
         <textarea data-f="paste" data-d="${d.id}" placeholder="ชื่อ1&#10;ชื่อ2"></textarea><button class="btn sm" data-act="paste" data-d="${d.id}" style="margin-top:6px">จับคู่ชื่อที่วาง</button></details>
@@ -2705,6 +2801,8 @@
             k = skel(f.text)
           if (m && k.length >= 2 && !variants(m).includes(k))
             (m.aliases = m.aliases || []).push(k)
+          if (m && f.text && f.text !== m.name && !(m.alts || []).includes(f.text))
+            (m.alts = m.alts || []).push(f.text)
         }
         s.att.forEach(i => {
           const m = memById(i)
@@ -2841,8 +2939,8 @@
         $('#mBody').innerHTML =
           list
             .map(
-              m => `<tr><td>${esc(m.name)}${codeBadge(m)}${(m.aliases || []).length ? ` <span class="mute" title="ชื่อที่ระบบจำไว้จากการแก้ไข ${(m.aliases || []).length} แบบ">🧠${m.aliases.length}</span>` : ''}</td>
-    <td class="num">${cnt.get(m.id) || 0} ครั้ง</td><td style="white-space:nowrap"><button class="btn sm" data-act="m-ren" data-mid="${m.id}">✏️</button> <button class="btn sm ghost" data-act="m-del" data-mid="${m.id}">🗑</button></td></tr>`
+              m => `<tr><td>${esc(m.name)}${codeBadge(m)}${(m.alts || []).length ? `<div class="mute" style="font-size:12px">อ่านได้ว่า: ${esc(m.alts.join(' · '))}</div>` : ''}${(m.aliases || []).length && !(m.alts || []).length ? ` <span class="mute" title="ชื่อที่ระบบจำไว้จากการแก้ไข ${(m.aliases || []).length} แบบ">🧠${m.aliases.length}</span>` : ''}</td>
+    <td class="num">${cnt.get(m.id) || 0} ครั้ง</td><td style="white-space:nowrap"><button class="btn sm" data-act="m-ren" data-mid="${m.id}" title="แก้ชื่อ">✏️</button> <button class="btn sm" data-act="m-alts" data-mid="${m.id}" title="แก้ชื่อที่ระบบจำ/มักอ่านผิด">🧠</button> <button class="btn sm ghost" data-act="m-del" data-mid="${m.id}">🗑</button></td></tr>`
             )
             .join('') ||
           `<tr><td class="mute" style="padding:20px">ยังไม่มีสมาชิก — วางรายชื่อด้านบน หรือนำเข้าจากชีตเดิม</td></tr>`
@@ -3166,6 +3264,25 @@
           }
           return
         }
+        if (act === 'dup-merge') {
+          if (!isAdminRole()) return toast('สิทธิ์ไม่พอ — เฉพาะแอดมิน')
+          mergeMembers(b.dataset.a, b.dataset.b)
+          return renderDups()
+        }
+        if (act === 'dup-no') {
+          ;(S.notDup = S.notDup || []).push(b.dataset.a + '|' + b.dataset.b)
+          save()
+          return renderDups()
+        }
+        if (act === 'm-alts') {
+          const m = memById(mid), v = prompt('ชื่อที่ระบบมักอ่านได้สำหรับ "' + m.name + '" (คั่นด้วย , ลบออกได้)', (m.alts || []).join(', '))
+          if (v === null) return
+          m.alts = v.split(',').map(x => x.trim()).filter(Boolean)
+          m.aliases = m.alts.map(skel).filter(Boolean)
+          logAct('แก้ชื่อที่ระบบจำ', `${m.name}: ${m.alts.join(', ')}`)
+          save()
+          return renderAll()
+        }
         if (act === 'm-del') {
           const m = memById(mid)
           if (confirm(`ลบ "${m.name}" ? (จะถูกเอาออกจากทุกรอบด้วย)`)) {
@@ -3191,6 +3308,10 @@
           d.mode = 'fixed'
           return renderCard(d)
         }
+        if (act === 'sortrows') {
+          d.sortBy = d.sortBy === 'name' ? 'ord' : 'name'
+          return renderCard(d)
+        }
         if (act === 'rmfound') {
           d.found = d.found.filter(f => f.mid !== mid)
           renderHeader()
@@ -3208,9 +3329,7 @@
           const u = d.unk[+b.dataset.u]
           if (!u) return
           const nm = u.text.trim()
-          const ex = S.members.find(
-              m => m.name.toLowerCase() === nm.toLowerCase()
-            ),
+          const ex = findMember(nm),
             m = ex || { id: uid(), name: nm, aliases: [] }
           if (!ex) S.members.push(m)
           save()
@@ -3287,6 +3406,22 @@
         if (f === 'label') {
           d.label = t.value
           return
+        }
+        if (f === 'fix') {
+          const [kind, key] = t.dataset.k.split(':'), nm = t.value.trim()
+          const row = kind === 'f' ? d.found.find(x => x.mid === key) : d.unk[+key]
+          if (!row || !nm) return
+          let m = findMember(nm)
+          if (!m) { m = { id: uid(), name: nm.slice(0, 60), aliases: [] }; S.members.push(m); logAct('เพิ่มสมาชิก', nm) }
+          if (kind === 'f' && m.id === key) return
+          const ocr = row.text, ord = kind === 'f' ? row.ord : row.li
+          if (kind === 'f') d.found = d.found.filter(x => x.mid !== key)
+          else d.unk.splice(+key, 1)
+          if (d.found.some(x => x.mid === m.id)) toast(m.name + ' มีในรอบนี้แล้ว')
+          else d.found.push({ mid: m.id, conf: 1, text: ocr || m.name, learn: true, ord })
+          save()
+          renderHeader()
+          return renderCard(d)
         }
         if (f === 'resolve') {
           const nm = t.value.trim().toLowerCase(),
@@ -3465,7 +3600,7 @@
             .trim()
           if (!n) continue
           if (/^(ชื่อ|ชื่อสมาชิก|name)$/i.test(n)) continue
-          if (S.members.some(m => m.name.toLowerCase() === n.toLowerCase())) {
+          if (findMember(n)) {
             dup++
             continue
           }
@@ -3477,6 +3612,7 @@
         renderAll()
         toast(`เพิ่มสมาชิก ${added} คน${dup ? ` (ซ้ำ ${dup})` : ''}`)
       }
+      $('#bDups').onclick = renderDups
       $('#mBulkAdd').onclick = () => {
         addMembersFromText($('#mBulk').value)
         $('#mBulk').value = ''
