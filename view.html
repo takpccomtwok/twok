@@ -428,21 +428,14 @@
             </span>
           </h2>
           <div class="hint" id="rule" style="margin-bottom: 10px"></div>
-          <div class="row" style="margin-bottom: 10px">
-            <span class="hint">เลขรูปที่มีพื้นหลังทอง = รอบที่ได้แต้มพิเศษ</span>
-          </div>
           <div class="tw">
             <table class="tbl pretty">
               <thead>
                 <tr>
                   <th class="rk">#</th>
                   <th>ชื่อสมาชิก</th>
-                  <th>รูปที่เข้าร่วม</th>
-                  <th class="r">มา (รอบ)</th>
-                  <th class="r">นับรวม (ครั้ง)</th>
+                  <th>รอบที่มา</th>
                   <th class="r">แต้ม</th>
-                  <th class="r">อีกกี่ครั้งได้แต้มต่อไป</th>
-                  <th class="r">เข้าร่วม</th>
                 </tr>
               </thead>
               <tbody id="tBody"></tbody>
@@ -482,7 +475,7 @@
       </main>
     </div>
 
-    <footer>ข้อมูลอัปเดตอัตโนมัติ · หน้านี้ดูได้อย่างเดียว · view v3</footer>
+    <footer>ข้อมูลอัปเดตอัตโนมัติ · หน้านี้ดูได้อย่างเดียว · view v4</footer>
 
     <script type="module">
       const CFG = {
@@ -527,9 +520,7 @@
       function renderTable() {
         const q = $('#tSearch').value.trim().toLowerCase(),
           sort = $('#tSort').value,
-          total = D.ses.length,
-          bonus = new Set(D.ses.filter(s => s.p !== D.normal).map(s => s.no)),
-          per = Math.max(1, D.per || 5)
+          x = 0
         // เลขรอบของแต่ละคน: ดึงจากรายการรอบที่บันทึกโดยตรง (ถ้าไม่มีค่อยใช้ r.o)
         const att = new Map()
         D.ses.forEach(s =>
@@ -560,19 +551,11 @@
                 (r, i) => `<tr>
         <td class="rk${i < 3 && r.p > 0 && !q && sort === 'pts' ? ' top' : ''}">${i + 1}</td>
         <td>${esc(nm(r.n))}</td>
-        <td>${
-          nosOf(r)
-            .map(no => `<span class="${bonus.has(no) ? 'n2' : 'n1'}">${no}</span>`)
-            .join(',') || '<span class="mute">—</span>'
-        }</td>
-        <td class="num">${r.c}</td>
-        <td class="num">${r.u}</td>
-        <td class="num pts">${r.p}</td>
-        <td class="num mute">อีก ${per - (r.u % per)} ครั้ง</td>
-        <td class="num">${total ? Math.round((r.c / total) * 100) : 0}%</td></tr>`
+        <td>${nosOf(r).join(', ') || '<span class="mute">—</span>'}</td>
+        <td class="num pts">${r.p}</td></tr>`
               )
               .join('')
-          : `<tr><td colspan="8" class="mute" style="padding:30px;text-align:center">${q ? 'ไม่พบชื่อนี้' : 'ยังไม่มีข้อมูล'}</td></tr>`
+          : `<tr><td colspan="4" class="mute" style="padding:30px;text-align:center">${q ? 'ไม่พบชื่อนี้' : 'ยังไม่มีข้อมูล'}</td></tr>`
       }
 
       function renderSessions() {
