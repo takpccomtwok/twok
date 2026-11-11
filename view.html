@@ -1,0 +1,520 @@
+<!doctype html>
+<html lang="th">
+  <head>
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, viewport-fit=cover"
+    />
+    <title>TWOK · ตารางคะแนนและรอบที่บันทึก</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Kanit:wght@500;700;800&family=Noto+Sans+Thai:wght@400;600&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        --base: #14161c;
+        --panel: #1c1f27;
+        --panel2: #262a36;
+        --line: #3d4352;
+        --bone: #f6f3ee;
+        --mute: #b8bece;
+        --blood: #e11d2e;
+        --gold: #ffc83d;
+        --ok: #3ddc84;
+      }
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+      body {
+        background:
+          radial-gradient(circle at 20% -10%, #3a1218 0, transparent 45%),
+          var(--base);
+        color: var(--bone);
+        font-family: 'Noto Sans Thai', system-ui, sans-serif;
+        line-height: 1.5;
+        min-height: 100vh;
+      }
+      header {
+        padding: 18px 16px 12px;
+        border-bottom: 2px solid var(--blood);
+        display: flex;
+        align-items: baseline;
+        gap: 12px;
+        flex-wrap: wrap;
+      }
+      .logo {
+        font-family: 'Kanit';
+        font-weight: 800;
+        font-size: 28px;
+        color: var(--gold);
+        letter-spacing: 1px;
+      }
+      header small {
+        color: var(--mute);
+      }
+      main {
+        max-width: 1000px;
+        margin: 0 auto;
+        padding: 14px 12px 60px;
+      }
+      .rule {
+        background: rgba(255, 200, 61, 0.1);
+        border-left: 4px solid var(--gold);
+        padding: 8px 12px;
+        font-size: 14px;
+        margin-bottom: 12px;
+      }
+      .stats {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 8px;
+        margin-bottom: 12px;
+      }
+      .stat {
+        background: var(--panel);
+        border: 1px solid var(--line);
+        padding: 8px;
+        text-align: center;
+      }
+      .stat b {
+        display: block;
+        font-family: 'Kanit';
+        font-size: 24px;
+        color: var(--gold);
+      }
+      .stat span {
+        font-size: 12px;
+        color: var(--mute);
+      }
+      .bar {
+        display: flex;
+        gap: 8px;
+        flex-wrap: wrap;
+        margin-bottom: 10px;
+      }
+      .bar input {
+        flex: 1;
+        min-width: 180px;
+        background: var(--panel);
+        color: var(--bone);
+        border: 1px solid var(--line);
+        padding: 10px 12px;
+        font: inherit;
+        font-size: 16px;
+      }
+      .tabs {
+        display: flex;
+        gap: 4px;
+      }
+      .tabs button,
+      .xbtn {
+        background: var(--panel2);
+        color: var(--bone);
+        border: 1px solid var(--line);
+        padding: 9px 14px;
+        font: inherit;
+        font-weight: 600;
+        cursor: pointer;
+      }
+      .tabs button.on {
+        background: var(--gold);
+        color: #111;
+        border-color: var(--gold);
+      }
+      .tw {
+        overflow-x: auto;
+        border: 1px solid var(--line);
+        background: var(--panel);
+      }
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        min-width: 520px;
+      }
+      th,
+      td {
+        padding: 9px 10px;
+        border-bottom: 1px solid var(--line);
+        text-align: left;
+        vertical-align: middle;
+      }
+      th {
+        background: var(--panel2);
+        color: var(--gold);
+        font-family: 'Kanit';
+        white-space: nowrap;
+        position: sticky;
+        top: 0;
+      }
+      td.n,
+      th.n {
+        text-align: right;
+        font-family: 'Kanit';
+        font-weight: 700;
+      }
+      td.p {
+        color: var(--gold);
+        font-size: 20px;
+        font-family: 'Kanit';
+        font-weight: 800;
+        text-align: right;
+      }
+      td.rk {
+        width: 48px;
+        text-align: center;
+        font-family: 'Kanit';
+        font-weight: 800;
+        color: var(--gold);
+      }
+      td.rk.top {
+        background: var(--gold);
+        color: #111;
+      }
+      tr.pr {
+        cursor: pointer;
+      }
+      tr.pr:nth-child(4n + 1) td,
+      tr.pr:nth-child(4n + 1) + tr td {
+        background: rgba(255, 255, 255, 0.025);
+      }
+      tr.pr:hover td {
+        background: rgba(255, 200, 61, 0.08);
+      }
+      tr.det td {
+        background: var(--base) !important;
+      }
+      .rounds {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 4px;
+      }
+      .rn {
+        background: var(--panel2);
+        border: 1px solid var(--line);
+        padding: 0 8px;
+        font-size: 13px;
+        cursor: pointer;
+        color: var(--bone);
+      }
+      .rn.b {
+        background: var(--gold);
+        border-color: var(--gold);
+        color: #111;
+        font-weight: 700;
+      }
+      .mute {
+        color: var(--mute);
+      }
+      .card {
+        background: var(--panel);
+        border: 1px solid var(--line);
+        margin-bottom: 10px;
+        padding: 10px 12px;
+      }
+      .card.flash {
+        outline: 3px solid var(--gold);
+      }
+      .ch {
+        display: flex;
+        gap: 8px 14px;
+        flex-wrap: wrap;
+        align-items: baseline;
+      }
+      .ch .no {
+        font-family: 'Kanit';
+        font-weight: 800;
+        font-size: 20px;
+        color: var(--gold);
+      }
+      .tag {
+        padding: 0 8px;
+        font-size: 13px;
+        background: var(--panel2);
+        border: 1px solid var(--line);
+      }
+      .tag.b {
+        background: var(--gold);
+        color: #111;
+        border-color: var(--gold);
+        font-weight: 700;
+      }
+      details summary {
+        cursor: pointer;
+        color: var(--gold);
+        font-weight: 600;
+        margin-top: 6px;
+      }
+      .nms {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 4px;
+        margin-top: 8px;
+      }
+      .nms span {
+        background: var(--base);
+        border: 1px solid var(--line);
+        padding: 1px 8px;
+        font-size: 14px;
+      }
+      .nms span.hit {
+        background: var(--gold);
+        color: #111;
+        border-color: var(--gold);
+        font-weight: 700;
+      }
+      #state {
+        text-align: center;
+        padding: 40px 12px;
+        color: var(--mute);
+      }
+      #state.err {
+        color: #ff8a8a;
+      }
+      footer {
+        text-align: center;
+        color: var(--mute);
+        font-size: 12px;
+        padding: 20px;
+      }
+      @media (max-width: 520px) {
+        .logo {
+          font-size: 24px;
+        }
+        td.p {
+          font-size: 18px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <span class="logo">TWOK</span>
+      <span>ตารางคะแนนและรอบที่บันทึก</span>
+      <small id="upd"></small>
+    </header>
+    <main>
+      <div id="state">กำลังโหลดข้อมูล...</div>
+      <div id="app" hidden>
+        <div class="rule" id="rule"></div>
+        <div class="stats">
+          <div class="stat"><b id="sM">0</b><span>สมาชิก</span></div>
+          <div class="stat"><b id="sS">0</b><span>รอบที่บันทึก</span></div>
+          <div class="stat"><b id="sP">0</b><span>แต้มที่แจกแล้ว</span></div>
+        </div>
+        <div class="bar">
+          <input
+            type="search"
+            id="q"
+            placeholder="ค้นหาชื่อของคุณ..."
+            autocomplete="off"
+          />
+          <div class="tabs">
+            <button class="on" data-t="score">ตารางคะแนน</button>
+            <button data-t="ses">รอบที่บันทึก</button>
+          </div>
+        </div>
+        <section id="score">
+          <div class="tw">
+            <table>
+              <thead>
+                <tr>
+                  <th>#</th>
+                  <th>ชื่อ</th>
+                  <th class="n">แต้ม</th>
+                  <th class="n">นับรวม (ครั้ง)</th>
+                  <th class="n">มา (รอบ)</th>
+                  <th class="n">อีกกี่ครั้งได้แต้มต่อไป</th>
+                </tr>
+              </thead>
+              <tbody id="tb"></tbody>
+            </table>
+          </div>
+          <p class="mute" style="font-size: 13px; margin-top: 6px">
+            กดที่ชื่อเพื่อดูว่าเข้าร่วมรอบไหนบ้าง (เลขสีทอง =
+            รอบที่ได้ครั้งพิเศษ)
+          </p>
+        </section>
+        <section id="ses" hidden>
+          <div style="margin-bottom: 8px">
+            <button class="xbtn" id="xp">ขยายรายชื่อทั้งหมด</button>
+          </div>
+          <div id="sl"></div>
+        </section>
+      </div>
+    </main>
+    <footer>ข้อมูลอัปเดตอัตโนมัติ · หน้านี้ดูได้อย่างเดียว</footer>
+
+    <script type="module">
+      const CFG = {
+        apiKey: 'AIzaSyC6GupbkoLqT__2Xp_ztAK5wOhuxDxq4ZY',
+        authDomain: 'twok-3a569.firebaseapp.com',
+        projectId: 'twok-3a569',
+        appId: '1:486045733897:web:74d2781ae9d3fe10f114d8',
+      }
+      const G = 'https://www.gstatic.com/firebasejs/10.14.1'
+      const $ = s => document.querySelector(s)
+      const esc = t =>
+        String(t).replace(
+          /[&<>"']/g,
+          c =>
+            ({
+              '&': '&amp;',
+              '<': '&lt;',
+              '>': '&gt;',
+              '"': '&quot;',
+              "'": '&#39;',
+            })[c]
+        )
+      const fmt = ms =>
+        new Date(ms).toLocaleString('th-TH', {
+          dateStyle: 'short',
+          timeStyle: 'short',
+        })
+      const state = (t, err) => {
+        $('#state').hidden = false
+        $('#state').className = err ? 'err' : ''
+        $('#state').textContent = t
+        $('#app').hidden = true
+      }
+      let D = null,
+        openAll = false,
+        tab = 'score'
+      const hits = q =>
+        q
+          ? new Set(
+              D.names
+                .map((n, i) => (n.toLowerCase().includes(q) ? i : -1))
+                .filter(i => i >= 0)
+            )
+          : null
+
+      function render() {
+        const q = $('#q').value.trim().toLowerCase(),
+          hit = hits(q)
+        const lastNo = new Set(
+          D.ses.filter(s => s.p !== D.normal).map(s => s.no)
+        )
+        $('#rule').textContent = 'กติกาแต้ม: ' + D.rule
+        $('#sM').textContent = D.names.length
+        $('#sS').textContent = D.ses.length
+        $('#sP').textContent = D.rows.reduce((t, r) => t + r.p, 0)
+        const rows = D.rows
+          .slice()
+          .sort(
+            (a, b) =>
+              b.p - a.p ||
+              b.c - a.c ||
+              D.names[a.n].localeCompare(D.names[b.n], 'th')
+          )
+        $('#tb').innerHTML = rows.length
+          ? rows
+              .map((r, i) => ({ r, i }))
+              .filter(({ r }) => !hit || hit.has(r.n))
+              .map(
+                ({ r, i }) => `
+            <tr class="pr" data-i="${r.n}"><td class="rk${i < 3 && r.p > 0 ? ' top' : ''}">${i + 1}</td><td>${esc(D.names[r.n])}</td>
+              <td class="p">${r.p}</td><td class="n">${r.u}</td><td class="n">${r.c}</td><td class="n mute">อีก ${D.per - (r.u % D.per)} ครั้ง</td></tr>
+            <tr class="det" id="d${r.n}" hidden><td></td><td colspan="5"><div class="rounds">${r.o.length ? r.o.map(no => `<button class="rn${lastNo.has(no) ? ' b' : ''}" data-no="${no}">#${no}</button>`).join('') : '<span class="mute">ยังไม่เคยเข้าร่วม</span>'}</div></td></tr>`
+              )
+              .join('') ||
+            '<tr><td colspan="6" class="mute" style="padding:24px;text-align:center">ไม่พบชื่อนี้</td></tr>'
+          : '<tr><td colspan="6" class="mute" style="padding:24px;text-align:center">ยังไม่มีข้อมูล</td></tr>'
+        const ses = D.ses
+          .slice()
+          .sort((a, b) => b.t - a.t)
+          .filter(s => !hit || s.a.some(i => hit.has(i)))
+        $('#sl').innerHTML = ses.length
+          ? ses
+              .map(
+                (s, k) => `
+            <div class="card" id="s${s.no}"><div class="ch"><span class="no">#${s.no}</span><span>${fmt(s.t)}</span>
+              <span class="tag${s.p !== D.normal ? ' b' : ''}">นับ ${s.p} ครั้ง</span>${s.l ? `<span>${esc(s.l)}</span>` : ''}<span class="mute">${s.a.length} คน</span></div>
+              <details${openAll || hit || k < 2 ? ' open' : ''}><summary>รายชื่อที่มา (${s.a.length})</summary>
+                <div class="nms">${
+                  s.a
+                    .map(i => [i, D.names[i]])
+                    .sort((x, y) => x[1].localeCompare(y[1], 'th'))
+                    .map(
+                      ([i, n]) =>
+                        `<span${hit && hit.has(i) ? ' class="hit"' : ''}>${esc(n)}</span>`
+                    )
+                    .join('') || '<span>—</span>'
+                }</div></details></div>`
+              )
+              .join('')
+          : `<div class="mute" style="padding:24px;text-align:center">${hit ? 'ไม่พบชื่อนี้ในรอบไหนเลย' : 'ยังไม่มีรอบที่บันทึก'}</div>`
+      }
+      const setTab = t => {
+        tab = t
+        $('#score').hidden = t !== 'score'
+        $('#ses').hidden = t !== 'ses'
+        document
+          .querySelectorAll('.tabs button')
+          .forEach(b => b.classList.toggle('on', b.dataset.t === t))
+      }
+      document
+        .querySelectorAll('.tabs button')
+        .forEach(b => (b.onclick = () => setTab(b.dataset.t)))
+      $('#q').oninput = () => D && render()
+      $('#xp').onclick = () => {
+        openAll = !openAll
+        $('#xp').textContent = openAll
+          ? 'ย่อรายชื่อทั้งหมด'
+          : 'ขยายรายชื่อทั้งหมด'
+        render()
+      }
+      $('#tb').onclick = e => {
+        const b = e.target.closest('.rn')
+        if (b) {
+          setTab('ses')
+          const c = $('#s' + b.dataset.no)
+          if (c) {
+            c.querySelector('details').open = true
+            c.scrollIntoView({ behavior: 'smooth', block: 'center' })
+            c.classList.add('flash')
+            setTimeout(() => c.classList.remove('flash'), 2000)
+          }
+          return
+        }
+        const tr = e.target.closest('tr.pr')
+        if (tr) $('#d' + tr.dataset.i).hidden = !$('#d' + tr.dataset.i).hidden
+      }
+      try {
+        const { initializeApp } = await import(G + '/firebase-app.js')
+        const { getFirestore, doc, onSnapshot } = await import(
+          G + '/firebase-firestore.js'
+        )
+        const db = getFirestore(initializeApp(CFG))
+        onSnapshot(
+          doc(db, 'public', 'board'),
+          snap => {
+            if (!snap.exists())
+              return state('ยังไม่มีข้อมูล — รอแอดมินเปิดเผยแพร่หน้านี้')
+            const d = JSON.parse(snap.data().json)
+            if (d.off) return state('ผู้ดูแลปิดหน้านี้ไว้ชั่วคราว')
+            D = d
+            $('#state').hidden = true
+            $('#app').hidden = false
+            const at = snap.data().at
+            $('#upd').textContent =
+              at && at.toMillis ? 'อัปเดตล่าสุด ' + fmt(at.toMillis()) : ''
+            render()
+          },
+          e =>
+            state(
+              e.code === 'permission-denied'
+                ? 'ยังไม่ได้เปิดสิทธิ์อ่านหน้านี้ (ให้แอดมินเพิ่มกฎ public/board ใน Firestore Rules)'
+                : 'โหลดข้อมูลไม่สำเร็จ: ' + (e.code || e.message),
+              true
+            )
+        )
+      } catch (e) {
+        state('เชื่อมต่อไม่ได้ — ตรวจอินเทอร์เน็ตแล้วลองใหม่', true)
+      }
+    </script>
+  </body>
+</html>
