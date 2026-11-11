@@ -512,7 +512,7 @@
       </main>
     </div>
 
-    <footer>ข้อมูลอัปเดตอัตโนมัติ · หน้านี้ดูได้อย่างเดียว · view v6</footer>
+    <footer>ข้อมูลอัปเดตอัตโนมัติ · หน้านี้ดูได้อย่างเดียว · view v7</footer>
 
     <script type="module">
       const CFG = {
@@ -573,8 +573,8 @@
           const l = att.get(r.n) || r.o || []
           return l.slice().sort((a, b) => a - b)
         }
-        const rows = D.rows
-          .filter(r => !q || norm(nm(r.n)).includes(q))
+        const all = D.rows
+          .slice()
           .sort((a, b) =>
             sort === 'name'
               ? nm(a.n).localeCompare(nm(b.n), 'th')
@@ -585,11 +585,15 @@
                   b.c - a.c ||
                   nm(a.n).localeCompare(nm(b.n), 'th')
           )
+        // อันดับคิดจากตารางทั้งหมด (ค้นหาแล้วอันดับจริงของคนนั้นยังอยู่เหมือนเดิม)
+        const rows = all
+          .map((r, i) => ({ r, i }))
+          .filter(({ r }) => !q || norm(nm(r.n)).includes(q))
         $('#tCount').textContent = q ? `พบ ${rows.length} คน` : ''
         $('#tBody').innerHTML = rows.length
           ? rows
               .map(
-                (r, i) => `<tr>
+                ({ r, i }) => `<tr>
         <td class="rk${i < 3 && r.p > 0 ? ' top' : ''}">${i + 1}</td>
         <td>${esc(nm(r.n))}</td>
         <td><div class="vbox rounds">${nosOf(r).join(',<wbr>') || '<span class="mute">—</span>'}</div></td>
