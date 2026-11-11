@@ -457,14 +457,50 @@
         overflow: hidden;
         margin: 6px 0;
       }
-      .srow { display: grid; grid-template-columns: 28px minmax(80px, 1fr) minmax(130px, 1.4fr) auto; gap: 6px; align-items: center; padding: 4px 2px; border-bottom: 1px solid var(--line); }
-      .srow.warn { background: rgba(255, 200, 0, 0.1); }
-      .srow.unk { background: rgba(255, 80, 80, 0.12); }
-      .srow.new { background: rgba(80, 200, 120, 0.1); }
-      .srow .sn { color: var(--gold); font-weight: 600; text-align: right; }
-      .srow code { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-      .srow input { width: 100%; }
-      .dupr { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; padding: 6px 0; border-bottom: 1px solid var(--line); }
+      .btn[data-act='m-del'],
+      .btn[data-act='s-del'],
+      .btn[data-act='m-clear'] {
+        color: #ff8a8a;
+        border-color: #7a3b3b;
+      }
+      .srow {
+        display: grid;
+        grid-template-columns: 28px minmax(80px, 1fr) minmax(130px, 1.4fr) auto;
+        gap: 6px;
+        align-items: center;
+        padding: 4px 2px;
+        border-bottom: 1px solid var(--line);
+      }
+      .srow.warn {
+        background: rgba(255, 200, 0, 0.1);
+      }
+      .srow.unk {
+        background: rgba(255, 80, 80, 0.12);
+      }
+      .srow.new {
+        background: rgba(80, 200, 120, 0.1);
+      }
+      .srow .sn {
+        color: var(--gold);
+        font-weight: 600;
+        text-align: right;
+      }
+      .srow code {
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+      .srow input {
+        width: 100%;
+      }
+      .dupr {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 6px;
+        align-items: center;
+        padding: 6px 0;
+        border-bottom: 1px solid var(--line);
+      }
       .ocrmsg {
         font-weight: 600;
         color: var(--gold);
@@ -828,16 +864,16 @@
       </div>
       <div class="tools">
         <span id="who" class="hint"></span>
-        <button class="btn" id="btnLogout" hidden>🚪 ออกจากระบบ</button>
-        <button class="btn" id="btnBackup">💾 สำรองข้อมูล</button>
-        <button class="btn" id="btnRestore">📂 โหลดข้อมูล</button>
+        <button class="btn" id="btnLogout" hidden>ออกจากระบบ</button>
+        <button class="btn" id="btnBackup">สำรองข้อมูล</button>
+        <button class="btn" id="btnRestore">โหลดข้อมูล</button>
         <input type="file" id="restoreFile" accept=".json" class="hide" />
       </div>
     </header>
 
     <div id="auth" class="hide">
       <form class="box" id="authForm" autocomplete="on" novalidate>
-        <b style="font-size: 20px">🔐 TWOK — เข้าสู่ระบบ</b>
+        <b style="font-size: 20px">TWOK — เข้าสู่ระบบ</b>
         <input
           type="email"
           id="authEmail"
@@ -865,13 +901,11 @@
             id="authEye"
             aria-label="แสดง/ซ่อนรหัสผ่าน"
             title="แสดง/ซ่อนรหัสผ่าน"
-          >
-            👁
-          </button>
+          ></button>
         </div>
         <button class="btn red" id="authGo" type="submit">เข้าสู่ระบบ</button>
         <button class="btn" id="authGoogle" type="button">
-          🔑 เข้าสู่ระบบด้วย Google (Gmail)
+          เข้าสู่ระบบด้วย Google (Gmail)
         </button>
         <button class="btn sm ghost" id="authReset" type="button">
           ลืมรหัสผ่าน? ส่งอีเมลรีเซ็ตรหัส
@@ -881,11 +915,11 @@
     </div>
     <div id="cloudBanner" class="hint" style="padding: 4px 14px"></div>
     <nav id="tabs">
-      <button class="tab on" data-tab="add">📥 ใส่รูปเช็คชื่อ</button>
-      <button class="tab" data-tab="table">📊 ตารางคะแนน</button>
-      <button class="tab" data-tab="sessions">🗂 รอบที่บันทึก</button>
-      <button class="tab" data-tab="log">📜 Log</button>
-      <button class="tab" data-tab="members">👥 สมาชิก &amp; ตั้งค่า</button>
+      <button class="tab on" data-tab="add">ใส่รูปเช็คชื่อ</button>
+      <button class="tab" data-tab="table">ตารางคะแนน</button>
+      <button class="tab" data-tab="sessions">รอบที่บันทึก</button>
+      <button class="tab" data-tab="log">Log</button>
+      <button class="tab" data-tab="members">สมาชิก &amp; ตั้งค่า</button>
     </nav>
 
     <main>
@@ -893,16 +927,25 @@
       <section class="sec" id="tab-add">
         <div class="drop" id="drop">
           <div class="big">
-            🖼️ ลากรูป TS มาวางที่นี่ (ใส่หลายรูปพร้อมกันได้)
+            ลากรูป TS มาวางที่นี่ (ใส่หลายรูปพร้อมกันได้ · หรือไฟล์ข้อความ /
+            PDF)
           </div>
           <div class="hint" style="margin: 6px 0 12px">
             หรือกด <b>Ctrl+V</b> วางรูปที่เพิ่งแคป · รูปละ 1 ตัวบอส = 1 รอบ
           </div>
           <div class="row" style="justify-content: center">
-            <button class="btn red" id="btnPick">📁 เลือกไฟล์รูป</button>
+            <button class="btn red" id="btnPick">เลือกไฟล์รูป</button>
             <button class="btn" id="btnManual">
-              ➕ เพิ่มรอบแบบไม่มีรูป (วาง/ติ๊กชื่อเอง)
+              เพิ่มรอบแบบไม่มีรูป (วาง/ติ๊กชื่อเอง)
             </button>
+            <button class="btn" id="btnDoc">เลือกไฟล์ข้อความ / PDF</button>
+            <input
+              type="file"
+              id="docFile"
+              accept=".txt,.csv,.tsv,.md,.pdf,text/plain,application/pdf"
+              multiple
+              class="hide"
+            />
             <input
               type="file"
               id="picFile"
@@ -912,18 +955,34 @@
             />
           </div>
         </div>
+        <details class="panel" style="margin: 10px 0">
+          <summary><b>พิมพ์/วางข้อความรายชื่อ</b> (1 บรรทัด = 1 คน)</summary>
+          <textarea
+            id="txtIn"
+            rows="6"
+            placeholder="Jazz1234&#10;เป็ดน้อย4821&#10;..."
+            style="width: 100%; margin-top: 6px"
+          ></textarea>
+          <div class="row" style="margin-top: 6px">
+            <button class="btn red" id="btnTxt">สร้างรอบจากข้อความ</button>
+            <span class="hint"
+              >ระบบจับคู่กับสมาชิกให้เหมือนอ่านจากรูป · เวลาแคปใช้เวลาตอนนี้
+              ตรวจช่อง "เวลาแคป" ในการ์ดด้วย</span
+            >
+          </div>
+        </details>
         <div class="rule" id="ruleBanner"></div>
         <div class="bulk hide" id="bulk">
           <b>ทุกรูปที่รอบันทึก:</b>
-          <button class="btn sm" id="bOcrAll">🔎 อ่านชื่อทั้งหมด</button>
+          <button class="btn sm" id="bOcrAll">อ่านชื่อทั้งหมด</button>
           <span class="mute">ตั้งแต้มทุกรูป:</span>
-          <button class="btn sm" data-bulkmode="auto">⏱ ตามเวลา</button>
-          <button class="btn sm" data-bulkmode="normal">☀️ แต้มปกติ</button>
-          <button class="btn sm" id="bBulkPlus">➕ +1 แต้มทุกรูป</button>
-          <button class="btn sm" data-bulkmode="bonus">🌙 แต้มพิเศษ</button>
-          <button class="btn sm gold" id="bSaveAll">✅ บันทึกทั้งหมด</button>
+          <button class="btn sm" data-bulkmode="auto">ตามเวลา</button>
+          <button class="btn sm" data-bulkmode="normal">แต้มปกติ</button>
+          <button class="btn sm" id="bBulkPlus">+1 แต้มทุกรูป</button>
+          <button class="btn sm" data-bulkmode="bonus">แต้มพิเศษ</button>
+          <button class="btn sm gold" id="bSaveAll">บันทึกทั้งหมด</button>
           <button class="btn sm ghost" id="bClearDrafts">
-            🗑 ล้างที่ยังไม่บันทึก
+            ล้างที่ยังไม่บันทึก
           </button>
           <span id="ocrStatus" class="hint"></span>
         </div>
@@ -933,19 +992,19 @@
           ตรวจสีเหลือง/ชื่อที่ไม่ตรง แก้ได้ → ④ กดบันทึก<br />
           ไม่ต้องใส่รายชื่อไว้ก่อน —
           ชื่อที่อ่านได้จากรูปจะถูกเพิ่มเป็นสมาชิกและนับแต้มให้เอง<br />กด
-          <b>➕ +1 แต้ม</b> ที่การ์ดรูปไหน คนในรูปนั้นจะได้แต้มเพิ่ม (1 → 2)
+          <b>+1 แต้ม</b> ที่การ์ดรูปไหน คนในรูปนั้นจะได้แต้มเพิ่ม (1 → 2)
         </div>
       </section>
 
       <!-- ============ TAB: ตาราง ============ -->
       <section class="sec hide" id="tab-table">
         <h2>
-          📊 ตารางคะแนน
+          ตารางคะแนน
           <span class="row">
             <input
               type="search"
               id="tSearch"
-              placeholder="🔍 ค้นหาชื่อ..."
+              placeholder="ค้นหาชื่อ..."
               style="width: 200px"
             />
             <select id="tSort">
@@ -956,12 +1015,10 @@
           </span>
         </h2>
         <div class="row" style="margin-bottom: 10px">
-          <button class="btn red sm" id="bCopySheet">
-            📋 คัดลอกไปวางในชีต
-          </button>
-          <button class="btn sm" id="bCsv">⬇ ดาวน์โหลด CSV</button>
+          <button class="btn red sm" id="bCopySheet">คัดลอกไปวางในชีต</button>
+          <button class="btn sm" id="bCsv">ดาวน์โหลด CSV</button>
           <button class="btn gold sm" id="bTickets">
-            🎟 ส่งออกเป็นตั๋ว (ชื่อ,ตั๋ว) ไปจับฉลาก
+            ส่งออกเป็นตั๋ว (ชื่อ,ตั๋ว) ไปจับฉลาก
           </button>
           <span class="hint">เลขรูปที่มีพื้นหลังทอง = รอบที่ได้แต้มพิเศษ</span>
         </div>
@@ -971,14 +1028,13 @@
               <tr>
                 <th>#</th>
                 <th>ชื่อสมาชิก</th>
-                <th>รูปที่เข้าร่วม</th>
+                <th>
+                  รูปที่เข้าร่วม (แก้ได้)
+                  <small class="mute">(เช่น 1,2,5-7)</small>
+                </th>
                 <th style="text-align: right">มา (รอบ)</th>
-                <th style="text-align: right">
-                  นับรวม (ครั้ง)<small class="mute"> / ปรับ</small>
-                </th>
-                <th style="text-align: right">
-                  แต้ม<small class="mute"> / ปรับ</small>
-                </th>
+                <th style="text-align: right">นับรวม (ครั้ง) (แก้ได้)</th>
+                <th style="text-align: right">แต้ม (แก้ได้)</th>
                 <th style="text-align: right">อีกกี่ครั้งได้แต้มต่อไป</th>
                 <th style="text-align: right">เข้าร่วม</th>
               </tr>
@@ -991,10 +1047,10 @@
       <!-- ============ TAB: รอบ ============ -->
       <section class="sec hide" id="tab-sessions">
         <h2>
-          🗂 รอบที่บันทึก
+          รอบที่บันทึก
           <span class="row"
             ><button class="btn sm" id="bRenum">
-              🔢 เรียงเลขรูปใหม่ตามเวลา
+              เรียงเลขรูปใหม่ตามเวลา
             </button></span
           >
         </h2>
@@ -1017,7 +1073,7 @@
       </section>
 
       <section class="sec hide" id="tab-log">
-        <h2>📜 Log การใช้งานทั้งหมด</h2>
+        <h2>Log การใช้งานทั้งหมด</h2>
         <div class="tw">
           <table class="tbl">
             <thead>
@@ -1037,11 +1093,9 @@
       <section class="sec hide" id="tab-members">
         <div class="grid2">
           <div>
-            <h2>👥 รายชื่อสมาชิก <span class="hint" id="mCount"></span></h2>
+            <h2>รายชื่อสมาชิก <span class="hint" id="mCount"></span></h2>
             <div class="row" style="margin-bottom: 8px">
-              <button class="btn red sm" id="bLegacy">
-                📥 นำเข้าจากชีตเดิม
-              </button>
+              <button class="btn red sm" id="bLegacy">นำเข้าจากชีตเดิม</button>
             </div>
             <details style="margin-bottom: 10px" open>
               <summary>
@@ -1056,12 +1110,18 @@
                 เพิ่มทั้งหมด
               </button>
             </details>
-            <button class="btn sm adminonly" id="bDups" style="margin-bottom:8px">🧹 ตรวจชื่อซ้ำ / รวมสมาชิก</button>
-            <div id="dupBox" style="margin-bottom:8px"></div>
+            <button
+              class="btn sm adminonly"
+              id="bDups"
+              style="margin-bottom: 8px"
+            >
+              ตรวจชื่อซ้ำ / รวมสมาชิก
+            </button>
+            <div id="dupBox" style="margin-bottom: 8px"></div>
             <input
               type="search"
               id="mSearch"
-              placeholder="🔍 ค้นหาสมาชิก..."
+              placeholder="ค้นหาสมาชิก..."
               style="margin-bottom: 8px"
             />
             <div class="tw" style="max-height: 52vh">
@@ -1071,10 +1131,21 @@
             </div>
           </div>
           <div>
-            <h2>⚙️ ตั้งค่า <span class="hint">(เฉพาะแอดมิน)</span></h2>
+            <h2>ตั้งค่า <span class="hint">(เฉพาะแอดมิน)</span></h2>
             <div class="panel" id="cfgPanel" style="display: grid; gap: 12px">
               <div>
                 <b>กติกาแต้ม</b>
+                <label
+                  style="
+                    margin-top: 6px;
+                    display: flex;
+                    gap: 8px;
+                    align-items: center;
+                  "
+                  ><input type="checkbox" id="cBonusOn" />
+                  <b>เปิดกติกาครั้งพิเศษตามช่วงเวลา</b> (ปิด =
+                  ทุกรอบนับครั้งปกติ ไม่ดูเวลาเลย)</label
+                >
                 <div class="row" style="margin-top: 6px">
                   <label
                     >นับครั้ง (กลางวัน)
@@ -1126,6 +1197,42 @@
                   ><input type="checkbox" id="cUseCode" /> บังคับเลขท้ายชื่อ 2–4
                   หลัก (ใช้ยืนยันตัวตนตอนอ่านรูป)</label
                 >
+                <label
+                  style="
+                    margin-top: 6px;
+                    display: flex;
+                    gap: 8px;
+                    align-items: center;
+                  "
+                  ><input type="checkbox" id="cAutoTime" />
+                  คิดจำนวนครั้งตามเวลาแคปอัตโนมัติ (ปิด = ทุกรอบนับครั้งปกติ
+                  ปรับเองทีละรอบได้)</label
+                >
+                <label
+                  style="
+                    margin-top: 6px;
+                    display: flex;
+                    gap: 8px;
+                    align-items: center;
+                  "
+                  ><input type="checkbox" id="cFileTime" /> เชื่อ "เวลาของไฟล์"
+                  ด้วย เมื่อไม่พบเวลาแคปในรูป (ปิดไว้ = รูปแบบนี้นับปกติ
+                  ปลอดภัยกว่า)</label
+                >
+                <label
+                  style="
+                    margin-top: 6px;
+                    display: flex;
+                    gap: 8px;
+                    align-items: center;
+                  "
+                  ><input type="checkbox" id="cLearn" /> ให้ระบบจำชื่อที่ผมแก้
+                  (เรียนรู้อัตโนมัติ)</label
+                >
+                <div class="hint">
+                  การตั้งค่า 3 ข้อนี้มีผลกับรอบที่ใส่ใหม่
+                  รอบที่ใส่ไว้แล้วใช้ปุ่มเลือกโหมดในการ์ดแต่ละรอบ
+                </div>
                 <div class="hint" id="cRuleHint"></div>
               </div>
               <div>
@@ -1172,7 +1279,7 @@
                   เพิ่มเป็นสมาชิกใหม่ให้เลย</label
                 >
                 <div style="margin-top: 10px">
-                  <b>🚫 ข้ามคนที่มีป้ายกิลด์ (ไม่นับแต้ม)</b>
+                  <b>ข้ามคนที่มีป้ายกิลด์ (ไม่นับแต้ม)</b>
                   <input
                     type="text"
                     id="cSkip"
@@ -1189,7 +1296,7 @@
                 <div style="margin-top: 10px">
                   <label style="display: flex; gap: 8px; align-items: center">
                     <input type="checkbox" id="cSameCrop" />
-                    <b>✂️ จำกรอบตัดภาพไว้ใช้กับทุกรูป (แนะนำ)</b>
+                    <b>จำกรอบตัดภาพไว้ใช้กับทุกรูป (แนะนำ)</b>
                   </label>
                   <div class="hint">
                     "ตัดภาพ" = ลากกรอบครอบเฉพาะรายชื่อคนในห้อง
@@ -1208,7 +1315,7 @@
                 </div>
               </div>
               <div id="aiBox" class="panel" style="margin-top: 10px">
-                <b>🤖 อ่านชื่อด้วย AI (Gemini)</b>
+                <b>อ่านชื่อด้วย AI (Gemini)</b>
                 <label
                   style="
                     margin-top: 6px;
@@ -1236,18 +1343,18 @@
                 /></label>
                 <div class="row" style="margin-top: 6px">
                   <button class="btn sm" id="bAiTest" type="button">
-                    🧪 ทดสอบ AI
+                    ทดสอบ AI
                   </button>
                 </div>
                 <div class="hint">
-                  กด "💾 บันทึกการตั้งค่า" แล้วคีย์จะถูกเก็บบน Firebase
+                  กด "บันทึกการตั้งค่า" แล้วคีย์จะถูกเก็บบน Firebase
                   ทีมงานทุกคนทุกเครื่องใช้ AI ร่วมกันได้เลย
                   (ไม่ต้องวางทีละเครื่อง) —
                   แนะนำให้ใช้คีย์เฉพาะงานนี้และจำกัดโควตาใน AI Studio
                 </div>
               </div>
               <div id="roleBox" class="panel hide">
-                <b>🔑 สิทธิ์ผู้ใช้งาน</b>
+                <b>สิทธิ์ผู้ใช้งาน</b>
                 <div class="hint" style="margin: 4px 0 8px">
                   แอดมิน = ทำได้ทุกอย่าง · ทีมงาน = ใส่รูป/เช็คชื่อได้อย่างเดียว
                   (มองไม่เห็นหน้าสมาชิก/ตั้งค่า/Log). ใส่ Gmail แล้วให้เขากด
@@ -1276,9 +1383,7 @@
                 </div>
               </div>
               <div>
-                <button class="btn gold" id="bSaveCfg">
-                  💾 บันทึกการตั้งค่า
-                </button>
+                <button class="btn gold" id="bSaveCfg">บันทึกการตั้งค่า</button>
                 <span id="cfgDirty" class="hide"
                   >● มีการแก้ไขที่ยังไม่ได้กดบันทึก</span
                 >
@@ -1289,9 +1394,26 @@
               </div>
               <div class="dangerzone">
                 <b style="color: var(--blood)">โซนอันตราย</b>
+                <div class="hint">
+                  ล้างทีละส่วน (แต่ละปุ่มถามยืนยันก่อน และลง Log):
+                </div>
+                <div class="row" style="margin-top: 6px; flex-wrap: wrap">
+                  <button class="btn sm ghost" id="bClrAdj">
+                    ล้างคะแนนที่ปรับเองทั้งหมด
+                  </button>
+                  <button class="btn sm ghost" id="bClrIdle">
+                    ลบสมาชิกที่ไม่มีรอบเลย
+                  </button>
+                  <button class="btn sm ghost" id="bClrSes">
+                    ลบรอบทั้งหมด (เก็บรายชื่อ)
+                  </button>
+                  <button class="btn sm ghost" id="bClrLearn">
+                    ล้างชื่อที่ระบบจำ + รายการข้าม
+                  </button>
+                </div>
                 <div class="row" style="margin-top: 6px">
                   <button class="btn sm ghost" id="bResetAll">
-                    🗑 ล้างข้อมูลทั้งหมด
+                    ล้างข้อมูลทั้งหมด
                   </button>
                 </div>
               </div>
@@ -1313,7 +1435,7 @@
 
     <div class="modal hide" id="cropModal">
       <div class="box">
-        <h3>✂️ ลากเลือกพื้นที่ "รายชื่อคนในห้อง"</h3>
+        <h3>ลากเลือกพื้นที่ "รายชื่อคนในห้อง"</h3>
         <div class="hint">
           ลากกรอบครอบเฉพาะรายชื่อ (ไม่ต้องเอาแชท/หน้าต่างอื่น) จะอ่านแม่นขึ้นมาก
           ระบบจะจำกรอบนี้ไว้ใช้กับรูปถัดไป (ถ้าเปิด "จำกรอบตัดภาพ" ในตั้งค่า)
@@ -1339,7 +1461,7 @@
           <input
             type="search"
             id="pickSearch"
-            placeholder="🔍 พิมพ์ค้นหา..."
+            placeholder="พิมพ์ค้นหา..."
             style="flex: 1"
           /><button class="btn sm" id="pickAll">เลือกที่เห็นทั้งหมด</button
           ><button class="btn sm" id="pickNone">ล้างทั้งหมด</button>
@@ -1375,7 +1497,7 @@
         /></label>
         <div>
           <b>ผู้เข้าร่วม <span id="seCount"></span></b>
-          <button class="btn sm" id="seEditAtt">✏️ เลือกผู้เข้าร่วม</button>
+          <button class="btn sm" id="seEditAtt">เลือกผู้เข้าร่วม</button>
         </div>
         <div class="chips" id="seChips"></div>
         <div class="row">
@@ -1387,7 +1509,7 @@
 
     <div class="modal hide" id="legacyModal">
       <div class="box">
-        <h3>📥 นำเข้าจากชีตเดิม</h3>
+        <h3>นำเข้าจากชีตเดิม</h3>
         <div class="hint">
           คัดลอกตารางจากชีต (คอลัมน์ ชื่อสมาชิก + รูปที่เข้าร่วม) มาวาง
           หรือเลือกไฟล์ CSV · ระบบจะสร้างรอบตามเลขรูปที่เจอ (รอบละ 1 แต้ม)
@@ -1418,9 +1540,9 @@
 
     <script>
       /* ============================================================
-   ✅ ภาพรวม: ระบบเช็คชื่อล่าบอส TWOK — ข้อมูลเก็บในเครื่อง (localStorage + IndexedDB สำหรับรูป)
-   📍 Key Logic: แคปจอ TS → ปรับภาพ → OCR (Tesseract.js) → จับคู่ชื่อกับรายชื่อสมาชิกแบบ "ใกล้เคียง" → คนตรวจ/แก้ → บันทึกเป็นรอบ
-   ⚠️ Pitfall: OCR ไม่แม่น 100% (โดยเฉพาะชื่อไทย) จึงมีขั้นตรวจก่อนบันทึก และระบบ "จำ" ชื่อที่แก้แล้วเพื่อแม่นขึ้นเรื่อยๆ
+   ภาพรวม: ระบบเช็คชื่อล่าบอส TWOK — ข้อมูลเก็บในเครื่อง (localStorage + IndexedDB สำหรับรูป)
+   Key Logic: แคปจอ TS → ปรับภาพ → OCR (Tesseract.js) → จับคู่ชื่อกับรายชื่อสมาชิกแบบ "ใกล้เคียง" → คนตรวจ/แก้ → บันทึกเป็นรอบ
+   ระวัง: Pitfall: OCR ไม่แม่น 100% (โดยเฉพาะชื่อไทย) จึงมีขั้นตรวจก่อนบันทึก และระบบ "จำ" ชื่อที่แก้แล้วเพื่อแม่นขึ้นเรื่อยๆ
    ============================================================ */
       const KEY = 'twok_attend_v1'
       const $ = s => document.querySelector(s),
@@ -1472,6 +1594,9 @@
       }
       let S = load()
       S.cfg.autoNew = S.cfg.autoNew !== false
+      S.cfg.autoTime = S.cfg.autoTime !== false
+      S.cfg.bonusOn = S.cfg.bonusOn !== false
+      S.cfg.learn = S.cfg.learn !== false
       function save() {
         try {
           localStorage.setItem(KEY, JSON.stringify(S))
@@ -1534,7 +1659,7 @@
         const c = S.cfg
         if (ms == null) return c.normal
         const h = new Date(ms).getHours()
-        if (c.from === c.to) return c.normal
+        if (c.bonusOn === false || c.from === c.to) return c.normal
         const inWin =
           c.from < c.to ? h >= c.from && h < c.to : h >= c.from || h < c.to
         return inWin ? c.bonus : c.normal
@@ -1548,7 +1673,7 @@
       const stripCode = s => String(s).replace(/\s*\d{2,4}\s*$/, '')
       const codeBadge = m =>
         S.cfg.useCode && !codeOf(m.name)
-          ? ' <span class="mute" title="ไม่มีเลขท้ายชื่อ 2-4 หลัก">⚠️ไม่มีเลข</span>'
+          ? ' <span class="mute" title="ไม่มีเลขท้ายชื่อ 2-4 หลัก">ระวัง: ไม่มีเลข</span>'
           : ''
       function logAct(act, detail = '') {
         const e = {
@@ -1589,7 +1714,7 @@
       }
       const ruleText = () => {
         const c = S.cfg
-        return c.from === c.to
+        return c.bonusOn === false || c.from === c.to
           ? `ทุกรอบนับ ${c.normal} ครั้ง · เข้าร่วมครบ ${per()} ครั้ง = 1 แต้ม`
           : `รูปที่แคปช่วง ${pad(c.from)}:00–${pad(c.to)}:00 น. นับ ${c.bonus} ครั้ง · เวลาอื่นนับ ${c.normal} ครั้ง · ครบ ${per()} ครั้ง = 1 แต้ม`
       }
@@ -1811,7 +1936,7 @@
           }
         const lo = pct(0.02),
           hi = Math.max(lo + 1, pct(0.98)),
-          inv = mean < 128 // 🔧 ธีมมืด (ตัวหนังสือสว่าง) → กลับสีให้เป็นตัวดำพื้นขาว
+          inv = mean < 128 // ธีมมืด (ตัวหนังสือสว่าง) → กลับสีให้เป็นตัวดำพื้นขาว
         for (let i = 0, p = 0; i < n; i++, p += 4) {
           let v = ((g[i] - lo) * 255) / (hi - lo)
           v = v < 0 ? 0 : v > 255 ? 255 : v
@@ -1872,7 +1997,7 @@
           y1 = Math.min(base.height, band[1] + pad),
           h = y1 - y0,
           W = base.width
-        // 🔧 ตัดไอคอนหน้าบรรทัด (วงกลมทึบ) และไอคอนท้ายบรรทัด (อยู่ห่างตัวหนังสือมาก) ออก
+        // ตัดไอคอนหน้าบรรทัด (วงกลมทึบ) และไอคอนท้ายบรรทัด (อยู่ห่างตัวหนังสือมาก) ออก
         const d = base
           .getContext('2d', { willReadFrequently: true })
           .getImageData(0, band[0], W, band[1] - band[0]).data
@@ -1976,7 +2101,7 @@
           'initializing api': 'เตรียมระบบ...',
           'recognizing text': 'กำลังอ่านชื่อ...',
         }
-        d.msg = '🔎 OCR: ' + (map[m.status] || m.status)
+        d.msg = 'OCR: ' + (map[m.status] || m.status)
         d.eta = null
         d.bar =
           m.status === 'recognizing text'
@@ -1993,7 +2118,7 @@
         if (d.status === 'queued') {
           const pos = drafts.filter(x => x.status === 'queued').indexOf(d) + 1
           bar.style.width = '0%'
-          tx.textContent = `⏳ รอคิว (ลำดับที่ ${pos})`
+          tx.textContent = `รอคิว (ลำดับที่ ${pos})`
           return
         }
         if (d.status !== 'running') return
@@ -2151,37 +2276,63 @@
         if (ex) return ex
         const k = skel(nm)
         if (k.length < 2) return null
-        let best = null, bs = 0
+        let best = null,
+          bs = 0
         for (const x of S.members) {
-          const c1 = codeOf(nm), c2 = codeOf(x.name)
+          const c1 = codeOf(nm),
+            c2 = codeOf(x.name)
           if (c1 && c2 && c1 !== c2) continue
           const s = Math.max(...variants(x).map(v => sim(k, v)))
-          if (s > bs) { bs = s; best = x }
+          if (s > bs) {
+            bs = s
+            best = x
+          }
         }
         return bs >= 0.88 ? best : null
       }
       function mergeMembers(keepId, dropId) {
-        const a = memById(keepId), b = memById(dropId)
+        const a = memById(keepId),
+          b = memById(dropId)
         if (!a || !b) return
-        a.aliases = [...new Set([...(a.aliases || []), ...(b.aliases || []), skel(b.name)])]
+        a.aliases = [
+          ...new Set([
+            ...(a.aliases || []),
+            ...(b.aliases || []),
+            skel(b.name),
+          ]),
+        ]
         a.alts = [...new Set([...(a.alts || []), ...(b.alts || []), b.name])]
         a.adjU = (+a.adjU || 0) + (+b.adjU || 0)
         a.adjP = (+a.adjP || 0) + (+b.adjP || 0)
-        S.sessions.forEach(s => { if (s.att.includes(dropId)) s.att = [...new Set(s.att.map(i => (i === dropId ? keepId : i)))] })
-        drafts.forEach(x => { x.found.forEach(f => { if (f.mid === dropId) f.mid = keepId }); x.found = x.found.filter((f, i, arr) => arr.findIndex(g => g.mid === f.mid) === i) })
+        S.sessions.forEach(s => {
+          if (s.att.includes(dropId))
+            s.att = [...new Set(s.att.map(i => (i === dropId ? keepId : i)))]
+        })
+        drafts.forEach(x => {
+          x.found.forEach(f => {
+            if (f.mid === dropId) f.mid = keepId
+          })
+          x.found = x.found.filter(
+            (f, i, arr) => arr.findIndex(g => g.mid === f.mid) === i
+          )
+        })
         S.members = S.members.filter(x => x !== b)
         logAct('รวมสมาชิก', `${b.name} → ${a.name}`)
         save()
         renderAll()
       }
       function renderDups() {
-        const no = new Set(S.notDup || []), cnt = new Map(calcRows().map(r => [r.m.id, r.cnt])), out = []
+        const no = new Set(S.notDup || []),
+          cnt = new Map(calcRows().map(r => [r.m.id, r.cnt])),
+          out = []
         const ms = S.members
         for (let i = 0; i < ms.length; i++)
           for (let j = i + 1; j < ms.length; j++) {
-            const a = ms[i], b = ms[j]
+            const a = ms[i],
+              b = ms[j]
             if (no.has(a.id + '|' + b.id) || no.has(b.id + '|' + a.id)) continue
-            const c1 = codeOf(a.name), c2 = codeOf(b.name)
+            const c1 = codeOf(a.name),
+              c2 = codeOf(b.name)
             if (c1 && c2 && c1 !== c2) continue
             const s = sim(skel(a.name), skel(b.name))
             if (s >= 0.8) out.push({ a, b, s })
@@ -2189,12 +2340,25 @@
         out.sort((x, y) => y.s - x.s)
         $('#dupBox').innerHTML = out.length
           ? `<div class="hint">พบคู่ที่อาจเป็นคนเดียวกัน ${out.length} คู่ — เลือกว่าจะเก็บชื่อไหน (ประวัติเข้าร่วมจะรวมกัน)</div>` +
-            out.slice(0, 30).map(({ a, b, s }) => `<div class="dupr"><b>${esc(a.name)}</b> (${cnt.get(a.id) || 0}) ⟷ <b>${esc(b.name)}</b> (${cnt.get(b.id) || 0}) <small>${Math.round(s * 100)}%</small>
+            out
+              .slice(0, 30)
+              .map(
+                ({
+                  a,
+                  b,
+                  s,
+                }) => `<div class="dupr"><b>${esc(a.name)}</b> (${cnt.get(a.id) || 0}) ⟷ <b>${esc(b.name)}</b> (${cnt.get(b.id) || 0}) <small>${Math.round(s * 100)}%</small>
               <button class="btn sm" data-act="dup-merge" data-a="${a.id}" data-b="${b.id}">เก็บ "${esc(a.name)}"</button>
               <button class="btn sm" data-act="dup-merge" data-a="${b.id}" data-b="${a.id}">เก็บ "${esc(b.name)}"</button>
-              <button class="btn sm ghost" data-act="dup-no" data-a="${a.id}" data-b="${b.id}">คนละคน</button></div>`).join('')
-          : '<div class="hint">✅ ไม่พบชื่อที่ซ้ำกัน</div>'
+              <button class="btn sm ghost" data-act="dup-no" data-a="${a.id}" data-b="${b.id}">คนละคน</button></div>`
+              )
+              .join('')
+          : '<div class="hint">ไม่พบชื่อที่ซ้ำกัน</div>'
       }
+      const defMode = src =>
+        S.cfg.autoTime !== false && (src !== 'ไฟล์' || S.cfg.fileTime)
+          ? 'auto'
+          : 'normal'
       const draftPts = d =>
         d.mode === 'fixed'
           ? d.pts
@@ -2241,9 +2405,13 @@
 
       async function addFiles(files) {
         files = [...files]
+        const docs = files.filter(f => !f.type.startsWith('image/'))
+        files = files
           .filter(f => f.type.startsWith('image/'))
           .sort((a, b) => a.lastModified - b.lastModified)
-        if (!files.length) return toast('ไม่พบไฟล์รูป')
+        if (docs.length) await addDocs(docs)
+        if (!files.length)
+          return docs.length ? undefined : toast('ไม่พบไฟล์ที่อ่านได้')
         for (const f of files) {
           const exif = await exifTime(f),
             nt = exif == null ? nameTime(f.name) : null,
@@ -2258,7 +2426,7 @@
             hash,
             time: ex ?? f.lastModified ?? Date.now(),
             timeSrc: ex ? exSrc : 'ไฟล์',
-            mode: 'auto',
+            mode: defMode(ex ? exSrc : 'ไฟล์'),
             label: '',
             no: nextNo(),
             status: 'idle',
@@ -2275,6 +2443,129 @@
         renderDrafts()
         showTab('add')
       }
+      /* ---------- ไฟล์ข้อความ / PDF / พิมพ์วางเอง ---------- */
+      function listText(text, delim) {
+        return String(text)
+          .split(/\r?\n/)
+          .map(l => {
+            l = l.trim()
+            if (delim) l = l.split(/[\t,;]/)[0].replace(/^"+|"+$/g, '')
+            return l.replace(/^\d{1,3}[.)]\s+/, '').trim()
+          })
+          .filter(l => l && !/^(ชื่อ|ชื่อสมาชิก|name|no\.?|#)$/i.test(l))
+          .join('\n')
+      }
+      function addTextDraft(text, name, time, delim) {
+        const body = listText(text, delim)
+        if (!body) return toast('ไม่พบข้อความรายชื่อ')
+        const d = {
+          id: uid(),
+          file: null,
+          url: null,
+          hash: null,
+          time: time || Date.now(),
+          timeSrc: time ? 'ไฟล์' : 'เอง',
+          mode: defMode(time ? 'ไฟล์' : 'เอง'),
+          label: name ? name.replace(/\.[^.]+$/, '') : '',
+          no: nextNo(),
+          status: 'manual',
+          prog: 0,
+          msg: '',
+          found: [],
+          unk: [],
+          dup: null,
+          crop: null,
+          raw: body,
+        }
+        applyText(d, body, false)
+        drafts.push(d)
+        renderDrafts()
+        showTab('add')
+      }
+      async function addPdf(f) {
+        toast('กำลังอ่าน PDF...')
+        const V = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/'
+        await loadScript(V + 'pdf.min.js')
+        const lib = window.pdfjsLib
+        lib.GlobalWorkerOptions.workerSrc = V + 'pdf.worker.min.js'
+        const pdf = await lib.getDocument({ data: await f.arrayBuffer() })
+          .promise
+        const out = [],
+          pages = []
+        for (let n = 1; n <= pdf.numPages && n <= 30; n++) {
+          const pg = await pdf.getPage(n),
+            tc = await pg.getTextContent(),
+            rows = new Map()
+          for (const it of tc.items) {
+            const y = Math.round(it.transform[5] / 3)
+            if (!rows.has(y)) rows.set(y, [])
+            rows.get(y).push(it)
+          }
+          ;[...rows.entries()]
+            .sort((a, b) => b[0] - a[0])
+            .forEach(([, its]) =>
+              out.push(
+                its
+                  .sort((a, b) => a.transform[4] - b.transform[4])
+                  .map(i => i.str)
+                  .join(' ')
+                  .trim()
+              )
+            )
+          pages.push(pg)
+        }
+        const text = out.filter(Boolean).join('\n')
+        if (text.replace(/\s/g, '').length >= 20)
+          return addTextDraft(text, f.name, f.lastModified, false)
+        // PDF สแกน (ไม่มีข้อความ) → แปลงทีละหน้าเป็นรูป แล้วอ่านด้วย OCR/AI
+        const files = []
+        for (let n = 0; n < pages.length; n++) {
+          const vp = pages[n].getViewport({ scale: 2 }),
+            c = document.createElement('canvas')
+          c.width = vp.width
+          c.height = vp.height
+          await pages[n].render({
+            canvasContext: c.getContext('2d'),
+            viewport: vp,
+          }).promise
+          const blob = await new Promise(r => c.toBlob(r, 'image/png'))
+          files.push(
+            new File(
+              [blob],
+              f.name.replace(/\.pdf$/i, '') + '-p' + (n + 1) + '.png',
+              { type: 'image/png', lastModified: f.lastModified }
+            )
+          )
+        }
+        toast('PDF นี้เป็นภาพสแกน — แปลงเป็นรูปแล้วอ่านด้วย OCR/AI')
+        await addFiles(files)
+      }
+      async function addDocs(files) {
+        for (const f of files) {
+          try {
+            if (/\.pdf$/i.test(f.name) || f.type === 'application/pdf')
+              await addPdf(f)
+            else if (
+              /\.(txt|csv|tsv|md|text)$/i.test(f.name) ||
+              f.type.startsWith('text/')
+            )
+              addTextDraft(
+                await f.text(),
+                f.name,
+                f.lastModified,
+                /\.(csv|tsv)$/i.test(f.name)
+              )
+            else
+              toast(
+                'ไม่รองรับไฟล์ ' +
+                  f.name +
+                  ' (รองรับ รูป, txt, csv, tsv, md, pdf)'
+              )
+          } catch (e) {
+            toast('อ่านไฟล์ ' + f.name + ' ไม่สำเร็จ: ' + (e.message || e))
+          }
+        }
+      }
       function addManualDraft() {
         drafts.push({
           id: uid(),
@@ -2283,7 +2574,7 @@
           hash: null,
           time: Date.now(),
           timeSrc: 'เอง',
-          mode: 'auto',
+          mode: defMode('เอง'),
           label: '',
           no: nextNo(),
           status: 'manual',
@@ -2365,7 +2656,12 @@
           'คงป้ายกิลด์ในวงเล็บเหลี่ยมไว้ตามที่เห็น ถ้าชื่อลงท้ายด้วยเลข 2-4 หลักติดกับชื่อ ให้คงเลขนั้นไว้ติดกับชื่อ ส่วนเลขเลเวลที่อยู่ห่างออกไปท้ายบรรทัดให้ตัดทิ้ง ' +
           'ห้ามเดาตัวอักษรที่มองไม่ชัด ให้ใส่ ? แทนตัวนั้น ตอบเฉพาะรายชื่อ ไม่ต้องมีคำอธิบายหรือหมายเลขลำดับ' +
           (S.members.length
-            ? ' รายชื่อสมาชิกที่น่าจะอยู่ในรูป: ' + S.members.slice(0, 150).map(m => m.name).join(' | ') + ' — ถ้าชื่อในรูปคล้ายกับรายการนี้อย่างชัดเจน ให้พิมพ์ตามชื่อในรายการ ถ้าไม่ใช่ให้พิมพ์ตามที่เห็นจริง ห้ามเดาให้เป็นชื่อในรายการ'
+            ? ' รายชื่อสมาชิกที่น่าจะอยู่ในรูป: ' +
+              S.members
+                .slice(0, 150)
+                .map(m => m.name)
+                .join(' | ') +
+              ' — ถ้าชื่อในรูปคล้ายกับรายการนี้อย่างชัดเจน ให้พิมพ์ตามชื่อในรายการ ถ้าไม่ใช่ให้พิมพ์ตามที่เห็นจริง ห้ามเดาให้เป็นชื่อในรายการ'
             : '')
         const body = JSON.stringify({
           contents: [
@@ -2477,7 +2773,7 @@
           )
         if (aiOn()) {
           try {
-            d.msg = '🤖 AI กำลังอ่านรูป (ปกติ 3–10 วินาที)'
+            d.msg = 'AI กำลังอ่านรูป (ปกติ 3–10 วินาที)'
             d.est = 8
             const txt = await geminiRead(
               d.file,
@@ -2504,7 +2800,7 @@
         d.t0 = Date.now()
         d.bar = null
         d.est = 25
-        d.msg = '🔎 OCR: เตรียมระบบอ่านรูป...'
+        d.msg = 'OCR: เตรียมระบบอ่านรูป...'
         try {
           const w = await ensureOcr()
           const crop = d.crop || (S.cfg.sameCrop ? S.cfg.crop : null)
@@ -2512,7 +2808,7 @@
           const sp = splitRows(base)
           let text = ''
           if (sp.ok) {
-            // 🔧 อ่านทีละบรรทัด: ลำดับตรงกับรูป และไม่ถูกไอคอน/ป้ายกิลด์รบกวนข้ามบรรทัด
+            // อ่านทีละบรรทัด: ลำดับตรงกับรูป และไม่ถูกไอคอน/ป้ายกิลด์รบกวนข้ามบรรทัด
             const lines = []
             rowMode = true
             try {
@@ -2522,7 +2818,7 @@
                 if (i === 0) d.rowT0 = Date.now()
                 d.prog = i / sp.rows.length
                 d.bar = 0.15 + 0.85 * d.prog
-                d.msg = `🔎 OCR: กำลังอ่านชื่อ ${i + 1}/${sp.rows.length}`
+                d.msg = `OCR: กำลังอ่านชื่อ ${i + 1}/${sp.rows.length}`
                 d.eta =
                   i > 0
                     ? Math.round(
@@ -2578,7 +2874,7 @@
             !gotText.has(skel(u.text)) &&
             !d.found.some(f => f.mid && sim(skel(f.text), skel(u.text)) === 1)
         )
-        // ✨ ชื่อที่ไม่ตรงกับสมาชิกเดิม → เพิ่มเป็นสมาชิกใหม่ + นับแต้มให้เลย
+        // ชื่อที่ไม่ตรงกับสมาชิกเดิม → เพิ่มเป็นสมาชิกใหม่ + นับแต้มให้เลย
         if (S.cfg.autoNew) {
           const rest = []
           for (const u of d.unk) {
@@ -2617,9 +2913,9 @@
         if (run + q) {
           if (!ocrBatchT0) ocrBatchT0 = Date.now()
           clearTimeout(ocrDoneTimer)
-          el.textContent = `⏱ กำลังอ่านรูป... (เหลือ ${run + q} รูป) · ใช้เวลารวม ${Math.round((Date.now() - ocrBatchT0) / 1000)} วิ`
+          el.textContent = `กำลังอ่านรูป... (เหลือ ${run + q} รูป) · ใช้เวลารวม ${Math.round((Date.now() - ocrBatchT0) / 1000)} วิ`
         } else if (ocrBatchT0) {
-          el.textContent = `✅ อ่านเสร็จแล้ว ใช้เวลารวม ${Math.round((Date.now() - ocrBatchT0) / 1000)} วิ`
+          el.textContent = `อ่านเสร็จแล้ว ใช้เวลารวม ${Math.round((Date.now() - ocrBatchT0) / 1000)} วิ`
           ocrBatchT0 = 0
           clearTimeout(ocrDoneTimer)
           ocrDoneTimer = setTimeout(() => (el.textContent = ''), 8000)
@@ -2656,7 +2952,7 @@
                 : f.conf < 0.88
                   ? 'warn'
                   : ''
-            return `<span class="chip ${cls}" title="${f.manual ? 'เลือกเอง' : f.isNew ? 'ชื่อใหม่จากรูป (กดที่ชื่อเพื่อแก้คำที่อ่านผิด)' : `อ่านได้ว่า: ${esc(f.text)} (${Math.round(f.conf * 100)}%)`}"><span data-act="m-ren" data-d="${d.id}" data-mid="${f.mid}" style="cursor:pointer">${esc(m.name)}</span>${!f.manual && f.conf < 0.88 ? ` <small>${Math.round(f.conf * 100)}%</small>` : ''}<button data-act="rmfound" data-d="${d.id}" data-mid="${f.mid}" title="เอาออก">✕</button></span>`
+            return `<span class="chip ${cls}" title="${f.manual ? 'เลือกเอง' : f.isNew ? 'ชื่อใหม่จากรูป (กดที่ชื่อเพื่อแก้คำที่อ่านผิด)' : `อ่านได้ว่า: ${esc(f.text)} (${Math.round(f.conf * 100)}%)`}"><span data-act="m-ren" data-d="${d.id}" data-mid="${f.mid}" style="cursor:pointer">${esc(m.name)}</span>${!f.manual && f.conf < 0.88 ? ` <small>${Math.round(f.conf * 100)}%</small>` : ''}<button data-act="rmfound" data-d="${d.id}" data-mid="${f.mid}" title="เอาออก">เอาออก</button></span>`
           })
           .join('')
         const unk = d.unk
@@ -2674,39 +2970,103 @@
           .join('')
         const nameOf = f => memById(f.mid)?.name || ''
         const rows = [
-          ...d.found.filter(f => memById(f.mid)).map(f => ({ ord: f.ord ?? 1e6, f })),
+          ...d.found
+            .filter(f => memById(f.mid))
+            .map(f => ({ ord: f.ord ?? 1e6, f })),
           ...d.unk.map((u, i) => ({ ord: u.li ?? 1e6, u, i })),
         ]
         rows.sort(
           d.sortBy === 'name'
-            ? (a, b) => (a.f ? nameOf(a.f) : a.u.text).localeCompare(b.f ? nameOf(b.f) : b.u.text, 'th')
+            ? (a, b) =>
+                (a.f ? nameOf(a.f) : a.u.text).localeCompare(
+                  b.f ? nameOf(b.f) : b.u.text,
+                  'th'
+                )
             : (a, b) => a.ord - b.ord
         )
         const rowsHTML = rows.length
           ? `<div class="hint" style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">ลำดับตามรูป · พิมพ์แก้หรือเลือกชื่อในช่องได้เลย ระบบจะจำคำที่อ่านผิดให้
-              <button class="btn sm ghost" data-act="sortrows" data-d="${d.id}">เรียง: ${d.sortBy === 'name' ? 'ก-ฮ' : 'ตามรูป'} ⇅</button></div>` +
-            rows.map((r, n) => {
-              if (r.f) {
-                const f = r.f, m = memById(f.mid), cls = f.manual ? 'man' : f.isNew ? 'new' : f.conf < 0.88 ? 'warn' : ''
-                return `<div class="srow ${cls}"><span class="sn">${n + 1}</span><code title="ข้อความที่ระบบอ่านได้">${f.manual ? '<span class="mute">เลือกเอง</span>' : esc(f.text)}</code>
+              <button class="btn sm ghost" data-act="sortrows" data-d="${d.id}">เรียง: ${d.sortBy === 'name' ? 'ก-ฮ' : 'ตามรูป'} </button></div>` +
+            rows
+              .map((r, n) => {
+                if (r.f) {
+                  const f = r.f,
+                    m = memById(f.mid),
+                    cls = f.manual
+                      ? 'man'
+                      : f.isNew
+                        ? 'new'
+                        : f.conf < 0.88
+                          ? 'warn'
+                          : ''
+                  return `<div class="srow ${cls}"><span class="sn">${n + 1}</span><code title="ข้อความที่ระบบอ่านได้">${f.manual ? '<span class="mute">เลือกเอง</span>' : esc(f.text)}</code>
                   <input type="text" list="dlMembers" value="${esc(m.name)}" data-f="fix" data-d="${d.id}" data-k="f:${f.mid}">
-                  <span style="white-space:nowrap">${!f.manual && f.conf < 0.88 ? `<small>${Math.round(f.conf * 100)}%</small> ` : ''}${f.isNew ? '<small>ใหม่</small> ' : ''}<button class="btn sm ghost" data-act="m-ren" data-d="${d.id}" data-mid="${f.mid}" title="แก้ชื่อสมาชิกคนนี้">✏️</button><button class="btn sm ghost" data-act="rmfound" data-d="${d.id}" data-mid="${f.mid}" title="เอาออก">✕</button></span></div>`
-              }
-              const u = r.u, i = r.i
-              return `<div class="srow unk"><span class="sn">${n + 1}</span><code title="${esc(u.text)}">${esc(u.text)}</code>
-                <input type="text" list="dlMembers" placeholder="❓ เลือก/พิมพ์ชื่อสมาชิก" data-f="fix" data-d="${d.id}" data-k="u:${i}">
-                <span>${u.sugg.slice(0, 2).map(s => `<button class="sug" data-act="sugg" data-d="${d.id}" data-u="${i}" data-mid="${s.mid}">${esc(memById(s.mid)?.name || '?')} ${Math.round(s.score * 100)}%</button>`).join('')}<button class="btn sm" data-act="newm" data-d="${d.id}" data-u="${i}" title="เพิ่มเป็นสมาชิกใหม่">＋ใหม่</button><button class="btn sm ghost" data-act="ign" data-d="${d.id}" data-u="${i}" title="ไม่ใช่ชื่อคน (จำไว้)">ข้าม</button></span></div>`
-            }).join('') + (d.unk.length > 1 ? `<div style="margin-top:6px"><button class="btn sm ghost" data-act="ignall" data-d="${d.id}">ข้ามบรรทัดสีแดงทั้งหมด (ไม่ใช่ชื่อคน)</button></div>` : '')
+                  <span style="white-space:nowrap">${!f.manual && f.conf < 0.88 ? `<small>${Math.round(f.conf * 100)}%</small> ` : ''}${f.isNew ? '<small>ใหม่</small> ' : ''}<button class="btn sm ghost" data-act="m-ren" data-d="${d.id}" data-mid="${f.mid}" title="แก้ชื่อสมาชิกคนนี้">แก้ไข</button><button class="btn sm ghost" data-act="rmfound" data-d="${d.id}" data-mid="${f.mid}" title="เอาออก">เอาออก</button></span></div>`
+                }
+                const u = r.u,
+                  i = r.i
+                return `<div class="srow unk"><span class="sn">${n + 1}</span><code title="${esc(u.text)}">${esc(u.text)}</code>
+                <input type="text" list="dlMembers" placeholder="เลือก/พิมพ์ชื่อสมาชิก" data-f="fix" data-d="${d.id}" data-k="u:${i}">
+                <span>${u.sugg
+                  .slice(0, 2)
+                  .map(
+                    s =>
+                      `<button class="sug" data-act="sugg" data-d="${d.id}" data-u="${i}" data-mid="${s.mid}">${esc(memById(s.mid)?.name || '?')} ${Math.round(s.score * 100)}%</button>`
+                  )
+                  .join(
+                    ''
+                  )}<button class="btn sm" data-act="newm" data-d="${d.id}" data-u="${i}" title="เพิ่มเป็นสมาชิกใหม่">＋ใหม่</button><button class="btn sm ghost" data-act="ign" data-d="${d.id}" data-u="${i}" title="ไม่ใช่ชื่อคน (จำไว้)">ข้าม</button></span></div>`
+              })
+              .join('') +
+            (d.unk.length > 1
+              ? `<div style="margin-top:6px"><button class="btn sm ghost" data-act="ignall" data-d="${d.id}">ข้ามบรรทัดสีแดงทั้งหมด (ไม่ใช่ชื่อคน)</button></div>`
+              : '')
           : '<span class="hint">ยังไม่มีรายชื่อ</span>'
+        const addRow = `<div class="srow" style="grid-template-columns:28px 1fr"><span class="sn">＋</span><input type="text" list="dlMembers" data-f="addname" data-d="${d.id}" placeholder="เพิ่มชื่อที่ระบบอ่านไม่เจอ: พิมพ์หรือเลือกจากรายการ แล้วกด Enter (ไม่มีในระบบ = สร้างสมาชิกใหม่)"></div>`
+        const warns = []
+        if (!['running', 'queued'].includes(d.status)) {
+          if (d.unk.length)
+            warns.push(
+              `ยังมี ${d.unk.length} บรรทัดสีแดงที่ยังไม่ได้เลือกชื่อ (จะไม่ถูกนับแต้ม)`
+            )
+          const hist = S.sessions.filter(s => s.att.length)
+          const avg =
+            hist.length >= 3
+              ? hist.reduce((a, s) => a + s.att.length, 0) / hist.length
+              : 0
+          if (avg && d.found.length < avg * 0.6)
+            warns.push(
+              `จำนวนคน (${d.found.length}) น้อยกว่าค่าเฉลี่ยรอบก่อนๆ (~${Math.round(avg)}) — อาจอ่านไม่ครบ`
+            )
+          if (avg && d.found.length > avg * 1.6)
+            warns.push(
+              `จำนวนคน (${d.found.length}) มากกว่าค่าเฉลี่ยรอบก่อนๆ (~${Math.round(avg)}) — เช็คว่ามีชื่อซ้ำหรือชื่อผิดไหม`
+            )
+          const low = d.found.filter(f => !f.manual && f.conf < 0.88).length
+          if (low)
+            warns.push(`${low} ชื่อความมั่นใจต่ำ (แถวสีเหลือง) ตรวจให้ชัวร์`)
+          const near = S.sessions.find(
+            s => s.time && Math.abs(s.time - d.time) < 60000
+          )
+          if (near)
+            warns.push(
+              `เวลาแคปตรงกับรูปที่ ${near.no} ที่บันทึกแล้ว — อาจเป็นรอบเดียวกัน`
+            )
+          if (S.sessions.some(s => s.no === d.no))
+            warns.push(`เลขรูปที่ ${d.no} ถูกใช้แล้ว เปลี่ยนเลขก่อนบันทึก`)
+        }
+        const warnHTML = warns.length
+          ? `<div class="warnbox">ระวัง: ตรวจก่อนบันทึก<br>${warns.map(w => '• ' + esc(w)).join('<br>')}</div>`
+          : ''
         const state =
           d.status === 'running' || d.status === 'queued'
             ? `<div class="bar"><i style="width:${Math.round((d.bar || 0) * 100)}%"></i></div><div class="hint ocrmsg">${esc(d.msg)}</div>`
             : d.status === 'error'
-              ? `<div class="warnbox">⚠️ อ่านรูปไม่สำเร็จ: ${esc(d.msg)}<br>ใช้ปุ่ม "เลือกจากรายชื่อ" หรือ "วางรายชื่อ" แทนได้เลย</div>`
+              ? `<div class="warnbox">ระวัง: อ่านรูปไม่สำเร็จ: ${esc(d.msg)}<br>ใช้ปุ่ม "เลือกจากรายชื่อ" หรือ "วางรายชื่อ" แทนได้เลย</div>`
               : ''
         const dupBox =
           d.dup != null
-            ? `<div class="warnbox">⚠️ รูปนี้ดูเหมือนเคยบันทึกแล้ว (รูปที่ ${d.dup}) — ถ้าบันทึกซ้ำคนจะได้แต้มซ้ำ</div>`
+            ? `<div class="warnbox">ระวัง: รูปนี้ดูเหมือนเคยบันทึกแล้ว (รูปที่ ${d.dup}) — ถ้าบันทึกซ้ำคนจะได้แต้มซ้ำ</div>`
             : ''
         const noImgTxt = d.file
           ? ''
@@ -2715,7 +3075,7 @@
     <div class="cthumb" ${d.url ? `data-act="view" data-src="${d.url}"` : ''}>${d.url ? `<img src="${d.url}" alt="">` : noImgTxt}<span class="cno">#${d.no}</span></div>
     <div>
       ${dupBox}
-      ${d.timeSrc === 'ไฟล์' ? '<div class="warnbox">🕐 ไม่พบเวลาแคปในรูป (รูปจาก Facebook/แชทมักถูกลบเวลาออก) — ใช้เวลาของไฟล์แทน อาจไม่ตรง ตรวจช่อง "เวลาแคป" หรือกด ➕ +1 แต้มเอง</div>' : ''}
+      ${d.timeSrc === 'ไฟล์' ? '<div class="warnbox">ไม่พบเวลาแคปในรูป (รูปจาก Facebook/แชทมักถูกลบเวลาออก) — ใช้เวลาของไฟล์แทน อาจไม่ตรง ตรวจช่อง "เวลาแคป" หรือกด +1 แต้มเอง</div>' : ''}
       <div class="crow">
         <label>รูปที่ <input type="number" min="1" value="${d.no}" data-f="no" data-d="${d.id}"></label>
         <label>เวลาแคป (${d.timeSrc}) <input type="datetime-local" value="${toLocalInput(d.time)}" data-f="time" data-d="${d.id}"></label>
@@ -2723,23 +3083,25 @@
           <span class="seg">
             <button data-act="ptsadj" data-d="${d.id}" data-delta="-1">−1</button>
             <button class="on">${pts} ครั้ง</button>
-            <button class="on" data-act="ptsadj" data-d="${d.id}" data-delta="1">➕ +1 ครั้ง</button>
-            <button class="${d.mode === 'auto' ? 'on' : ''}" data-act="mode" data-d="${d.id}" data-m="auto" title="คิดตามเวลาที่แคป">⏱ ตามเวลา</button>
+            <button class="on" data-act="ptsadj" data-d="${d.id}" data-delta="1">+1 ครั้ง</button>
+            <button class="${d.mode === 'auto' ? 'on' : ''}" data-act="mode" data-d="${d.id}" data-m="auto" title="คิดตามเวลาที่แคป">ตามเวลา</button>
           </span></label>
-        <span class="pts ${isBonus ? '' : 'p1'}">${isBonus ? '🌙 ' : '☀️ '}${pts} ครั้ง</span>
+        <span class="pts ${isBonus ? '' : 'p1'}">${isBonus ? 'หลังเที่ยงคืน ' : 'กลางวัน '}${pts} ครั้ง</span>
         <label style="flex:1;min-width:150px">บอส/หมายเหตุ <input type="text" value="${esc(d.label)}" data-f="label" data-d="${d.id}" placeholder="เช่น ชื่อบอส (ไม่ใส่ก็ได้)"></label>
       </div>
       ${state}
-      <div><b>✅ ตรวจพบ ${d.found.length} คน</b> ${d.unk.length ? `<span class="mute">· ❓ ไม่ตรงกับใคร ${d.unk.length} บรรทัด</span>` : ''}</div>
+      <div><b>ตรวจพบ ${d.found.length} คน</b> ${d.unk.length ? `<span class="mute">· ไม่ตรงกับใคร ${d.unk.length} บรรทัด</span>` : ''}</div>
       ${rowsHTML}
-      ${d.raw ? `<details><summary>🔍 ดูข้อความดิบที่ระบบอ่านได้ (ไว้ตรวจว่าอ่านผิดตรงไหน)</summary><pre style="white-space:pre-wrap;font-size:13px;background:var(--base);border:1px solid var(--line);padding:8px;max-height:260px;overflow:auto">${esc(d.raw)}</pre></details>` : ''}
+      ${addRow}
+      ${warnHTML}
+      ${d.raw ? `<details><summary>ดูข้อความดิบที่ระบบอ่านได้ (ไว้ตรวจว่าอ่านผิดตรงไหน)</summary><pre style="white-space:pre-wrap;font-size:13px;background:var(--base);border:1px solid var(--line);padding:8px;max-height:260px;overflow:auto">${esc(d.raw)}</pre></details>` : ''}
       <details><summary>วางรายชื่อเพิ่ม (พิมพ์/คัดลอกมา 1 บรรทัด = 1 คน)</summary>
         <textarea data-f="paste" data-d="${d.id}" placeholder="ชื่อ1&#10;ชื่อ2"></textarea><button class="btn sm" data-act="paste" data-d="${d.id}" style="margin-top:6px">จับคู่ชื่อที่วาง</button></details>
       <div class="cact">
-        <button class="btn gold" data-act="save" data-d="${d.id}">✅ บันทึกเป็นรูปที่ ${d.no} (${pts} ครั้ง)</button>
-        <button class="btn" data-act="pick" data-d="${d.id}">☑️ เลือกจากรายชื่อ</button>
-        ${d.file ? `<button class="btn" data-act="crop" data-d="${d.id}">✂️ เลือกพื้นที่รายชื่อ</button><button class="btn" data-act="ocr" data-d="${d.id}">🔁 อ่านใหม่</button>` : ''}
-        <button class="btn ghost" data-act="drop" data-d="${d.id}">🗑 ทิ้ง</button>
+        <button class="btn gold" data-act="save" data-d="${d.id}">บันทึกเป็นรูปที่ ${d.no} (${pts} ครั้ง)</button>
+        <button class="btn" data-act="pick" data-d="${d.id}">เลือกจากรายชื่อ</button>
+        ${d.file ? `<button class="btn" data-act="crop" data-d="${d.id}">เลือกพื้นที่รายชื่อ</button><button class="btn" data-act="ocr" data-d="${d.id}">อ่านใหม่</button>` : ''}
+        <button class="btn ghost" data-act="drop" data-d="${d.id}">ทิ้ง</button>
       </div>
     </div></div>`
       }
@@ -2779,6 +3141,14 @@
           !confirm('ยังไม่มีผู้เข้าร่วมเลย บันทึกรอบว่างไหม?')
         )
           return false
+        if (
+          !quiet &&
+          d.unk.length &&
+          !confirm(
+            `ยังมี ${d.unk.length} บรรทัดสีแดงที่ยังไม่ได้เลือกชื่อ (จะไม่ถูกนับแต้ม) บันทึกเลยไหม?`
+          )
+        )
+          return false
         const s = {
           id: uid(),
           no: d.no,
@@ -2795,13 +3165,18 @@
           `รูปที่ ${s.no} · ${s.att.length} คน · นับ ${s.pts} ครั้ง ${s.label ? '· ' + s.label : ''}`
         )
         for (const f of d.found) {
-          // 🔧 ระบบ "จำ" ชื่อที่ผู้ใช้แก้เอง → ครั้งหน้าจับคู่ได้เลย
-          if (!f.learn) continue
+          // ระบบ "จำ" ชื่อที่ผู้ใช้แก้เอง → ครั้งหน้าจับคู่ได้เลย
+          if (!f.learn || S.cfg.learn === false) continue
           const m = memById(f.mid),
             k = skel(f.text)
           if (m && k.length >= 2 && !variants(m).includes(k))
             (m.aliases = m.aliases || []).push(k)
-          if (m && f.text && f.text !== m.name && !(m.alts || []).includes(f.text))
+          if (
+            m &&
+            f.text &&
+            f.text !== m.name &&
+            !(m.alts || []).includes(f.text)
+          )
             (m.alts = m.alts || []).push(f.text)
         }
         s.att.forEach(i => {
@@ -2817,7 +3192,7 @@
             idb.put(s.id, th).then(r => {
               if (r === null)
                 toast(
-                  '⚠️ เก็บรูปย่อไม่ได้ (พื้นที่เบราว์เซอร์เต็ม) — แต้มบันทึกแล้ว แต่รูปจะไม่แสดง'
+                  'ระวัง: เก็บรูปย่อไม่ได้ (พื้นที่เบราว์เซอร์เต็ม) — แต้มบันทึกแล้ว แต่รูปจะไม่แสดง'
                 )
             })
           }
@@ -2827,7 +3202,7 @@
         renderAll()
         if (!quiet)
           toast(
-            `✅ บันทึกรูปที่ ${s.no} แล้ว — ${s.att.length} คน × ${s.pts} ครั้ง`
+            `บันทึกรูปที่ ${s.no} แล้ว — ${s.att.length} คน × ${s.pts} ครั้ง`
           )
         return true
       }
@@ -2878,22 +3253,133 @@
       }
       function renderTable() {
         const rows = sortedRows(),
-          total = S.sessions.length
-        $('#tBody').innerHTML = rows.length
-          ? rows
-              .map(
-                (r, i) => `<tr><td class="rk">${i + 1}</td>
-      <td>${esc(r.m.name)} <button class="btn sm ghost" data-act="m-ren" data-mid="${r.m.id}" title="แก้ชื่อ">✏️</button></td>
-      <td>${r.nos.map(x => `<span class="${x.p !== S.cfg.normal ? 'n2' : 'n1'}">${x.no}</span>`).join(',') || '<span class="mute">—</span>'}</td>
+          total = S.sessions.length,
+          ad = window.ROLE !== 'staff'
+        const num = (r, k, v, w) =>
+          ad
+            ? `<input type="number" min="0" class="tin" style="width:${w}px;text-align:right" data-ed="${k}" data-mid="${r.m.id}" value="${v}">`
+            : v
+        const head = ad
+          ? `<tr><td class="rk">＋</td><td colspan="7"><input type="text" list="dlMembers" class="tin" style="width:100%" data-ed="newm" placeholder="เพิ่มสมาชิกใหม่ในตาราง: พิมพ์ชื่อแล้วกด Enter"></td></tr>`
+          : ''
+        $('#tBody').innerHTML =
+          head +
+          (rows.length
+            ? rows
+                .map(
+                  (r, i) => `<tr><td class="rk">${i + 1}</td>
+      <td style="white-space:nowrap">${ad ? `<input type="text" class="tin" style="min-width:130px" data-ed="name" data-mid="${r.m.id}" value="${esc(r.m.name)}"> <button class="btn sm ghost" data-act="m-clear" data-mid="${r.m.id}" title="ล้างรอบและแต้มของคนนี้ (เก็บชื่อไว้)">ล้างแต้ม</button> <button class="btn sm ghost" data-act="m-del" data-mid="${r.m.id}" title="ลบสมาชิกคนนี้ออกทั้งหมด">ลบ</button>` : esc(r.m.name)}</td>
+      <td>${ad ? `<input type="text" class="tin" style="min-width:110px" data-ed="nos" data-mid="${r.m.id}" value="${r.nos.map(x => x.no).join(',')}" title="เลขรูปที่เข้าร่วม เช่น 1,2,5-7">` : r.nos.map(x => `<span class="${x.p !== S.cfg.normal ? 'n2' : 'n1'}">${x.no}</span>`).join(',') || '<span class="mute">—</span>'}</td>
       <td class="num">${r.cnt}</td>
-      <td class="num">${r.units}<input type="number" class="adj" data-adj="adjU" data-mid="${r.m.id}" value="${+r.m.adjU || 0}" title="ปรับจำนวนครั้งเอง (+/−)"></td>
-      <td class="num pts">${r.pts}<input type="number" class="adj" data-adj="adjP" data-mid="${r.m.id}" value="${+r.m.adjP || 0}" title="ปรับแต้มเอง (+/−)"></td>
+      <td class="num">${num(r, 'units', r.units, 64)}</td>
+      <td class="num pts">${num(r, 'pts', r.pts, 64)}</td>
       <td class="num mute">อีก ${per() - (r.units % per())} ครั้ง</td>
       <td class="num">${total ? Math.round((r.cnt / total) * 100) : 0}%</td></tr>`
-              )
-              .join('')
-          : '<tr><td colspan="8" class="mute" style="padding:30px;text-align:center">ยังไม่มีข้อมูล</td></tr>'
+                )
+                .join('')
+            : '<tr><td colspan="8" class="mute" style="padding:30px;text-align:center">ยังไม่มีข้อมูล</td></tr>')
       }
+      /* แก้ตารางคะแนนสดๆ: ชื่อ / รอบที่เข้าร่วม / ครั้งรวม / แต้ม / เพิ่มสมาชิก */
+      const parseNos = s => {
+        const out = new Set()
+        String(s)
+          .split(/[,\s]+/)
+          .filter(Boolean)
+          .forEach(p => {
+            const m = p.match(/^(\d+)\s*[-–]\s*(\d+)$/)
+            if (m) for (let i = +m[1]; i <= +m[2] && i < 5000; i++) out.add(i)
+            else if (/^\d+$/.test(p)) out.add(+p)
+          })
+        return out
+      }
+      $('#tBody').addEventListener('change', e => {
+        const i = e.target.closest('[data-ed]')
+        if (!i || window.ROLE === 'staff') return
+        const k = i.dataset.ed,
+          v = i.value.trim()
+        let focusKey = null
+        if (k === 'newm') {
+          if (!v) return
+          const ex = findMember(v)
+          if (ex) return toast(`มี "${ex.name}" อยู่แล้ว`)
+          S.members.push({ id: uid(), name: v.slice(0, 60), aliases: [] })
+          logAct('เพิ่มสมาชิก', v)
+          toast('เพิ่ม ' + v)
+        } else {
+          const m = memById(i.dataset.mid)
+          if (!m) return
+          focusKey = i.dataset.mid
+          const r = calcRows().find(x => x.m.id === m.id)
+          if (k === 'name') {
+            if (!v || v === m.name) return (i.value = m.name)
+            const dupM = S.members.find(
+              x => x !== m && x.name.toLowerCase() === v.toLowerCase()
+            )
+            if (dupM) {
+              i.value = m.name
+              return toast(
+                `มีชื่อ "${dupM.name}" อยู่แล้ว — ใช้ปุ่ม รวมสมาชิก ในแท็บสมาชิกแทน`
+              )
+            }
+            logAct('แก้ชื่อสมาชิก', `${m.name} → ${v}`)
+            m.name = v.slice(0, 60)
+          } else if (k === 'nos') {
+            const want = parseNos(v),
+              have = new Set(r.nos.map(x => x.no)),
+              add = [],
+              del = []
+            const known = new Set(S.sessions.map(s => s.no))
+            const unknown = [...want].filter(n => !known.has(n))
+            S.sessions.forEach(s => {
+              const w = want.has(s.no),
+                h = s.att.includes(m.id)
+              if (w && !h) {
+                s.att.push(m.id)
+                add.push(s.no)
+              }
+              if (!w && h) {
+                s.att = s.att.filter(x => x !== m.id)
+                del.push(s.no)
+              }
+            })
+            if (!add.length && !del.length) {
+              i.value = [...have].join(',')
+              return unknown.length && toast('ไม่มีรอบที่ ' + unknown.join(','))
+            }
+            logAct(
+              'แก้รอบเข้าร่วมในตาราง',
+              `${m.name}: เพิ่ม [${add.join(',')}] เอาออก [${del.join(',')}]`
+            )
+            if (unknown.length)
+              toast('ข้ามเลขรอบที่ไม่มี: ' + unknown.join(','))
+          } else if (k === 'units') {
+            const n = Math.max(0, Math.round(+v || 0)),
+              old = +m.adjU || 0
+            if (n === r.units) return
+            m.adjU = n - r.base
+            logAct(
+              'แก้ครั้งรวมในตาราง',
+              `${m.name}: ${r.units} → ${n} (ปรับ ${old} → ${m.adjU})`
+            )
+          } else if (k === 'pts') {
+            const n = Math.max(0, Math.round(+v || 0)),
+              old = +m.adjP || 0
+            if (n === r.pts) return
+            m.adjP = n - Math.floor(r.units / per())
+            logAct(
+              'แก้แต้มในตาราง',
+              `${m.name}: ${r.pts} → ${n} (ปรับ ${old} → ${m.adjP})`
+            )
+          }
+        }
+        save()
+        renderAll()
+        if (focusKey)
+          document
+            .querySelector(`#tBody [data-ed="${k}"][data-mid="${focusKey}"]`)
+            ?.focus()
+        else document.querySelector('#tBody [data-ed="newm"]')?.focus()
+      })
       const imgUrlCache = new Map()
       async function sesImg(s) {
         if (imgUrlCache.has(s.id)) return imgUrlCache.get(s.id)
@@ -2910,8 +3396,8 @@
                 const p = sesPts(s)
                 return `<tr><td class="rk">#${s.no}</td><td>${s.img ? `<img class="thumb" data-sid="${s.id}" data-act="s-view" alt="">` : '<span class="mute">ไม่มีรูป</span>'}</td>
       <td>${fmtTime(s.time)}${s.auto ? '' : ' <span class="mute">(กำหนดเอง)</span>'}</td><td>${esc(s.label || '')}</td>
-      <td><span class="tag ${p !== S.cfg.normal ? 'b' : 'n'}">${p !== S.cfg.normal ? '🌙' : '☀️'} ${p}</span></td><td class="num">${s.att.length}</td>
-      <td style="white-space:nowrap"><button class="btn sm" data-act="s-edit" data-sid="${s.id}">✏️ แก้ไข</button> <button class="btn sm ghost" data-act="s-del" data-sid="${s.id}">🗑</button></td></tr>`
+      <td><span class="tag ${p !== S.cfg.normal ? 'b' : 'n'}">${p !== S.cfg.normal ? 'คืน' : 'วัน'} ${p}</span></td><td class="num">${s.att.length}</td>
+      <td style="white-space:nowrap"><button class="btn sm" data-act="s-edit" data-sid="${s.id}">แก้ไข</button> <button class="btn sm ghost" data-act="s-del" data-sid="${s.id}">ลบ</button></td></tr>`
               })
               .join('')
           : `<tr><td colspan="7" class="mute" style="padding:30px;text-align:center">ยังไม่มีรอบที่บันทึก</td></tr>`
@@ -2939,8 +3425,8 @@
         $('#mBody').innerHTML =
           list
             .map(
-              m => `<tr><td>${esc(m.name)}${codeBadge(m)}${(m.alts || []).length ? `<div class="mute" style="font-size:12px">อ่านได้ว่า: ${esc(m.alts.join(' · '))}</div>` : ''}${(m.aliases || []).length && !(m.alts || []).length ? ` <span class="mute" title="ชื่อที่ระบบจำไว้จากการแก้ไข ${(m.aliases || []).length} แบบ">🧠${m.aliases.length}</span>` : ''}</td>
-    <td class="num">${cnt.get(m.id) || 0} ครั้ง</td><td style="white-space:nowrap"><button class="btn sm" data-act="m-ren" data-mid="${m.id}" title="แก้ชื่อ">✏️</button> <button class="btn sm" data-act="m-alts" data-mid="${m.id}" title="แก้ชื่อที่ระบบจำ/มักอ่านผิด">🧠</button> <button class="btn sm ghost" data-act="m-del" data-mid="${m.id}">🗑</button></td></tr>`
+              m => `<tr><td>${esc(m.name)}${codeBadge(m)}${(m.alts || []).length ? `<div class="mute" style="font-size:12px">อ่านได้ว่า: ${esc(m.alts.join(' · '))}</div>` : ''}${(m.aliases || []).length && !(m.alts || []).length ? ` <span class="mute" title="ชื่อที่ระบบจำไว้จากการแก้ไข ${(m.aliases || []).length} แบบ">จำไว้ ${m.aliases.length}</span>` : ''}</td>
+    <td class="num">${cnt.get(m.id) || 0} ครั้ง</td><td style="white-space:nowrap"><button class="btn sm" data-act="m-ren" data-mid="${m.id}" title="แก้ชื่อ">แก้ไข</button> <button class="btn sm" data-act="m-alts" data-mid="${m.id}" title="แก้ชื่อที่ระบบจำ/มักอ่านผิด">ชื่อที่จำ</button> <button class="btn sm ghost" data-act="m-del" data-mid="${m.id}">ลบ</button></td></tr>`
             )
             .join('') ||
           `<tr><td class="mute" style="padding:20px">ยังไม่มีสมาชิก — วางรายชื่อด้านบน หรือนำเข้าจากชีตเดิม</td></tr>`
@@ -2953,6 +3439,10 @@
         $('#cTo').value = c.to
         $('#cPer').value = c.per || 5
         $('#cUseCode').checked = !!c.useCode
+        $('#cAutoTime').checked = c.autoTime !== false
+        $('#cBonusOn').checked = c.bonusOn !== false
+        $('#cFileTime').checked = !!c.fileTime
+        $('#cLearn').checked = c.learn !== false
         $('#cThr').value = c.thr
         $('#cThrV').textContent = c.thr + '%'
         $('#cAuto').checked = c.autoOcr
@@ -2966,7 +3456,7 @@
         $('#hsSes').textContent = S.sessions.length
         $('#hsPts').textContent = calcRows().reduce((t, r) => t + r.pts, 0)
         $('#ruleBanner').innerHTML =
-          '⏰ กติกาแต้ม: ' +
+          'กติกาแต้ม: ' +
           esc(ruleText()) +
           ' <span class="hint">(แก้ได้ที่แท็บ สมาชิก & ตั้งค่า · ปรับรายรูปได้ที่การ์ดแต่ละใบ)</span>'
         $('#dlMembers').innerHTML = S.members
@@ -3154,7 +3644,7 @@
             .sort((a, b) => a.name.localeCompare(b.name, 'th'))
             .map(
               m =>
-                `<span class="chip">${esc(m.name)}<button data-act="se-rm" data-mid="${m.id}">✕</button></span>`
+                `<span class="chip">${esc(m.name)}<button data-act="se-rm" data-mid="${m.id}">เอาออก</button></span>`
             )
             .join('') || '<span class="hint">ไม่มีผู้เข้าร่วม</span>'
       }
@@ -3250,7 +3740,7 @@
           const m = memById(mid),
             v = prompt('แก้ชื่อสมาชิก', m.name)
           if (v && v.trim()) {
-            // 🔧 จำคำที่ระบบอ่านผิด → ครั้งหน้าอ่านผิดแบบเดิมก็จับเป็นคนนี้ได้เลย
+            // จำคำที่ระบบอ่านผิด → ครั้งหน้าอ่านผิดแบบเดิมก็จับเป็นคนนี้ได้เลย
             if (d) {
               const fo = d.found.find(x => x.mid === mid),
                 k = fo && skel(fo.text)
@@ -3275,13 +3765,46 @@
           return renderDups()
         }
         if (act === 'm-alts') {
-          const m = memById(mid), v = prompt('ชื่อที่ระบบมักอ่านได้สำหรับ "' + m.name + '" (คั่นด้วย , ลบออกได้)', (m.alts || []).join(', '))
+          const m = memById(mid),
+            v = prompt(
+              'ชื่อที่ระบบมักอ่านได้สำหรับ "' +
+                m.name +
+                '" (คั่นด้วย , ลบออกได้)',
+              (m.alts || []).join(', ')
+            )
           if (v === null) return
-          m.alts = v.split(',').map(x => x.trim()).filter(Boolean)
+          m.alts = v
+            .split(',')
+            .map(x => x.trim())
+            .filter(Boolean)
           m.aliases = m.alts.map(skel).filter(Boolean)
           logAct('แก้ชื่อที่ระบบจำ', `${m.name}: ${m.alts.join(', ')}`)
           save()
           return renderAll()
+        }
+        if (act === 'm-clear') {
+          if (!isAdminRole()) return toast('สิทธิ์ไม่พอ — เฉพาะแอดมิน')
+          const m = memById(mid)
+          if (
+            m &&
+            confirm(
+              `ล้างรอบที่เข้าร่วมและแต้มทั้งหมดของ "${m.name}" ? (เก็บชื่อไว้ในรายชื่อ)`
+            )
+          ) {
+            let n = 0
+            S.sessions.forEach(s => {
+              if (s.att.includes(mid)) {
+                s.att = s.att.filter(x => x !== mid)
+                n++
+              }
+            })
+            m.adjU = 0
+            m.adjP = 0
+            logAct('ล้างแต้มรายคน', `${m.name} (เอาออกจาก ${n} รอบ)`)
+            save()
+            renderAll()
+          }
+          return
         }
         if (act === 'm-del') {
           const m = memById(mid)
@@ -3407,18 +3930,75 @@
           d.label = t.value
           return
         }
+        if (f === 'addname') {
+          const nm = t.value.trim()
+          if (!nm) return
+          let m = findMember(nm),
+            isNew = false
+          if (!m) {
+            m = { id: uid(), name: nm.slice(0, 60), aliases: [] }
+            S.members.push(m)
+            isNew = true
+            logAct('เพิ่มสมาชิก', nm)
+          }
+          if (d.found.some(x => x.mid === m.id)) {
+            toast(m.name + ' มีในรอบนี้แล้ว')
+            return renderCard(d)
+          }
+          d.found.push({
+            mid: m.id,
+            conf: 1,
+            text: m.name,
+            manual: true,
+            ord: 1e6,
+          })
+          save()
+          if (isNew) renderAll()
+          else {
+            renderHeader()
+            renderCard(d)
+          }
+          toast(
+            'เพิ่ม ' +
+              m.name +
+              (isNew ? ' (สมาชิกใหม่)' : '') +
+              (isNew && S.cfg.useCode && !codeOf(m.name)
+                ? ' — ระวัง: ไม่มีเลขท้ายชื่อ'
+                : '')
+          )
+          const nx = document.querySelector(
+            `.card[data-d="${d.id}"] [data-f=addname]`
+          )
+          if (nx) nx.focus()
+          return
+        }
         if (f === 'fix') {
-          const [kind, key] = t.dataset.k.split(':'), nm = t.value.trim()
-          const row = kind === 'f' ? d.found.find(x => x.mid === key) : d.unk[+key]
+          const [kind, key] = t.dataset.k.split(':'),
+            nm = t.value.trim()
+          const row =
+            kind === 'f' ? d.found.find(x => x.mid === key) : d.unk[+key]
           if (!row || !nm) return
           let m = findMember(nm)
-          if (!m) { m = { id: uid(), name: nm.slice(0, 60), aliases: [] }; S.members.push(m); logAct('เพิ่มสมาชิก', nm) }
+          if (!m) {
+            m = { id: uid(), name: nm.slice(0, 60), aliases: [] }
+            S.members.push(m)
+            logAct('เพิ่มสมาชิก', nm)
+          }
           if (kind === 'f' && m.id === key) return
-          const ocr = row.text, ord = kind === 'f' ? row.ord : row.li
+          const ocr = row.text,
+            ord = kind === 'f' ? row.ord : row.li
           if (kind === 'f') d.found = d.found.filter(x => x.mid !== key)
           else d.unk.splice(+key, 1)
-          if (d.found.some(x => x.mid === m.id)) toast(m.name + ' มีในรอบนี้แล้ว')
-          else d.found.push({ mid: m.id, conf: 1, text: ocr || m.name, learn: true, ord })
+          if (d.found.some(x => x.mid === m.id))
+            toast(m.name + ' มีในรอบนี้แล้ว')
+          else
+            d.found.push({
+              mid: m.id,
+              conf: 1,
+              text: ocr || m.name,
+              learn: true,
+              ord,
+            })
           save()
           renderHeader()
           return renderCard(d)
@@ -3467,6 +4047,15 @@
           addFiles(fs)
         }
       })
+      $('#btnDoc').onclick = () => $('#docFile').click()
+      $('#docFile').onchange = e => {
+        addFiles(e.target.files)
+        e.target.value = ''
+      }
+      $('#btnTxt').onclick = () => {
+        addTextDraft($('#txtIn').value, '', null, false)
+        $('#txtIn').value = ''
+      }
       $('#btnPick').onclick = () => $('#picFile').click()
       $('#picFile').onchange = e => {
         addFiles(e.target.files)
@@ -3513,6 +4102,14 @@
         if (
           list.some(d => !d.found.length) &&
           !confirm('มีบางรูปยังไม่มีผู้เข้าร่วม บันทึกไปเลยไหม?')
+        )
+          return
+        const red = list.reduce((n, d) => n + d.unk.length, 0)
+        if (
+          red &&
+          !confirm(
+            `ยังมี ${red} บรรทัดสีแดงที่ยังไม่ได้เลือกชื่อ (จะไม่ถูกนับแต้ม) บันทึกทั้งหมดเลยไหม?`
+          )
         )
           return
         for (const d of list) if (await saveDraft(d, true)) ok++
@@ -3685,28 +4282,46 @@
         save()
         renderAll()
       }
+      ;[
+        ['#cAutoTime', 'autoTime', 'คิดครั้งตามเวลาแคปอัตโนมัติ'],
+        ['#cFileTime', 'fileTime', 'เชื่อเวลาของไฟล์'],
+        ['#cLearn', 'learn', 'จำชื่อที่แก้อัตโนมัติ'],
+      ].forEach(([sel, k, label]) => {
+        $(sel).onchange = e => {
+          S.cfg[k] = e.target.checked
+          logAct('แก้ตั้งค่า', label + ' = ' + (S.cfg[k] ? 'เปิด' : 'ปิด'))
+          save()
+        }
+      })
+      $('#cBonusOn').onchange = e => {
+        const on = e.target.checked
+        const n = S.sessions.filter(
+          s => s.auto && autoPts(s.time) !== S.cfg.normal
+        ).length
+        if (
+          !on &&
+          n &&
+          !confirm(
+            `มี ${n} รอบที่บันทึกแบบ "ตามเวลา" และตอนนี้นับพิเศษอยู่ ถ้าปิด รอบเหล่านี้จะกลับเป็นนับปกติ แต้มรวมจะเปลี่ยน ปิดเลยไหม?`
+          )
+        ) {
+          e.target.checked = true
+          return
+        }
+        S.cfg.bonusOn = on
+        logAct(
+          'แก้ตั้งค่า',
+          'กติกาครั้งพิเศษตามช่วงเวลา = ' + (on ? 'เปิด' : 'ปิด')
+        )
+        save()
+        renderAll()
+      }
       $('#cUseCode').onchange = () => {
         S.cfg.useCode = $('#cUseCode').checked
         logAct('แก้ตั้งค่า', 'บังคับเลขท้ายชื่อ = ' + S.cfg.useCode)
         save()
         renderAll()
       }
-      $('#tBody').addEventListener('change', e => {
-        const i = e.target.closest('input[data-adj]')
-        if (!i || !isAdminRole()) return
-        const m = memById(i.dataset.mid),
-          k = i.dataset.adj,
-          v = Math.round(+i.value || 0),
-          old = +m[k] || 0
-        if (v === old) return
-        m[k] = v
-        logAct(
-          'ปรับคะแนนเอง',
-          `${m.name}: ${k === 'adjU' ? 'ครั้ง' : 'แต้ม'} ${old} → ${v}`
-        )
-        save()
-        renderAll()
-      })
       window.fillAiUi = () => {
         const c = aiCfg()
         $('#cAi').checked = !!c.on
@@ -3727,7 +4342,7 @@
         localStorage.setItem('twok_gemini_key', $('#cAiKey').value.trim())
         toast(
           window.cloudSaveAi
-            ? 'แก้คีย์แล้ว — กด 💾 บันทึกการตั้งค่า เพื่อใช้กับทุกเครื่อง'
+            ? 'แก้คีย์แล้ว — กด บันทึกการตั้งค่า เพื่อใช้กับทุกเครื่อง'
             : 'บันทึกคีย์ในเครื่องนี้แล้ว'
         )
       }
@@ -3739,7 +4354,7 @@
         if (!key) return toast('ใส่ API key ก่อน')
         const b = $('#bAiTest')
         b.disabled = true
-        b.textContent = '⏳ กำลังทดสอบ...'
+        b.textContent = 'กำลังทดสอบ...'
         try {
           const r = await fetch(
             `https://generativelanguage.googleapis.com/v1beta/models/${encodeURIComponent(model)}:generateContent`,
@@ -3755,19 +4370,19 @@
               }),
             }
           )
-          if (r.ok) toast('✅ AI ใช้งานได้ (' + model + ')')
+          if (r.ok) toast('AI ใช้งานได้ (' + model + ')')
           else
             toast(
-              '❌ AI ใช้ไม่ได้: HTTP ' +
+              'ผิดพลาด: AI ใช้ไม่ได้: HTTP ' +
                 r.status +
                 ' ' +
                 (await geminiDetail(r))
             )
         } catch (e) {
-          toast('❌ เชื่อมต่อ Google ไม่ได้: ' + (e.message || e))
+          toast('ผิดพลาด: เชื่อมต่อ Google ไม่ได้: ' + (e.message || e))
         }
         b.disabled = false
-        b.textContent = '🧪 ทดสอบ AI'
+        b.textContent = 'ทดสอบ AI'
       }
       $('#aiBox').classList.add('adminonly')
       const isAdminRole = () => window.ROLE !== 'staff'
@@ -3775,7 +4390,7 @@
         if (!isAdminRole()) return toast('สิทธิ์ไม่พอ')
         const btn = $('#bSaveCfg')
         btn.disabled = true
-        btn.textContent = '⏳ กำลังบันทึก...'
+        btn.textContent = 'กำลังบันทึก...'
         let ok = true
         const cloud = !!window.cloudNow
         try {
@@ -3798,18 +4413,77 @@
           ok = false
         }
         btn.disabled = false
-        btn.textContent = ok ? '✅ บันทึกแล้ว' : '❌ ไม่สำเร็จ ลองอีกครั้ง'
+        btn.textContent = ok ? 'บันทึกแล้ว' : 'ผิดพลาด: ไม่สำเร็จ ลองอีกครั้ง'
         if (ok) setDirty(false)
-        setTimeout(() => (btn.textContent = '💾 บันทึกการตั้งค่า'), 2500)
+        setTimeout(() => (btn.textContent = 'บันทึกการตั้งค่า'), 2500)
         toast(
           ok
-            ? '✅ บันทึกการตั้งค่าแล้ว' +
+            ? 'บันทึกการตั้งค่าแล้ว' +
                 (cloud
                   ? ' (ซิงก์ขึ้น Firebase เรียบร้อย — ทุกเครื่องได้ค่าใหม่)'
                   : ' (เก็บในเครื่อง)')
-            : '❌ บันทึกขึ้น Firebase ไม่สำเร็จ ลองอีกครั้ง'
+            : 'ผิดพลาด: บันทึกขึ้น Firebase ไม่สำเร็จ ลองอีกครั้ง'
         )
       }
+      const clearPart = (id, msg, fn, logTxt) =>
+        ($(id).onclick = () => {
+          if (!confirm(msg + '\n\nกู้คืนไม่ได้ — แนะนำให้กดสำรองข้อมูลก่อน'))
+            return
+          const n = fn()
+          logAct('ล้างข้อมูลบางส่วน', logTxt + (n != null ? ` (${n})` : ''))
+          save()
+          renderAll()
+          toast('ล้างแล้ว: ' + logTxt + (n != null ? ` (${n})` : ''))
+        })
+      clearPart(
+        '#bClrAdj',
+        'ล้างคะแนนที่ปรับเองของทุกคน (กลับไปนับจากรอบเข้าร่วมจริงอย่างเดียว)?',
+        () => {
+          let n = 0
+          S.members.forEach(m => {
+            if (m.adjU || m.adjP) n++
+            m.adjU = 0
+            m.adjP = 0
+          })
+          return n + ' คน'
+        },
+        'คะแนนที่ปรับเอง'
+      )
+      clearPart(
+        '#bClrIdle',
+        'ลบสมาชิกที่ไม่มีรอบเข้าร่วมเลยและไม่มีคะแนนปรับ?',
+        () => {
+          const used = new Set(S.sessions.flatMap(s => s.att))
+          const before = S.members.length
+          S.members = S.members.filter(m => used.has(m.id) || m.adjU || m.adjP)
+          return before - S.members.length + ' คน'
+        },
+        'สมาชิกที่ไม่มีรอบ'
+      )
+      clearPart(
+        '#bClrSes',
+        'ลบรอบทั้งหมด (รายชื่อสมาชิกยังอยู่ แต่แต้มกลับเป็น 0)?',
+        () => {
+          const n = S.sessions.length
+          S.sessions.forEach(s => idb.del(s.id))
+          S.sessions = []
+          return n + ' รอบ'
+        },
+        'รอบทั้งหมด'
+      )
+      clearPart(
+        '#bClrLearn',
+        'ล้างชื่อที่ระบบจำไว้ (ชื่อที่เคยแก้) และรายการบรรทัดที่เคยกดข้าม?',
+        () => {
+          S.members.forEach(m => {
+            m.aliases = []
+            m.alts = []
+          })
+          S.ignore = []
+          return null
+        },
+        'ชื่อที่ระบบจำ/รายการข้าม'
+      )
       $('#bResetAll').onclick = () => {
         if (
           !confirm(
@@ -4019,7 +4693,7 @@
       const banner = $('#cloudBanner')
       if (!FIREBASE_CONFIG.apiKey) {
         banner.textContent =
-          '⚠️ โหมดในเครื่อง — ยังไม่ได้ตั้งค่า Firebase (ข้อมูลอยู่แค่ในเบราว์เซอร์นี้ ไม่มีล็อกอิน)'
+          'ระวัง: โหมดในเครื่อง — ยังไม่ได้ตั้งค่า Firebase (ข้อมูลอยู่แค่ในเบราว์เซอร์นี้ ไม่มีล็อกอิน)'
       } else {
         const { initializeApp } = await import(G + '/firebase-app.js')
         const {
@@ -4075,10 +4749,11 @@
               by: window.CUR_USER,
               at: serverTimestamp(),
             })
-            banner.textContent = '☁️ ซิงก์แล้ว · ' + window.CUR_USER
+            banner.textContent = 'ซิงก์แล้ว · ' + window.CUR_USER
             return true
           } catch (e) {
-            banner.textContent = '❌ บันทึกขึ้น Firebase ไม่สำเร็จ: ' + e.code
+            banner.textContent =
+              'ผิดพลาด: บันทึกขึ้น Firebase ไม่สำเร็จ: ' + e.code
             return false
           }
         }
@@ -4128,7 +4803,7 @@
           const i = $('#authPass'),
             show = i.type === 'password'
           i.type = show ? 'text' : 'password'
-          $('#authEye').textContent = show ? '🙈' : '👁'
+          $('#authEye').textContent = show ? 'ซ่อน' : 'แสดง'
           i.focus()
         }
         $('#authReset').onclick = async () => {
@@ -4200,14 +4875,14 @@
             $('#rEmail').value = ''
             logAct('ตั้งสิทธิ์', em + ' = ' + role)
             toast(
-              '✅ ตั้งสิทธิ์ ' +
+              'ตั้งสิทธิ์ ' +
                 em +
                 ' เป็น ' +
                 (role === 'admin' ? 'แอดมิน' : 'ทีมงาน') +
                 ' แล้ว'
             )
           } catch (e) {
-            toast('❌ ตั้งสิทธิ์ไม่สำเร็จ: ' + (e.code || e.message))
+            toast('ผิดพลาด: ตั้งสิทธิ์ไม่สำเร็จ: ' + (e.code || e.message))
           }
         }
         $('#rBody').onchange = async e => {
@@ -4220,9 +4895,11 @@
               { merge: true }
             )
             logAct('ตั้งสิทธิ์', sel.dataset.r + ' = ' + sel.value)
-            toast('✅ เปลี่ยนสิทธิ์ ' + sel.dataset.r + ' แล้ว')
+            toast('เปลี่ยนสิทธิ์ ' + sel.dataset.r + ' แล้ว')
           } catch (err) {
-            toast('❌ เปลี่ยนสิทธิ์ไม่สำเร็จ: ' + (err.code || err.message))
+            toast(
+              'ผิดพลาด: เปลี่ยนสิทธิ์ไม่สำเร็จ: ' + (err.code || err.message)
+            )
           }
         }
         $('#rBody').onclick = async e => {
@@ -4237,9 +4914,9 @@
           try {
             await deleteDoc(doc(db, 'roles', b.dataset.rdel))
             logAct('ลบสิทธิ์', b.dataset.rdel)
-            toast('🗑 ลบสิทธิ์ ' + b.dataset.rdel + ' แล้ว')
+            toast('ลบสิทธิ์ ' + b.dataset.rdel + ' แล้ว')
           } catch (err) {
-            toast('❌ ลบไม่สำเร็จ: ' + (err.code || err.message))
+            toast('ผิดพลาด: ลบไม่สำเร็จ: ' + (err.code || err.message))
           }
         }
         onAuthStateChanged(auth, async u => {
@@ -4362,7 +5039,7 @@
           $('#btnLogout').hidden = false
           $('#who').textContent =
             u.email + (window.ROLE === 'admin' ? ' (แอดมิน)' : ' (ทีมงาน)')
-          banner.textContent = '☁️ เชื่อม Firebase แล้ว · ' + u.email
+          banner.textContent = 'เชื่อม Firebase แล้ว · ' + u.email
           window.logAct && logAct('เข้าสู่ระบบ', '')
         })
       }
