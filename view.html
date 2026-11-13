@@ -679,6 +679,19 @@
         border: 1px solid var(--line);
         background: #fff;
       }
+      .sThumb {
+        width: 36px;
+        height: 28px;
+        object-fit: cover;
+        vertical-align: middle;
+        margin-right: 6px;
+        background: var(--panel2);
+      }
+      .s-no.clk {
+        cursor: pointer;
+        text-decoration: underline;
+        text-underline-offset: 3px;
+      }
       #lb {
         position: fixed;
         inset: 0;
@@ -964,11 +977,11 @@
                         `<span${hit && hit.has(i) ? ' class="hit"' : ''}>${esc(n)}</span>`
                     )
                     .join('')
-                return `<tr id="s${s.no}"><td class="rk s-no">#${s.no}</td>
+                return `<tr id="s${s.no}"><td class="rk s-no${gByNo.has(s.no) ? ' clk' : ''}" data-no="${s.no}">#${s.no}</td>
         <td class="s-time">${fmt(s.t)}</td><td class="s-lbl">${esc(s.l || '')}</td>
         <td class="s-tag"><span class="tag ${b ? 'b' : 'n'}">${b ? 'คืน' : 'วัน'} ${s.p}</span></td>
         <td class="num s-cnt">${s.a.length} คน</td>
-        <td class="s-names"><details class="nl"${sOpen || hit ? ' open' : ''}><summary>ดูรายชื่อ (${s.a.length})</summary><div class="nms">${names || '<span>—</span>'}</div></details>${gByNo.has(s.no) ? `<button class="btn sImg" data-no="${s.no}" style="margin-top:6px">🖼 ดูรูปรอบนี้</button>` : ''}</td></tr>`
+        <td class="s-names"><details class="nl"${sOpen || hit ? ' open' : ''}><summary>ดูรายชื่อ (${s.a.length})</summary><div class="nms">${names || '<span>—</span>'}</div></details>${gByNo.has(s.no) ? `<button class="btn sImg" data-no="${s.no}" style="margin-top:6px"><img class="sThumb" loading="lazy" src="${thumb(gByNo.get(s.no).id, 120)}" alt="" /> ดูรูปรอบนี้</button>` : gFiles.length ? '<div class="hint" style="margin-top:6px">ยังไม่มีรูปรอบนี้</div>' : ''}</td></tr>`
               })
               .join('')
           : `<tr><td colspan="6" class="mute" style="padding:30px;text-align:center">${hit ? 'ไม่พบชื่อนี้ในรอบไหนเลย' : 'ยังไม่มีรอบที่บันทึก'}</td></tr>`
@@ -1085,7 +1098,7 @@
         if (c) lbShow(+c.dataset.i)
       }
       $('#sBody').addEventListener('click', e => {
-        const b = e.target.closest('.sImg')
+        const b = e.target.closest('.sImg, .s-no.clk')
         if (!b) return
         gShown = gFiles
         lbShow(gFiles.indexOf(gByNo.get(+b.dataset.no)))
