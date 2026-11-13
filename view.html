@@ -815,6 +815,7 @@
           </h2>
           <div class="gbar">
             <input type="search" id="gSearch" placeholder="ค้นหาชื่อไฟล์รูป..." />
+            <button class="btn" id="gRefresh">รีเฟรชรูป</button>
             <a class="btn" id="gOpen" target="_blank" rel="noopener">เปิดโฟลเดอร์ใน Drive</a>
           </div>
           <div id="gBox"><div class="hint">กำลังโหลดรูป...</div></div>
@@ -1027,11 +1028,13 @@
           : '<div class="hint" style="padding:30px;text-align:center">ไม่พบรูป</div>'
       }
 
-      async function loadGallery() {
-        if (gLoaded) return
+      // 📍 Key Logic: force=true คือโหลดใหม่ (ปุ่มรีเฟรช / โพลล์ทุก 60 วิ) เพื่อให้รูปที่เพิ่งอัปขึ้นมาเอง
+      async function loadGallery(force) {
+        if (gLoaded && !force) return
         gLoaded = true
         if (!DRIVE.apiKey) return showFolderFrame()
         try {
+          const files = []
           let token = ''
           do {
             const u = new URL('https://www.googleapis.com/drive/v3/files')
@@ -1045,16 +1048,18 @@
             const r = await fetch(u)
             if (!r.ok) throw new Error(r.status)
             const j = await r.json()
-            gFiles.push(...(j.files || []))
+            files.push(...(j.files || []))
             token = j.nextPageToken || ''
           } while (token)
           // 🔧 The "Why": numeric:true ทำให้ 2 มาก่อน 10 (ไม่ใช่ 1,10,2)
-          gFiles.sort((a, b) => a.name.localeCompare(b.name, 'th', { numeric: true }))
+          files.sort((a, b) => a.name.localeCompare(b.name, 'th', { numeric: true }))
+          gFiles = files // ⚠️ สลับทีเดียวตอนโหลดเสร็จ จะได้ไม่กะพริบ/ว่างระหว่างรอ
           buildByNo()
           if (D) renderSessions()
           if (!gFiles.length) return showFolderFrame('ยังไม่พบรูปในโฟลเดอร์ (หรือยังไม่ได้แชร์เป็นสาธารณะ)')
           renderGallery()
         } catch (e) {
+          if (force && gFiles.length) return // รีเฟรชพลาด: คงรูปเดิมไว้
           gFiles = []
           showFolderFrame('โหลดแบบแกลเลอรีไม่ได้ จึงแสดงโฟลเดอร์ Drive แทน')
         }
@@ -1085,6 +1090,15 @@
         gShown = gFiles
         lbShow(gFiles.indexOf(gByNo.get(+b.dataset.no)))
       })
+      $('#gRefresh').onclick = () => {
+        if (DRIVE.apiKey) loadGallery(true)
+        else showFolderFrame() // โหมดฝังโฟลเดอร์: สร้าง iframe ใหม่ = ดึงรายการล่าสุด
+      }
+      // 💡 Pro-Tip: โพลล์ทุก 60 วิเฉพาะตอนเปิดแท็บอยู่ ประหยัดโควตา Drive API
+      if (DRIVE.apiKey)
+        setInterval(() => {
+          if (!document.hidden) loadGallery(true)
+        }, 60000)
       $('#gSearch').oninput = () => gFiles.length && renderGallery()
       $('#lbPrev').onclick = () => lbShow(gIdx - 1)
       $('#lbNext').onclick = () => lbShow(gIdx + 1)
