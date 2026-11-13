@@ -967,7 +967,7 @@
         <td class="s-time">${fmt(s.t)}</td><td class="s-lbl">${esc(s.l || '')}</td>
         <td class="s-tag"><span class="tag ${b ? 'b' : 'n'}">${b ? 'คืน' : 'วัน'} ${s.p}</span></td>
         <td class="num s-cnt">${s.a.length} คน</td>
-        <td class="s-names"><details class="nl"${sOpen || hit ? ' open' : ''}><summary>ดูรายชื่อ (${s.a.length})</summary><div class="nms">${names || '<span>—</span>'}</div></details></td></tr>`
+        <td class="s-names"><details class="nl"${sOpen || hit ? ' open' : ''}><summary>ดูรายชื่อ (${s.a.length})</summary><div class="nms">${names || '<span>—</span>'}</div></details>${gByNo.has(s.no) ? `<button class="btn sImg" data-no="${s.no}" style="margin-top:6px">🖼 ดูรูปรอบนี้</button>` : ''}</td></tr>`
               })
               .join('')
           : `<tr><td colspan="6" class="mute" style="padding:30px;text-align:center">${hit ? 'ไม่พบชื่อนี้ในรอบไหนเลย' : 'ยังไม่มีรอบที่บันทึก'}</td></tr>`
@@ -980,13 +980,23 @@
         $('#rule').textContent = D.rule ? 'กติกาแต้ม: ' + D.rule : ''
         renderTable()
         renderSessions()
+        if (DRIVE.apiKey) loadGallery() // โหลดรูปล่วงหน้า เพื่อให้ปุ่ม "ดูรูปรอบนี้" โผล่ในแท็บรอบ
       }
 
       // ===== แกลเลอรีรูป =====
       let gFiles = [],
         gShown = [],
         gIdx = 0,
-        gLoaded = false
+        gLoaded = false,
+        gByNo = new Map()
+      // 📍 Key Logic: ชื่อไฟล์ขึ้นต้นด้วยเลข (1.jpg, 2.png) = รูปของรอบที่ # นั้น
+      const buildByNo = () => {
+        gByNo = new Map()
+        gFiles.forEach(f => {
+          const m = f.name.match(/^\s*(\d+)/)
+          if (m && !gByNo.has(+m[1])) gByNo.set(+m[1], f)
+        })
+      }
       const thumb = (id, w) =>
         `https://drive.google.com/thumbnail?id=${encodeURIComponent(id)}&sz=w${w}`
       const folderUrl = `https://drive.google.com/drive/folders/${DRIVE.folderId}`
@@ -1028,7 +1038,6 @@
             u.search = new URLSearchParams({
               q: `'${DRIVE.folderId}' in parents and mimeType contains 'image/' and trashed=false`,
               fields: 'nextPageToken,files(id,name)',
-              orderBy: 'createdTime desc',
               pageSize: '200',
               key: DRIVE.apiKey,
               ...(token ? { pageToken: token } : {}),
@@ -1039,6 +1048,10 @@
             gFiles.push(...(j.files || []))
             token = j.nextPageToken || ''
           } while (token)
+          // 🔧 The "Why": numeric:true ทำให้ 2 มาก่อน 10 (ไม่ใช่ 1,10,2)
+          gFiles.sort((a, b) => a.name.localeCompare(b.name, 'th', { numeric: true }))
+          buildByNo()
+          if (D) renderSessions()
           if (!gFiles.length) return showFolderFrame('ยังไม่พบรูปในโฟลเดอร์ (หรือยังไม่ได้แชร์เป็นสาธารณะ)')
           renderGallery()
         } catch (e) {
@@ -1066,6 +1079,12 @@
         const c = e.target.closest('.gcard')
         if (c) lbShow(+c.dataset.i)
       }
+      $('#sBody').addEventListener('click', e => {
+        const b = e.target.closest('.sImg')
+        if (!b) return
+        gShown = gFiles
+        lbShow(gFiles.indexOf(gByNo.get(+b.dataset.no)))
+      })
       $('#gSearch').oninput = () => gFiles.length && renderGallery()
       $('#lbPrev').onclick = () => lbShow(gIdx - 1)
       $('#lbNext').onclick = () => lbShow(gIdx + 1)
