@@ -624,6 +624,98 @@
           padding: 16px 10px;
         }
       }
+
+      /* ===== แกลเลอรีรูปจาก Google Drive ===== */
+      .gbar {
+        display: flex;
+        gap: 8px;
+        flex-wrap: wrap;
+        align-items: center;
+        margin-bottom: 12px;
+      }
+      .gbar input {
+        flex: 1;
+        min-width: 160px;
+      }
+      .gbar a.btn {
+        color: inherit;
+        text-decoration: none;
+      }
+      .ggrid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(190px, 1fr));
+        gap: 10px;
+      }
+      .gcard {
+        cursor: pointer;
+        background: var(--base);
+        border: 1px solid var(--line);
+        padding: 0;
+        text-align: left;
+        display: block;
+      }
+      .gcard:hover {
+        border-color: var(--gold);
+      }
+      .gcard img {
+        display: block;
+        width: 100%;
+        aspect-ratio: 4 / 3;
+        object-fit: cover;
+        background: var(--panel2);
+      }
+      .gcard span {
+        display: block;
+        padding: 5px 8px;
+        font-size: 13px;
+        color: var(--mute);
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+      .gframe {
+        width: 100%;
+        height: 72vh;
+        border: 1px solid var(--line);
+        background: #fff;
+      }
+      #lb {
+        position: fixed;
+        inset: 0;
+        z-index: 50;
+        background: rgba(8, 9, 12, 0.94);
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 10px;
+        padding: 12px;
+      }
+      #lb img {
+        max-width: 100%;
+        max-height: 80vh;
+        object-fit: contain;
+      }
+      #lb .lbar {
+        display: flex;
+        gap: 8px;
+        flex-wrap: wrap;
+        align-items: center;
+        justify-content: center;
+      }
+      #lb .lbar a.btn {
+        color: inherit;
+        text-decoration: none;
+      }
+      @media (max-width: 700px) {
+        .ggrid {
+          grid-template-columns: repeat(2, 1fr);
+          gap: 6px;
+        }
+        .gframe {
+          height: 65vh;
+        }
+      }
     </style>
   </head>
   <body>
@@ -645,6 +737,7 @@
       <nav id="tabs">
         <button class="tab on" data-tab="table">ตารางคะแนน</button>
         <button class="tab" data-tab="sessions">รอบที่บันทึก</button>
+        <button class="tab" data-tab="gallery">รูปภาพ</button>
       </nav>
 
       <main>
@@ -653,7 +746,11 @@
           <h2>
             <span>ตารางคะแนน <span class="hint" id="tCount"></span></span>
             <span class="row">
-              <input type="search" id="tSearch" placeholder="ค้นหาชื่อของคุณ..." />
+              <input
+                type="search"
+                id="tSearch"
+                placeholder="ค้นหาชื่อของคุณ..."
+              />
               <select id="tSort">
                 <option value="pts">เรียงตามแต้ม</option>
                 <option value="cnt">เรียงตามจำนวนครั้ง</option>
@@ -710,7 +807,30 @@
             </table>
           </div>
         </section>
+
+        <!-- ===== รูปภาพจาก Google Drive ===== -->
+        <section class="sec" id="tab-gallery" hidden>
+          <h2>
+            <span>รูปภาพ <span class="hint" id="gCount"></span></span>
+          </h2>
+          <div class="gbar">
+            <input type="search" id="gSearch" placeholder="ค้นหาชื่อไฟล์รูป..." />
+            <a class="btn" id="gOpen" target="_blank" rel="noopener">เปิดโฟลเดอร์ใน Drive</a>
+          </div>
+          <div id="gBox"><div class="hint">กำลังโหลดรูป...</div></div>
+        </section>
       </main>
+    </div>
+
+    <div id="lb" hidden role="dialog" aria-modal="true" aria-label="ดูรูปขยาย">
+      <img id="lbImg" alt="" />
+      <div class="hint" id="lbCap"></div>
+      <div class="lbar">
+        <button class="btn" id="lbPrev">◀ ก่อนหน้า</button>
+        <button class="btn" id="lbNext">ถัดไป ▶</button>
+        <a class="btn" id="lbDrive" target="_blank" rel="noopener">เปิดใน Drive</a>
+        <button class="btn" id="lbClose">ปิด ✕</button>
+      </div>
     </div>
 
     <footer>ข้อมูลอัปเดตอัตโนมัติ · หน้านี้ดูได้อย่างเดียว · view v8</footer>
@@ -721,6 +841,13 @@
         authDomain: 'twok-3a569.firebaseapp.com',
         projectId: 'twok-3a569',
         appId: '1:486045733897:web:74d2781ae9d3fe10f114d8',
+      }
+      // ✅ ภาพรวม: ตั้งค่าโฟลเดอร์ Google Drive ที่เก็บรูป
+      // 📍 Key Logic: ใส่ apiKey = ดึงรูปมาแสดงเป็นแกลเลอรีเอง / เว้นว่าง = ฝังหน้าโฟลเดอร์ Drive แทน (ใช้ได้ทันที)
+      // ⚠️ Pitfall Warning: โฟลเดอร์ต้องตั้งเป็น "ทุกคนที่มีลิงก์ดูได้" ไม่งั้นคนอื่นจะไม่เห็นรูป
+      const DRIVE = {
+        folderId: '12iLP8QZHw4rKY161sqP9c6g4Nr0lTKTO',
+        apiKey: '', // 💡 Pro-Tip: ใส่ Google API key (เปิด Drive API + จำกัดโดเมน) เพื่อได้แกลเลอรี+ค้นหา+ขยายรูป
       }
       const G = 'https://www.gstatic.com/firebasejs/10.14.1'
       const $ = s => document.querySelector(s)
@@ -755,7 +882,10 @@
         sOpen = false
       const nm = i => (D.names && D.names[i]) || '?'
       // ค้นหาแบบไม่สนตัวพิมพ์เล็ก/ใหญ่ และไม่สนช่องว่าง
-      const norm = t => String(t ?? '').toLowerCase().replace(/\s+/g, '')
+      const norm = t =>
+        String(t ?? '')
+          .toLowerCase()
+          .replace(/\s+/g, '')
 
       function renderTable() {
         const q = norm($('#tSearch').value),
@@ -852,9 +982,107 @@
         renderSessions()
       }
 
+      // ===== แกลเลอรีรูป =====
+      let gFiles = [],
+        gShown = [],
+        gIdx = 0,
+        gLoaded = false
+      const thumb = (id, w) =>
+        `https://drive.google.com/thumbnail?id=${encodeURIComponent(id)}&sz=w${w}`
+      const folderUrl = `https://drive.google.com/drive/folders/${DRIVE.folderId}`
+      $('#gOpen').href = folderUrl
+
+      // 🔧 The "Why": ถ้าไม่มี apiKey หรือโหลดไม่ได้ ฝังหน้าโฟลเดอร์ Drive ตรงๆ เพื่อให้ยังดูรูปได้เสมอ
+      function showFolderFrame(msg) {
+        $('#gSearch').hidden = true
+        $('#gCount').textContent = ''
+        $('#gBox').innerHTML =
+          (msg ? `<div class="hint" style="margin-bottom:8px">${esc(msg)}</div>` : '') +
+          `<iframe class="gframe" loading="lazy" src="https://drive.google.com/embeddedfolderview?id=${DRIVE.folderId}#grid" title="รูปจาก Google Drive"></iframe>`
+      }
+
+      function renderGallery() {
+        const q = norm($('#gSearch').value)
+        gShown = gFiles.filter(f => !q || norm(f.name).includes(q))
+        $('#gCount').textContent = q
+          ? `พบ ${gShown.length}/${gFiles.length} รูป`
+          : gFiles.length + ' รูป'
+        $('#gBox').innerHTML = gShown.length
+          ? `<div class="ggrid">${gShown
+              .map(
+                (f, i) =>
+                  `<button class="gcard" data-i="${i}"><img loading="lazy" src="${thumb(f.id, 400)}" alt="${esc(f.name)}" /><span>${esc(f.name)}</span></button>`
+              )
+              .join('')}</div>`
+          : '<div class="hint" style="padding:30px;text-align:center">ไม่พบรูป</div>'
+      }
+
+      async function loadGallery() {
+        if (gLoaded) return
+        gLoaded = true
+        if (!DRIVE.apiKey) return showFolderFrame()
+        try {
+          let token = ''
+          do {
+            const u = new URL('https://www.googleapis.com/drive/v3/files')
+            u.search = new URLSearchParams({
+              q: `'${DRIVE.folderId}' in parents and mimeType contains 'image/' and trashed=false`,
+              fields: 'nextPageToken,files(id,name)',
+              orderBy: 'createdTime desc',
+              pageSize: '200',
+              key: DRIVE.apiKey,
+              ...(token ? { pageToken: token } : {}),
+            })
+            const r = await fetch(u)
+            if (!r.ok) throw new Error(r.status)
+            const j = await r.json()
+            gFiles.push(...(j.files || []))
+            token = j.nextPageToken || ''
+          } while (token)
+          if (!gFiles.length) return showFolderFrame('ยังไม่พบรูปในโฟลเดอร์ (หรือยังไม่ได้แชร์เป็นสาธารณะ)')
+          renderGallery()
+        } catch (e) {
+          gFiles = []
+          showFolderFrame('โหลดแบบแกลเลอรีไม่ได้ จึงแสดงโฟลเดอร์ Drive แทน')
+        }
+      }
+
+      // Lightbox: คลิกรูปเพื่อขยาย / ลูกศรซ้ายขวาเลื่อนรูป / Esc ปิด
+      const lbShow = i => {
+        if (!gShown.length) return
+        gIdx = (i + gShown.length) % gShown.length
+        const f = gShown[gIdx]
+        $('#lbImg').src = thumb(f.id, 2000)
+        $('#lbImg').alt = f.name
+        $('#lbCap').textContent = `${f.name} (${gIdx + 1}/${gShown.length})`
+        $('#lbDrive').href = `https://drive.google.com/file/d/${encodeURIComponent(f.id)}/view`
+        $('#lb').hidden = false
+      }
+      const lbClose = () => {
+        $('#lb').hidden = true
+        $('#lbImg').src = ''
+      }
+      $('#gBox').onclick = e => {
+        const c = e.target.closest('.gcard')
+        if (c) lbShow(+c.dataset.i)
+      }
+      $('#gSearch').oninput = () => gFiles.length && renderGallery()
+      $('#lbPrev').onclick = () => lbShow(gIdx - 1)
+      $('#lbNext').onclick = () => lbShow(gIdx + 1)
+      $('#lbClose').onclick = lbClose
+      $('#lb').onclick = e => e.target.id === 'lb' && lbClose()
+      document.addEventListener('keydown', e => {
+        if ($('#lb').hidden) return
+        if (e.key === 'Escape') lbClose()
+        if (e.key === 'ArrowLeft') lbShow(gIdx - 1)
+        if (e.key === 'ArrowRight') lbShow(gIdx + 1)
+      })
+
       const setTab = t => {
         $('#tab-table').hidden = t !== 'table'
         $('#tab-sessions').hidden = t !== 'sessions'
+        $('#tab-gallery').hidden = t !== 'gallery'
+        if (t === 'gallery') loadGallery()
         document
           .querySelectorAll('#tabs .tab')
           .forEach(b => b.classList.toggle('on', b.dataset.tab === t))
@@ -893,9 +1121,7 @@
           snap => {
             try {
               if (!snap.exists())
-                return showState(
-                  'ยังไม่มีข้อมูล — รอแอดมินเปิดเผยแพร่หน้านี้'
-                )
+                return showState('ยังไม่มีข้อมูล — รอแอดมินเปิดเผยแพร่หน้านี้')
               const d = JSON.parse(snap.data().json)
               if (d.off) return showState('ผู้ดูแลปิดหน้านี้ไว้ชั่วคราว')
               D = d
