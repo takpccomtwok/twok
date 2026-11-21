@@ -917,6 +917,8 @@
       }
       body.staff [data-tab='members'],
       body.staff [data-tab='log'],
+      body.staff [data-tab='raffle'],
+      body.staff #tab-raffle,
       body.staff #tab-members,
       body.staff #tab-log,
       body.staff #btnBackup,
@@ -1037,6 +1039,7 @@
       <button class="tab" data-tab="table">ตารางคะแนน</button>
       <button class="tab" data-tab="sessions">รอบที่บันทึก</button>
       <button class="tab" data-tab="log">Log</button>
+      <button class="tab" data-tab="raffle">🎟️ จับฉลาก</button>
       <button class="tab" data-tab="members">สมาชิก &amp; ตั้งค่า</button>
     </nav>
 
@@ -1219,6 +1222,21 @@
       </section>
 
       <!-- ============ TAB: สมาชิก ============ -->
+      <!-- ============ TAB: จับฉลาก (ฝัง TWOK-Raffle.html — ใช้ Firebase เดียวกัน) ============ -->
+      <section class="sec hide" id="tab-raffle">
+        <div style="display:flex;justify-content:flex-end;margin-bottom:6px">
+          <a class="btn sm" href="TWOK-Raffle.html" target="_blank" rel="noopener">เปิดเต็มจอ (แท็บใหม่) ↗</a>
+        </div>
+        <iframe
+          id="raffleFrame"
+          title="TWOK ระบบจับฉลาก"
+          data-src="TWOK-Raffle.html"
+          allow="fullscreen; autoplay"
+          allowfullscreen
+          style="width:100%;height:calc(100vh - 170px);min-height:720px;border:1px solid var(--line);background:var(--base)"
+        ></iframe>
+      </section>
+
       <section class="sec hide" id="tab-members">
         <div class="grid2">
           <div>
@@ -3902,6 +3920,10 @@
         $$('main .sec').forEach(s =>
           s.classList.toggle('hide', s.id !== 'tab-' + t)
         )
+        if (t === 'raffle') {
+          const f = $('#raffleFrame')
+          if (!f.getAttribute('src')) f.src = f.dataset.src // โหลดครั้งแรกตอนเปิดแท็บ
+        }
       }
       $('#tabs').addEventListener('click', e => {
         const b = e.target.closest('.tab')
@@ -4629,7 +4651,8 @@
       }
       $('#bPubView').onclick = () => {
         if (!isAdminRole()) return toast('สิทธิ์ไม่พอ — เฉพาะแอดมิน')
-        if (!window.pubNow) return toast('ยังไม่ได้เชื่อม Firebase — ล็อกอินก่อน')
+        if (!window.pubNow)
+          return toast('ยังไม่ได้เชื่อม Firebase — ล็อกอินก่อน')
         if (!S.cfg.pubOn) {
           S.cfg.pubOn = true
           $('#cPubOn').checked = true
