@@ -411,6 +411,181 @@
         font-size: 16px;
       }
 
+
+      /* ===== WARZ RANK SYSTEM : ยศบอสโลก 5 อันดับแรก ===== */
+      .k1 { --c: #ffd34d; --cs: rgba(255, 211, 77, 0.28); }
+      .k2 { --c: #ff4d5e; --cs: rgba(255, 77, 94, 0.28); }
+      .k3 { --c: #ff8a2b; --cs: rgba(255, 138, 43, 0.28); }
+      .k4 { --c: #b983ff; --cs: rgba(185, 131, 255, 0.28); }
+      .k5 { --c: #4fc3ff; --cs: rgba(79, 195, 255, 0.28); }
+      .hof {
+        margin: 0 0 14px;
+        padding: 14px;
+        border: 1px solid var(--line);
+        background:
+          radial-gradient(620px 170px at 50% 0, rgba(255, 200, 61, 0.14), transparent 70%),
+          linear-gradient(180deg, rgba(225, 29, 46, 0.16), rgba(20, 22, 28, 0.7));
+      }
+      .hof h3 {
+        font-family: 'Kanit', 'Noto Sans Thai', sans-serif;
+        font-size: 20px;
+        letter-spacing: 1px;
+        color: var(--gold);
+        display: flex;
+        align-items: baseline;
+        gap: 10px;
+        flex-wrap: wrap;
+        margin-bottom: 10px;
+      }
+      .hof h3 small {
+        font-family: 'Noto Sans Thai', sans-serif;
+        font-weight: 400;
+        font-size: 13px;
+        color: var(--mute);
+        letter-spacing: 0;
+      }
+      .hof-grid {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 10px;
+      }
+      .wc {
+        --c: var(--gold);
+        --cs: rgba(255, 200, 61, 0.28);
+        display: flex;
+        gap: 12px;
+        align-items: center;
+        min-width: 0;
+        padding: 12px 14px;
+        background: linear-gradient(135deg, var(--cs), var(--panel2) 70%);
+        border: 1px solid var(--line);
+        border-left: 6px solid var(--c);
+      }
+      .wc.k1 {
+        grid-column: 1 / -1;
+        padding: 18px 20px;
+        border-color: var(--c);
+        animation: warzGlow 2.8s ease-in-out infinite;
+      }
+      .wc-ico {
+        flex: 0 0 auto;
+        font-size: 34px;
+        line-height: 1;
+        filter: drop-shadow(0 0 8px var(--c));
+      }
+      .wc.k1 .wc-ico { font-size: 58px; }
+      .wc-body { min-width: 0; }
+      .wc-rank {
+        font-family: 'Kanit', sans-serif;
+        font-weight: 600;
+        font-size: 12px;
+        letter-spacing: 2px;
+        color: var(--c);
+      }
+      .wc-title {
+        font-family: 'Kanit', sans-serif;
+        font-style: italic;
+        font-weight: 800;
+        font-size: 22px;
+        line-height: 1.1;
+        color: var(--c);
+        text-shadow: 0 0 14px var(--cs);
+        overflow-wrap: anywhere;
+      }
+      .wc.k1 .wc-title {
+        font-size: 42px;
+        letter-spacing: 2px;
+        background: linear-gradient(90deg, #fff, var(--gold), var(--ember), var(--gold), #fff);
+        background-size: 200% 100%;
+        -webkit-background-clip: text;
+        background-clip: text;
+        color: transparent;
+        text-shadow: none;
+        animation: warzShine 3.2s linear infinite;
+      }
+      .wc-sub { font-size: 13px; color: var(--mute); }
+      .wc-name {
+        font-family: 'Kanit', sans-serif;
+        font-weight: 600;
+        font-size: 18px;
+        margin-top: 4px;
+        overflow-wrap: anywhere;
+      }
+      .wc.k1 .wc-name { font-size: 26px; }
+      .wc-stat { font-size: 13px; color: var(--mute); }
+      .wc-stat b { font-family: 'Kanit', sans-serif; font-size: 18px; color: var(--gold); }
+      @keyframes warzGlow {
+        0%, 100% { box-shadow: 0 0 12px rgba(255, 211, 77, 0.22); }
+        50% { box-shadow: 0 0 34px rgba(255, 211, 77, 0.55); }
+      }
+      @keyframes warzShine { to { background-position: -200% 0; } }
+      @media (prefers-reduced-motion: reduce) {
+        .wc.k1, .wc.k1 .wc-title { animation: none; }
+      }
+      .ttl {
+        display: inline-flex;
+        align-items: center;
+        gap: 4px;
+        margin-top: 3px;
+        padding: 0 10px;
+        font-family: 'Kanit', sans-serif;
+        font-style: italic;
+        font-weight: 800;
+        font-size: 12px;
+        letter-spacing: 0.5px;
+        color: #111;
+        background: var(--c);
+        white-space: nowrap;
+        clip-path: polygon(6px 0, 100% 0, calc(100% - 6px) 100%, 0 100%);
+      }
+      .ttl small {
+        font-family: 'Noto Sans Thai', sans-serif;
+        font-style: normal;
+        font-weight: 600;
+        font-size: 12px;
+      }
+      .tbl td.rk.k1, .tbl td.rk.k2, .tbl td.rk.k3, .tbl td.rk.k4, .tbl td.rk.k5 {
+        background: var(--c) !important;
+        color: #111;
+      }
+      .x2line {
+        margin-top: 6px;
+        padding-top: 6px;
+        border-top: 1px dashed var(--line);
+        font-size: 13px;
+        color: var(--mute);
+      }
+      .x2tag {
+        display: inline-block;
+        padding: 0 6px;
+        background: var(--ember);
+        color: #111;
+        font-family: 'Kanit', sans-serif;
+        font-weight: 800;
+      }
+      .x2chip {
+        display: inline-block;
+        margin: 1px 2px;
+        padding: 0 6px;
+        background: var(--gold);
+        color: #111;
+        font-weight: 800;
+        text-decoration: none;
+      }
+      .x2chip:hover { background: #fff; }
+      .x2cell { display: flex; flex-wrap: wrap; gap: 2px; align-items: center; }
+      @media (max-width: 900px) {
+        .hof-grid { grid-template-columns: repeat(2, 1fr); }
+      }
+      @media (max-width: 480px) {
+        .hof { padding: 10px; }
+        .wc { padding: 10px; gap: 8px; }
+        .wc-ico { font-size: 26px; }
+        .wc.k1 .wc-ico { font-size: 42px; }
+        .wc.k1 .wc-title { font-size: 30px; }
+        .wc.k1 .wc-name { font-size: 22px; }
+      }
+
       /* ===== มือถือ ===== */
       @media (max-width: 700px) {
         body {
@@ -679,19 +854,6 @@
         border: 1px solid var(--line);
         background: #fff;
       }
-      .sThumb {
-        width: 36px;
-        height: 28px;
-        object-fit: cover;
-        vertical-align: middle;
-        margin-right: 6px;
-        background: var(--panel2);
-      }
-      .s-no.clk {
-        cursor: pointer;
-        text-decoration: underline;
-        text-underline-offset: 3px;
-      }
       #lb {
         position: fixed;
         inset: 0;
@@ -772,13 +934,14 @@
             </span>
           </h2>
           <div class="hint" id="rule" style="margin-bottom: 10px"></div>
+          <div id="hof" class="hof" hidden></div>
           <div class="tw">
             <table class="tbl pretty">
               <thead>
                 <tr>
                   <th class="rk">#</th>
                   <th>ชื่อสมาชิก</th>
-                  <th>รูปที่เข้าร่วม</th>
+                  <th>รูปที่เข้าร่วม <small class="mute">(ทอง = x2)</small></th>
                   <th class="r">มา (รอบ)</th>
                   <th class="r">นับรวม (ครั้ง)</th>
                   <th class="r">แต้ม</th>
@@ -827,9 +990,14 @@
             <span>รูปภาพ <span class="hint" id="gCount"></span></span>
           </h2>
           <div class="gbar">
-            <input type="search" id="gSearch" placeholder="ค้นหาชื่อไฟล์รูป..." />
-            <button class="btn" id="gRefresh">รีเฟรชรูป</button>
-            <a class="btn" id="gOpen" target="_blank" rel="noopener">เปิดโฟลเดอร์ใน Drive</a>
+            <input
+              type="search"
+              id="gSearch"
+              placeholder="ค้นหาชื่อไฟล์รูป..."
+            />
+            <a class="btn" id="gOpen" target="_blank" rel="noopener"
+              >เปิดโฟลเดอร์ใน Drive</a
+            >
           </div>
           <div id="gBox"><div class="hint">กำลังโหลดรูป...</div></div>
         </section>
@@ -842,7 +1010,9 @@
       <div class="lbar">
         <button class="btn" id="lbPrev">◀ ก่อนหน้า</button>
         <button class="btn" id="lbNext">ถัดไป ▶</button>
-        <a class="btn" id="lbDrive" target="_blank" rel="noopener">เปิดใน Drive</a>
+        <a class="btn" id="lbDrive" target="_blank" rel="noopener"
+          >เปิดใน Drive</a
+        >
         <button class="btn" id="lbClose">ปิด ✕</button>
       </div>
     </div>
@@ -901,11 +1071,63 @@
           .toLowerCase()
           .replace(/\s+/g, '')
 
+      /* ============================================================
+   ✅ ภาพรวม: ระบบยศ WARZ — 5 อันดับแรก (ที่มีแต้ม > 0) ได้ยศบอสโลก
+   📍 Key Logic: อันดับคิดจาก "แต้ม → ครั้งรวม → จำนวนรอบ → ชื่อ" เสมอ ไม่ขึ้นกับช่องค้นหา/การเรียง
+   ⚠️ Pitfall: ถ้าแต้มเท่ากันเป๊ะ ตัวตัดสินคือครั้งรวม แล้วจำนวนรอบ แล้วชื่อ ก-ฮ
+   ============================================================ */
+      const WARZ = [
+        { k: 1, ico: '👑', en: 'WARZTH', th: 'ราชาบอสโลก' },
+        { k: 2, ico: '⚔️', en: 'WARZ GENERAL', th: 'จอมทัพบอสโลก' },
+        { k: 3, ico: '🔥', en: 'WARZ WARLORD', th: 'เจ้าสงครามบอสโลก' },
+        { k: 4, ico: '🗡️', en: 'WARZ SLAYER', th: 'ผู้พิชิตบอสโลก' },
+        { k: 5, ico: '🛡️', en: 'WARZ KNIGHT', th: 'อัศวินบอสโลก' },
+      ]
+      const ttlBadge = k => {
+        const w = WARZ[k - 1]
+        return w
+          ? `<span class="ttl k${k}" title="${esc(w.th)}">${w.ico} ${w.en}<small>· ${w.th}</small></span>`
+          : ''
+      }
+      function hofHTML(list) {
+        if (!list.length) return ''
+        return (
+          `<h3>🏆 WARZ HALL OF FAME <small>เฉพาะ 5 อันดับแรกเท่านั้นที่ได้รับยศ</small></h3><div class="hof-grid">` +
+          list
+            .map((p, i) => {
+              const w = WARZ[i]
+              return `<div class="wc k${w.k}"><div class="wc-ico" aria-hidden="true">${w.ico}</div><div class="wc-body"><div class="wc-rank">RANK ${w.k}</div><div class="wc-title">${w.en}</div><div class="wc-sub">${w.th}</div><div class="wc-name">${esc(p.name)}</div><div class="wc-stat"><b>${p.pts}</b> แต้ม · มา ${p.cnt} รอบ${p.x2 ? ` · 🔥 x2 ${p.x2} รอบ` : ''}</div></div></div>`
+            })
+            .join('') +
+          `</div>`
+        )
+      }
+
+      const mult = s => (D.normal > 0 ? +(s.p / D.normal).toFixed(1) : s.p)
+      // 📍 Key Logic: รอบ "โบนัส" = รอบที่นับครั้งไม่เท่ากับค่าปกติ (ข้อมูลมาจาก ses.p ที่แอดมินเผยแพร่)
+      function x2Info() {
+        const bonusSes = D.ses.filter(s => s.p !== D.normal),
+          mults = [...new Set(bonusSes.map(mult))]
+        return {
+          sesByNo: new Map(D.ses.map(s => [s.no, s])),
+          bonus: new Set(bonusSes.map(s => s.no)),
+          label: mults.length === 1 ? 'x' + mults[0] : 'โบนัส',
+          tip: s =>
+            `รอบ #${s.no} · ${fmt(s.t)}${s.l ? ' · ' + s.l : ''} · นับ ${s.p} ครั้ง (x${mult(s)})`,
+        }
+      }
+      function renderHof(list) {
+        const el = $('#hof')
+        el.hidden = !list.length
+        el.innerHTML = hofHTML(list)
+      }
+
       function renderTable() {
         const q = norm($('#tSearch').value),
           sort = $('#tSort').value,
           total = D.ses.length,
-          per = Math.max(1, D.per || 5)
+          per = Math.max(1, D.per || 5),
+          X = x2Info()
         // เลขรอบของแต่ละคน: ดึงจากรายการรอบที่บันทึกโดยตรง (ถ้าไม่มีค่อยใช้ r.o)
         const att = new Map()
         D.ses.forEach(s =>
@@ -918,6 +1140,53 @@
           const l = att.get(r.n) || r.o || []
           return l.slice().sort((a, b) => a - b)
         }
+        const cmpPts = (a, b) =>
+          b.p - a.p ||
+          b.u - a.u ||
+          b.c - a.c ||
+          nm(a.n).localeCompare(nm(b.n), 'th')
+        // 🔧 The "Why": อันดับ/ยศคิดจากแต้มทั้งหมดเสมอ ไม่เปลี่ยนตามช่องค้นหาหรือการเรียง
+        const ranked = D.rows.slice().sort(cmpPts),
+          rkMap = new Map(ranked.map((r, i) => [r.n, i + 1])),
+          winOf = r => {
+            const k = rkMap.get(r.n)
+            return k <= 5 && r.p > 0 ? k : 0
+          }
+        const x2Of = r => nosOf(r).filter(no => X.bonus.has(no))
+        renderHof(
+          ranked
+            .filter(r => r.p > 0)
+            .slice(0, 5)
+            .map(r => ({
+              name: nm(r.n),
+              pts: r.p,
+              cnt: r.c,
+              x2: x2Of(r).length,
+            }))
+        )
+        const roundsHTML = r => {
+          const ns = nosOf(r)
+          if (!ns.length) return '<span class="mute">—</span>'
+          const line = ns
+            .map(no =>
+              X.bonus.has(no)
+                ? `<span class="n2" title="${esc(X.tip(X.sesByNo.get(no)))}">${no}</span>`
+                : `<span class="n1">${no}</span>`
+            )
+            .join(',<wbr>')
+          const xs = x2Of(r)
+          if (!xs.length) return line
+          const extra = xs.reduce(
+            (t, no) => t + (X.sesByNo.get(no).p - D.normal),
+            0
+          )
+          return `${line}<div class="x2line"><span class="x2tag">🔥 ${esc(X.label)}</span> จากรอบ ${xs
+            .map(
+              no =>
+                `<a href="#s${no}" class="x2chip" data-no="${no}" title="${esc(X.tip(X.sesByNo.get(no)))}">#${no}</a>`
+            )
+            .join(' ')} <small>(+${extra} ครั้งโบนัส)</small></div>`
+        }
         const all = D.rows
           .slice()
           .sort((a, b) =>
@@ -925,29 +1194,25 @@
               ? nm(a.n).localeCompare(nm(b.n), 'th')
               : sort === 'cnt'
                 ? b.c - a.c || b.p - a.p
-                : b.p - a.p ||
-                  b.u - a.u ||
-                  b.c - a.c ||
-                  nm(a.n).localeCompare(nm(b.n), 'th')
+                : cmpPts(a, b)
           )
-        // อันดับคิดจากตารางทั้งหมด (ค้นหาแล้วอันดับจริงของคนนั้นยังอยู่เหมือนเดิม)
-        const rows = all
-          .map((r, i) => ({ r, i }))
-          .filter(({ r }) => !q || norm(nm(r.n)).includes(q))
+        const rows = all.filter(r => !q || norm(nm(r.n)).includes(q))
         $('#tCount').textContent = q ? `พบ ${rows.length} คน` : ''
         $('#tBody').innerHTML = rows.length
           ? rows
-              .map(
-                ({ r, i }) => `<tr>
-        <td class="rk c-rk${i < 3 && r.p > 0 ? ' top' : ''}">${i + 1}</td>
-        <td class="c-name">${esc(nm(r.n))}<div class="msub">มา ${r.c} รอบ · นับรวม ${r.u} ครั้ง · อีก ${per - (r.u % per)} ครั้งได้แต้มต่อไป · ${total ? Math.round((r.c / total) * 100) : 0}%</div></td>
-        <td class="c-rounds"><div class="vbox rounds">${nosOf(r).join(',<wbr>') || '<span class="mute">—</span>'}</div></td>
+              .map(r => {
+                const k = rkMap.get(r.n),
+                  w = winOf(r)
+                return `<tr>
+        <td class="rk c-rk${w ? ' k' + w : ''}">${k}</td>
+        <td class="c-name">${esc(nm(r.n))}${w ? `<div>${ttlBadge(w)}</div>` : ''}<div class="msub">มา ${r.c} รอบ · นับรวม ${r.u} ครั้ง · อีก ${per - (r.u % per)} ครั้งได้แต้มต่อไป · ${total ? Math.round((r.c / total) * 100) : 0}%</div></td>
+        <td class="c-rounds"><div class="vbox rounds">${roundsHTML(r)}</div></td>
         <td class="num c-x">${r.c}</td>
         <td class="num c-x"><span class="vbox v">${r.u}</span></td>
         <td class="num c-pts"><span class="vbox v pts">${r.p}</span></td>
         <td class="num mute c-x">อีก ${per - (r.u % per)} ครั้ง</td>
         <td class="num c-x">${total ? Math.round((r.c / total) * 100) : 0}%</td></tr>`
-              )
+              })
               .join('')
           : `<tr><td colspan="8" class="mute" style="padding:30px;text-align:center">${q ? 'ไม่พบชื่อนี้' : 'ยังไม่มีข้อมูล'}</td></tr>`
       }
@@ -977,11 +1242,11 @@
                         `<span${hit && hit.has(i) ? ' class="hit"' : ''}>${esc(n)}</span>`
                     )
                     .join('')
-                return `<tr id="s${s.no}"><td class="rk s-no${gByNo.has(s.no) ? ' clk' : ''}" data-no="${s.no}">#${s.no}</td>
+                return `<tr id="s${s.no}"><td class="rk s-no">#${s.no}</td>
         <td class="s-time">${fmt(s.t)}</td><td class="s-lbl">${esc(s.l || '')}</td>
-        <td class="s-tag"><span class="tag ${b ? 'b' : 'n'}">${b ? 'คืน' : 'วัน'} ${s.p}</span></td>
+        <td class="s-tag"><span class="tag ${b ? 'b' : 'n'}">${b ? '🔥 x' + mult(s) + ' · คืน' : 'วัน ' + s.p}</span></td>
         <td class="num s-cnt">${s.a.length} คน</td>
-        <td class="s-names"><details class="nl"${sOpen || hit ? ' open' : ''}><summary>ดูรายชื่อ (${s.a.length})</summary><div class="nms">${names || '<span>—</span>'}</div></details>${gByNo.has(s.no) ? `<button class="btn sImg" data-no="${s.no}" style="margin-top:6px"><img class="sThumb" loading="lazy" src="${thumb(gByNo.get(s.no).id, 120)}" alt="" /> ดูรูปรอบนี้</button>` : gFiles.length ? '<div class="hint" style="margin-top:6px">ยังไม่มีรูปรอบนี้</div>' : ''}</td></tr>`
+        <td class="s-names"><details class="nl"${sOpen || hit ? ' open' : ''}><summary>ดูรายชื่อ (${s.a.length})</summary><div class="nms">${names || '<span>—</span>'}</div></details>${gByNo.has(s.no) ? `<button class="btn sImg" data-no="${s.no}" style="margin-top:6px">🖼 ดูรูปรอบนี้</button>` : ''}</td></tr>`
               })
               .join('')
           : `<tr><td colspan="6" class="mute" style="padding:30px;text-align:center">${hit ? 'ไม่พบชื่อนี้ในรอบไหนเลย' : 'ยังไม่มีรอบที่บันทึก'}</td></tr>`
@@ -1021,7 +1286,9 @@
         $('#gSearch').hidden = true
         $('#gCount').textContent = ''
         $('#gBox').innerHTML =
-          (msg ? `<div class="hint" style="margin-bottom:8px">${esc(msg)}</div>` : '') +
+          (msg
+            ? `<div class="hint" style="margin-bottom:8px">${esc(msg)}</div>`
+            : '') +
           `<iframe class="gframe" loading="lazy" src="https://drive.google.com/embeddedfolderview?id=${DRIVE.folderId}#grid" title="รูปจาก Google Drive"></iframe>`
       }
 
@@ -1041,13 +1308,11 @@
           : '<div class="hint" style="padding:30px;text-align:center">ไม่พบรูป</div>'
       }
 
-      // 📍 Key Logic: force=true คือโหลดใหม่ (ปุ่มรีเฟรช / โพลล์ทุก 60 วิ) เพื่อให้รูปที่เพิ่งอัปขึ้นมาเอง
-      async function loadGallery(force) {
-        if (gLoaded && !force) return
+      async function loadGallery() {
+        if (gLoaded) return
         gLoaded = true
         if (!DRIVE.apiKey) return showFolderFrame()
         try {
-          const files = []
           let token = ''
           do {
             const u = new URL('https://www.googleapis.com/drive/v3/files')
@@ -1061,18 +1326,21 @@
             const r = await fetch(u)
             if (!r.ok) throw new Error(r.status)
             const j = await r.json()
-            files.push(...(j.files || []))
+            gFiles.push(...(j.files || []))
             token = j.nextPageToken || ''
           } while (token)
           // 🔧 The "Why": numeric:true ทำให้ 2 มาก่อน 10 (ไม่ใช่ 1,10,2)
-          files.sort((a, b) => a.name.localeCompare(b.name, 'th', { numeric: true }))
-          gFiles = files // ⚠️ สลับทีเดียวตอนโหลดเสร็จ จะได้ไม่กะพริบ/ว่างระหว่างรอ
+          gFiles.sort((a, b) =>
+            a.name.localeCompare(b.name, 'th', { numeric: true })
+          )
           buildByNo()
           if (D) renderSessions()
-          if (!gFiles.length) return showFolderFrame('ยังไม่พบรูปในโฟลเดอร์ (หรือยังไม่ได้แชร์เป็นสาธารณะ)')
+          if (!gFiles.length)
+            return showFolderFrame(
+              'ยังไม่พบรูปในโฟลเดอร์ (หรือยังไม่ได้แชร์เป็นสาธารณะ)'
+            )
           renderGallery()
         } catch (e) {
-          if (force && gFiles.length) return // รีเฟรชพลาด: คงรูปเดิมไว้
           gFiles = []
           showFolderFrame('โหลดแบบแกลเลอรีไม่ได้ จึงแสดงโฟลเดอร์ Drive แทน')
         }
@@ -1086,7 +1354,8 @@
         $('#lbImg').src = thumb(f.id, 2000)
         $('#lbImg').alt = f.name
         $('#lbCap').textContent = `${f.name} (${gIdx + 1}/${gShown.length})`
-        $('#lbDrive').href = `https://drive.google.com/file/d/${encodeURIComponent(f.id)}/view`
+        $('#lbDrive').href =
+          `https://drive.google.com/file/d/${encodeURIComponent(f.id)}/view`
         $('#lb').hidden = false
       }
       const lbClose = () => {
@@ -1098,20 +1367,23 @@
         if (c) lbShow(+c.dataset.i)
       }
       $('#sBody').addEventListener('click', e => {
-        const b = e.target.closest('.sImg, .s-no.clk')
+        const b = e.target.closest('.sImg')
         if (!b) return
         gShown = gFiles
         lbShow(gFiles.indexOf(gByNo.get(+b.dataset.no)))
       })
-      $('#gRefresh').onclick = () => {
-        if (DRIVE.apiKey) loadGallery(true)
-        else showFolderFrame() // โหมดฝังโฟลเดอร์: สร้าง iframe ใหม่ = ดึงรายการล่าสุด
-      }
-      // 💡 Pro-Tip: โพลล์ทุก 60 วิเฉพาะตอนเปิดแท็บอยู่ ประหยัดโควตา Drive API
-      if (DRIVE.apiKey)
-        setInterval(() => {
-          if (!document.hidden) loadGallery(true)
-        }, 60000)
+      // กดเลขรอบ x2 ในตารางคะแนน → เด้งไปแท็บรอบที่บันทึก แล้วไฮไลต์แถวนั้น
+      $('#tBody').addEventListener('click', e => {
+        const a = e.target.closest('.x2chip')
+        if (!a) return
+        e.preventDefault()
+        setTab('sessions')
+        const tr = document.getElementById('s' + a.dataset.no)
+        if (!tr) return
+        tr.scrollIntoView({ block: 'center', behavior: 'smooth' })
+        tr.classList.add('flash')
+        setTimeout(() => tr.classList.remove('flash'), 2400)
+      })
       $('#gSearch').oninput = () => gFiles.length && renderGallery()
       $('#lbPrev').onclick = () => lbShow(gIdx - 1)
       $('#lbNext').onclick = () => lbShow(gIdx + 1)
