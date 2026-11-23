@@ -969,178 +969,242 @@
         padding: 2px 4px;
       }
 
-      /* ===== WARZ RANK SYSTEM : ยศบอสโลก 5 อันดับแรก ===== */
-      .k1 { --c: #ffd34d; --cs: rgba(255, 211, 77, 0.28); }
-      .k2 { --c: #ff4d5e; --cs: rgba(255, 77, 94, 0.28); }
-      .k3 { --c: #ff8a2b; --cs: rgba(255, 138, 43, 0.28); }
-      .k4 { --c: #b983ff; --cs: rgba(185, 131, 255, 0.28); }
-      .k5 { --c: #4fc3ff; --cs: rgba(79, 195, 255, 0.28); }
+      /* ===== WARZ RANK SYSTEM : ยศบอสโลก 5 อันดับแรก (v2 ตระการตา) ===== */
+      @property --ang { syntax: '<angle>'; initial-value: 0deg; inherits: false; }
+      .k1 { --c:#ffd34d; --c2:#fff3b0; --c3:#c98a00; --cs:rgba(255,211,77,.45); --cw:rgba(255,211,77,.10); }
+      .k2 { --c:#ff4d5e; --c2:#ffb3ba; --c3:#a8101f; --cs:rgba(255,77,94,.42);  --cw:rgba(255,77,94,.09); }
+      .k3 { --c:#ff8a2b; --c2:#ffd0a3; --c3:#b44a00; --cs:rgba(255,138,43,.42); --cw:rgba(255,138,43,.09); }
+      .k4 { --c:#b983ff; --c2:#e6d3ff; --c3:#6a2fc0; --cs:rgba(185,131,255,.42);--cw:rgba(185,131,255,.09); }
+      .k5 { --c:#4fc3ff; --c2:#c6ecff; --c3:#0f77b3; --cs:rgba(79,195,255,.42); --cw:rgba(79,195,255,.09); }
+      @keyframes spinAng { to { --ang: 360deg; } }
+      @keyframes spin { to { transform: rotate(360deg); } }
+      @keyframes foil { to { background-position: -250% 0; } }
+      @keyframes sheen { 0%, 55% { transform: translateX(-130%); } 100% { transform: translateX(130%); } }
+      @keyframes floaty { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-6px); } }
+      @keyframes flick { from { transform: scale(1) rotate(-3deg); } to { transform: scale(1.18) rotate(3deg); } }
+      @keyframes rise {
+        0% { transform: translate(0, 0) scale(1); opacity: 0; }
+        12% { opacity: 1; }
+        100% { transform: translate(var(--dx), -460px) scale(.3); opacity: 0; }
+      }
+      @keyframes pulseGlow { 0%,100% { filter: drop-shadow(0 6px 18px var(--cs)); } 50% { filter: drop-shadow(0 8px 38px var(--cs)); } }
+
       .hof {
-        margin: 0 0 14px;
-        padding: 14px;
-        border: 1px solid var(--line);
+        position: relative;
+        overflow: hidden;
+        margin: 0 0 18px;
+        padding: 22px 18px 20px;
+        border: 1px solid #5a2a2f;
         background:
-          radial-gradient(620px 170px at 50% 0, rgba(255, 200, 61, 0.14), transparent 70%),
-          linear-gradient(180deg, rgba(225, 29, 46, 0.16), rgba(20, 22, 28, 0.7));
+          radial-gradient(700px 260px at 50% -10%, rgba(255,200,61,.22), transparent 70%),
+          radial-gradient(500px 220px at 0% 100%, rgba(225,29,46,.22), transparent 70%),
+          radial-gradient(500px 220px at 100% 100%, rgba(255,106,26,.16), transparent 70%),
+          repeating-linear-gradient(135deg, rgba(255,255,255,.025) 0 2px, transparent 2px 12px),
+          #10121a;
+        box-shadow: inset 0 0 60px rgba(0,0,0,.6), 0 0 0 1px rgba(255,200,61,.08);
       }
-      .hof h3 {
+      .hof-embers { position: absolute; inset: 0; pointer-events: none; z-index: 0; }
+      .hof-embers i {
+        position: absolute; bottom: -10px; left: var(--x);
+        width: var(--s); height: var(--s); border-radius: 50%;
+        background: #ffb347; box-shadow: 0 0 8px 2px rgba(255,120,20,.9);
+        opacity: 0; animation: rise var(--d) linear var(--dl) infinite;
+      }
+      .hof-head {
+        position: relative; z-index: 2;
+        display: flex; align-items: center; justify-content: center; gap: 16px;
+        margin-bottom: 4px;
+      }
+      .hof-head .ln { flex: 0 1 120px; height: 2px; background: linear-gradient(90deg, transparent, var(--gold)); }
+      .hof-head .ln.r { transform: scaleX(-1); }
+      .hof-t {
         font-family: 'Kanit', 'Noto Sans Thai', sans-serif;
-        font-size: 20px;
-        letter-spacing: 1px;
-        color: var(--gold);
-        display: flex;
-        align-items: baseline;
-        gap: 10px;
-        flex-wrap: wrap;
-        margin-bottom: 10px;
+        font-style: italic; font-weight: 800;
+        font-size: 32px; letter-spacing: 5px; text-align: center;
+        background: linear-gradient(100deg, var(--ember) 0%, #fff 25%, var(--gold) 50%, #fff 75%, var(--ember) 100%);
+        background-size: 250% 100%;
+        -webkit-background-clip: text; background-clip: text; color: transparent;
+        animation: foil 5s linear infinite;
+        filter: drop-shadow(0 0 14px rgba(255,160,40,.45));
       }
-      .hof h3 small {
-        font-family: 'Noto Sans Thai', sans-serif;
-        font-weight: 400;
-        font-size: 13px;
-        color: var(--mute);
-        letter-spacing: 0;
+      .hof-s { position: relative; z-index: 2; text-align: center; color: var(--mute); font-size: 13px; letter-spacing: 1px; margin-bottom: 22px; }
+
+      .podium {
+        position: relative; z-index: 1;
+        display: flex; align-items: flex-end; justify-content: center; gap: 18px;
       }
-      .hof-grid {
-        display: grid;
-        grid-template-columns: repeat(4, 1fr);
-        gap: 10px;
+      .hof-rest {
+        position: relative; z-index: 1;
+        display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 18px;
+        max-width: 760px; margin: 22px auto 0;
       }
+      .wcw { --cc: 18px; position: relative; flex: 1 1 0; min-width: 0; filter: drop-shadow(0 6px 18px var(--cs)); }
+      .wcw.k1 { flex: 1.7 1 0; animation: pulseGlow 3s ease-in-out infinite; }
+      .wcb {
+        padding: 2px;
+        background: conic-gradient(from var(--ang), var(--c), var(--c3), var(--c2), var(--c), var(--c3), var(--c2), var(--c));
+        animation: spinAng 7s linear infinite;
+        clip-path: polygon(var(--cc) 0, calc(100% - var(--cc)) 0, 100% var(--cc), 100% calc(100% - var(--cc)), calc(100% - var(--cc)) 100%, var(--cc) 100%, 0 calc(100% - var(--cc)), 0 var(--cc));
+      }
+      .wcw.k1 .wcb { padding: 3px; animation-duration: 4s; }
       .wc {
-        --c: var(--gold);
-        --cs: rgba(255, 200, 61, 0.28);
-        display: flex;
-        gap: 12px;
-        align-items: center;
-        min-width: 0;
-        padding: 12px 14px;
-        background: linear-gradient(135deg, var(--cs), var(--panel2) 70%);
-        border: 1px solid var(--line);
-        border-left: 6px solid var(--c);
+        position: relative; overflow: hidden;
+        padding: 20px 16px 18px;
+        background:
+          radial-gradient(120% 90% at 50% 0, var(--cs), transparent 62%),
+          repeating-linear-gradient(135deg, rgba(255,255,255,.035) 0 2px, transparent 2px 10px),
+          linear-gradient(180deg, #232838, #12141b);
+        clip-path: polygon(calc(var(--cc) - 1px) 0, calc(100% - var(--cc) + 1px) 0, 100% calc(var(--cc) - 1px), 100% calc(100% - var(--cc) + 1px), calc(100% - var(--cc) + 1px) 100%, calc(var(--cc) - 1px) 100%, 0 calc(100% - var(--cc) + 1px), 0 calc(var(--cc) - 1px));
       }
-      .wc.k1 {
-        grid-column: 1 / -1;
-        padding: 18px 20px;
-        border-color: var(--c);
-        animation: warzGlow 2.8s ease-in-out infinite;
+      .wcw.k1 .wc { padding: 30px 28px 28px; }
+      .rays {
+        position: absolute; left: 50%; top: 50%; width: 1000px; height: 1000px; margin: -500px 0 0 -500px;
+        background: repeating-conic-gradient(from 0deg, rgba(255,211,77,.20) 0 5deg, transparent 5deg 15deg);
+        -webkit-mask: radial-gradient(circle, #000 0, transparent 60%);
+        mask: radial-gradient(circle, #000 0, transparent 60%);
+        animation: spin 45s linear infinite; pointer-events: none;
       }
-      .wc-ico {
-        flex: 0 0 auto;
-        font-size: 34px;
-        line-height: 1;
-        filter: drop-shadow(0 0 8px var(--c));
+      .wc-num {
+        position: absolute; right: 12px; bottom: -26px;
+        font-family: 'Kanit', sans-serif; font-style: italic; font-weight: 800;
+        font-size: 160px; line-height: 1; color: var(--c); opacity: .11; pointer-events: none;
       }
-      .wc.k1 .wc-ico { font-size: 58px; }
+      .wcw.k1 .wc-num { font-size: 260px; bottom: -48px; right: 24px; opacity: .13; }
+      .wc-sheen {
+        position: absolute; inset: 0; pointer-events: none; z-index: 3;
+        background: linear-gradient(105deg, transparent 40%, rgba(255,255,255,.22) 50%, transparent 60%);
+        transform: translateX(-130%); animation: sheen 5s ease-in-out infinite;
+      }
+      .wcw.k2 .wc-sheen { animation-delay: .8s; } .wcw.k3 .wc-sheen { animation-delay: 1.6s; }
+      .wcw.k4 .wc-sheen { animation-delay: 2.4s; } .wcw.k5 .wc-sheen { animation-delay: 3.2s; }
+      .wc-in { position: relative; z-index: 2; display: flex; flex-direction: column; align-items: center; text-align: center; gap: 12px; }
+      .wcw.k1 .wc-in, .hof-rest .wc-in { flex-direction: row; text-align: left; gap: 22px; }
+      .hof-rest .wc-in { gap: 14px; }
+      .hof-rest .wc { padding: 14px 16px; }
       .wc-body { min-width: 0; }
-      .wc-rank {
-        font-family: 'Kanit', sans-serif;
-        font-weight: 600;
-        font-size: 12px;
-        letter-spacing: 2px;
-        color: var(--c);
+      .medal {
+        position: relative; flex: 0 0 auto;
+        width: 84px; height: 84px; border-radius: 50%;
+        display: grid; place-items: center; color: #1b1205;
+        background: radial-gradient(circle at 35% 28%, var(--c2), var(--c) 55%, var(--c3));
+        box-shadow: 0 0 0 3px rgba(0,0,0,.55), 0 0 26px var(--cs),
+          inset 0 -8px 14px rgba(0,0,0,.35), inset 0 5px 9px rgba(255,255,255,.55);
       }
+      .medal::before {
+        content: ''; position: absolute; inset: -9px; border-radius: 50%;
+        border: 2px dashed var(--c); opacity: .75; animation: spin 16s linear infinite;
+      }
+      .medal::after {
+        content: ''; position: absolute; inset: -16px; border-radius: 50%;
+        border: 1px solid var(--cs);
+      }
+      .medal .wi { width: 54%; height: 54%; filter: drop-shadow(0 1px 0 rgba(255,255,255,.45)); }
+      .wcw.k1 .medal { width: 136px; height: 136px; }
+      .wcw.k1 .medal .wi { animation: floaty 3s ease-in-out infinite; }
+      .hof-rest .medal { width: 62px; height: 62px; }
+      .wc-rank { font-family: 'Kanit', sans-serif; font-weight: 600; font-size: 12px; letter-spacing: 4px; color: var(--c); }
       .wc-title {
-        font-family: 'Kanit', sans-serif;
-        font-style: italic;
-        font-weight: 800;
-        font-size: 22px;
-        line-height: 1.1;
-        color: var(--c);
-        text-shadow: 0 0 14px var(--cs);
-        overflow-wrap: anywhere;
+        font-family: 'Kanit', sans-serif; font-style: italic; font-weight: 800;
+        font-size: 24px; line-height: 1.1; letter-spacing: 1px; overflow-wrap: anywhere;
+        background: linear-gradient(100deg, var(--c3) 0%, var(--c2) 30%, #fff 50%, var(--c2) 70%, var(--c3) 100%);
+        background-size: 250% 100%;
+        -webkit-background-clip: text; background-clip: text; color: transparent;
+        animation: foil 4s linear infinite;
       }
-      .wc.k1 .wc-title {
-        font-size: 42px;
-        letter-spacing: 2px;
-        background: linear-gradient(90deg, #fff, var(--gold), var(--ember), var(--gold), #fff);
-        background-size: 200% 100%;
-        -webkit-background-clip: text;
-        background-clip: text;
-        color: transparent;
-        text-shadow: none;
-        animation: warzShine 3.2s linear infinite;
-      }
-      .wc-sub { font-size: 13px; color: var(--mute); }
+      .wcw.k1 .wc-title { font-size: 58px; letter-spacing: 4px; filter: drop-shadow(0 0 16px rgba(255,200,61,.55)); }
+      .hof-rest .wc-title { font-size: 20px; }
+      .wc-sub { font-size: 13px; color: var(--c2); opacity: .85; letter-spacing: 1px; }
+      .wcw.k1 .wc-sub { font-size: 16px; }
       .wc-name {
-        font-family: 'Kanit', sans-serif;
-        font-weight: 600;
-        font-size: 18px;
-        margin-top: 4px;
-        overflow-wrap: anywhere;
+        font-family: 'Kanit', sans-serif; font-weight: 600; font-size: 19px;
+        margin-top: 8px; color: #fff; overflow-wrap: anywhere; text-shadow: 0 2px 10px rgba(0,0,0,.6);
       }
-      .wc.k1 .wc-name { font-size: 26px; }
-      .wc-stat { font-size: 13px; color: var(--mute); }
-      .wc-stat b { font-family: 'Kanit', sans-serif; font-size: 18px; color: var(--gold); }
-      @keyframes warzGlow {
-        0%, 100% { box-shadow: 0 0 12px rgba(255, 211, 77, 0.22); }
-        50% { box-shadow: 0 0 34px rgba(255, 211, 77, 0.55); }
+      .wcw.k1 .wc-name { font-size: 30px; }
+      .wc-stats { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 10px; justify-content: center; }
+      .wcw.k1 .wc-stats, .hof-rest .wc-stats { justify-content: flex-start; }
+      .pill {
+        display: inline-flex; align-items: center; gap: 5px;
+        padding: 2px 12px; font-size: 12.5px; color: var(--bone);
+        background: rgba(0,0,0,.42); border: 0;
+        clip-path: polygon(7px 0, 100% 0, calc(100% - 7px) 100%, 0 100%);
       }
-      @keyframes warzShine { to { background-position: -200% 0; } }
-      @media (prefers-reduced-motion: reduce) {
-        .wc.k1, .wc.k1 .wc-title { animation: none; }
-      }
+      .pill b { font-family: 'Kanit', sans-serif; font-size: 20px; line-height: 1.2; }
+      .pill.pts { background: linear-gradient(90deg, var(--c3), var(--c) 60%, var(--c2)); color: #14100a; font-weight: 800; }
+      .pill.fire { background: linear-gradient(90deg, #ff3d00, #ff9100 60%, #ffd000); color: #1a0b00; font-weight: 800; }
+      .pill svg, .x2tag svg { width: 14px; height: 14px; animation: flick .8s ease-in-out infinite alternate; }
+
       .ttl {
-        display: inline-flex;
-        align-items: center;
-        gap: 4px;
-        margin-top: 3px;
-        padding: 0 10px;
-        font-family: 'Kanit', sans-serif;
-        font-style: italic;
-        font-weight: 800;
-        font-size: 12px;
-        letter-spacing: 0.5px;
-        color: #111;
-        background: var(--c);
-        white-space: nowrap;
-        clip-path: polygon(6px 0, 100% 0, calc(100% - 6px) 100%, 0 100%);
+        display: inline-flex; align-items: center; gap: 6px;
+        margin-top: 5px; padding: 2px 14px 2px 9px;
+        font-family: 'Kanit', sans-serif; font-style: italic; font-weight: 800;
+        font-size: 12px; letter-spacing: .8px; color: #17110a; white-space: nowrap;
+        background: linear-gradient(100deg, var(--c3), var(--c) 30%, var(--c2) 50%, var(--c) 70%, var(--c3));
+        background-size: 250% 100%; animation: foil 5s linear infinite;
+        clip-path: polygon(8px 0, 100% 0, calc(100% - 8px) 100%, 0 100%);
       }
-      .ttl small {
-        font-family: 'Noto Sans Thai', sans-serif;
-        font-style: normal;
-        font-weight: 600;
-        font-size: 12px;
-      }
+      .ttl .wi { width: 14px; height: 14px; }
+      .ttl small { font-family: 'Noto Sans Thai', sans-serif; font-style: normal; font-weight: 700; font-size: 12px; }
+
       .tbl td.rk.k1, .tbl td.rk.k2, .tbl td.rk.k3, .tbl td.rk.k4, .tbl td.rk.k5 {
-        background: var(--c) !important;
-        color: #111;
+        background: linear-gradient(160deg, var(--c2), var(--c) 50%, var(--c3)) !important;
+        color: #15100a; font-size: 22px; font-style: italic;
+        text-shadow: 0 1px 0 rgba(255,255,255,.45);
+        box-shadow: inset -3px 0 0 rgba(0,0,0,.28);
+      }
+      .tbl.pretty tbody tr.rowk td:not(.rk) { background: var(--cw) !important; }
+      .tbl.pretty tbody tr.rowk td { border-bottom-color: var(--cs); }
+      .tbl tr.rowk td.pts, .tbl tr.rowk .vbox.pts { color: var(--c); text-shadow: 0 0 12px var(--cs); }
+      .tbl tr.rowk .vbox.pts { border-color: var(--c); box-shadow: 0 0 14px var(--cs); }
+
+      .n2 {
+        background: linear-gradient(180deg, #ffe27a, #ffb300) !important;
+        box-shadow: 0 0 8px rgba(255,190,0,.55);
       }
       .x2line {
-        margin-top: 6px;
-        padding-top: 6px;
-        border-top: 1px dashed var(--line);
-        font-size: 13px;
-        color: var(--mute);
+        display: flex; flex-wrap: wrap; gap: 4px; align-items: center;
+        margin-top: 8px; padding-top: 8px;
+        border-top: 1px dashed rgba(255,140,0,.5); font-size: 13px; color: var(--mute);
       }
-      .x2tag {
-        display: inline-block;
-        padding: 0 6px;
-        background: var(--ember);
-        color: #111;
-        font-family: 'Kanit', sans-serif;
-        font-weight: 800;
+      .x2tag, .x2lbl {
+        display: inline-flex; align-items: center; gap: 4px;
+        padding: 1px 12px 1px 7px; color: #1a0b00;
+        font-family: 'Kanit', sans-serif; font-weight: 800; font-size: 12px;
+        background: linear-gradient(90deg, #ff3d00, #ff9100 60%, #ffd000);
+        clip-path: polygon(6px 0, 100% 0, calc(100% - 6px) 100%, 0 100%);
       }
       .x2chip {
-        display: inline-block;
-        margin: 1px 2px;
-        padding: 0 6px;
-        background: var(--gold);
-        color: #111;
-        font-weight: 800;
-        text-decoration: none;
+        display: inline-block; margin: 1px 1px; padding: 0 9px;
+        background: linear-gradient(180deg, #ffe27a, #ffb300); color: #1a1000;
+        font-weight: 800; text-decoration: none;
+        clip-path: polygon(5px 0, 100% 0, calc(100% - 5px) 100%, 0 100%);
       }
       .x2chip:hover { background: #fff; }
-      .x2cell { display: flex; flex-wrap: wrap; gap: 2px; align-items: center; }
+      .x2cell { display: flex; flex-wrap: wrap; gap: 3px; align-items: center; }
+
       @media (max-width: 900px) {
-        .hof-grid { grid-template-columns: repeat(2, 1fr); }
+        .podium { flex-wrap: wrap; }
+        .wcw.k1 { order: -1; flex: 1 1 100%; }
+        .wcw.k2, .wcw.k3 { flex: 1 1 calc(50% - 10px); }
+        .hof-rest { grid-template-columns: 1fr; }
+        .hof-t { font-size: 24px; letter-spacing: 3px; }
+        .wcw.k1 .wc-title { font-size: 44px; }
       }
-      @media (max-width: 480px) {
-        .hof { padding: 10px; }
-        .wc { padding: 10px; gap: 8px; }
-        .wc-ico { font-size: 26px; }
-        .wc.k1 .wc-ico { font-size: 42px; }
-        .wc.k1 .wc-title { font-size: 30px; }
-        .wc.k1 .wc-name { font-size: 22px; }
+      @media (max-width: 560px) {
+        .hof { padding: 16px 10px; }
+        .hof-head .ln { flex-basis: 24px; }
+        .hof-t { font-size: 19px; letter-spacing: 2px; }
+        .wcw.k1 .wc-in { flex-direction: column; text-align: center; gap: 14px; }
+        .wcw.k1 .wc-stats { justify-content: center; }
+        .wcw.k1 .wc { padding: 24px 14px 22px; }
+        .wcw.k1 .medal { width: 108px; height: 108px; }
+        .wcw.k1 .wc-title { font-size: 36px; }
+        .wcw.k1 .wc-name { font-size: 24px; }
+        .wcw.k2, .wcw.k3 { flex-basis: 100%; }
+        .wc-title { font-size: 21px; }
+        .medal { width: 70px; height: 70px; }
+      }
+      @media (prefers-reduced-motion: reduce) {
+        .wcw, .wcb, .wc-sheen, .rays, .medal::before, .medal .wi, .wc-title, .hof-t, .ttl, .hof-embers i, .pill svg, .x2tag svg { animation: none !important; }
       }
     </style>
   </head>
@@ -3633,29 +3697,48 @@
    ⚠️ Pitfall: ถ้าแต้มเท่ากันเป๊ะ ตัวตัดสินคือครั้งรวม แล้วจำนวนรอบ แล้วชื่อ ก-ฮ
    ============================================================ */
       const WARZ = [
-        { k: 1, ico: '👑', en: 'WARZTH', th: 'ราชาบอสโลก' },
-        { k: 2, ico: '⚔️', en: 'WARZ GENERAL', th: 'จอมทัพบอสโลก' },
-        { k: 3, ico: '🔥', en: 'WARZ WARLORD', th: 'เจ้าสงครามบอสโลก' },
-        { k: 4, ico: '🗡️', en: 'WARZ SLAYER', th: 'ผู้พิชิตบอสโลก' },
-        { k: 5, ico: '🛡️', en: 'WARZ KNIGHT', th: 'อัศวินบอสโลก' },
+        { k: 1, en: 'WARZTH', th: 'ราชาบอสโลก' },
+        { k: 2, en: 'WARZ GENERAL', th: 'จอมทัพบอสโลก' },
+        { k: 3, en: 'WARZ WARLORD', th: 'เจ้าสงครามบอสโลก' },
+        { k: 4, en: 'WARZ SLAYER', th: 'ผู้พิชิตบอสโลก' },
+        { k: 5, en: 'WARZ KNIGHT', th: 'อัศวินบอสโลก' },
       ]
+      // ไอคอน SVG (คมชัดทุกขนาด ไม่พึ่งอีโมจิของเครื่อง)
+      const WZ_SVG = {
+        1: '<path d="M2.5 7.5l4.8 4.2L12 4l4.7 7.7 4.8-4.2-1.9 11H4.4z"/><rect x="4.4" y="20" width="15.2" height="2.2" rx=".6"/>',
+        2: '<path d="M3.5 2.5h3.2l7 8.6-2.1 2.1z"/><path d="M20.5 2.5h-3.2l-7 8.6 2.1 2.1z"/><path d="M8.6 13.6l1.8 1.8-4.6 4.6-1.9-.1-.1-1.9z"/><path d="M15.4 13.6l-1.8 1.8 4.6 4.6 1.9-.1.1-1.9z"/>',
+        3: '<path d="M12 1.5s6 4.6 6 10.4a6 6 0 01-12 0c0-2.3 1.2-3.6 2.4-4.8.1 2.2 1 3.5 2.2 3.5.4-3.3.1-6.2 1.4-9.1z"/><path d="M12 22a3 3 0 01-3-3c0-1.8 1.5-2.6 3-4.6 1.5 2 3 2.8 3 4.6a3 3 0 01-3 3z" fill="rgba(255,255,255,.4)"/>',
+        4: '<path d="M12 1.5l3 11.5H9z"/><rect x="6.5" y="13" width="11" height="2.4" rx=".8"/><rect x="10.8" y="15.4" width="2.4" height="5"/><circle cx="12" cy="21.4" r="1.6"/>',
+        5: '<path d="M12 1.8l8.2 3.1v6.3c0 5-3.6 9.2-8.2 11-4.6-1.8-8.2-6-8.2-11V4.9z"/><path d="M12 5l5.2 2v4.2c0 3.5-2.2 6.4-5.2 7.8z" fill="rgba(255,255,255,.32)"/>',
+      }
+      const wzIco = k => `<svg class="wi" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">${WZ_SVG[k]}</svg>`
+      const FLAME = '<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 1.5s6 4.6 6 10.4a6 6 0 01-12 0c0-2.3 1.2-3.6 2.4-4.8.1 2.2 1 3.5 2.2 3.5.4-3.3.1-6.2 1.4-9.1z"/></svg>'
       const ttlBadge = k => {
         const w = WARZ[k - 1]
         return w
-          ? `<span class="ttl k${k}" title="${esc(w.th)}">${w.ico} ${w.en}<small>· ${w.th}</small></span>`
+          ? `<span class="ttl k${k}" title="${esc(w.th)}">${wzIco(k)}${w.en}<small>· ${w.th}</small></span>`
           : ''
       }
       function hofHTML(list) {
         if (!list.length) return ''
+        const card = i => {
+          const w = WARZ[i],
+            p = list[i]
+          return `<div class="wcw k${w.k}"><div class="wcb"><div class="wc">${w.k === 1 ? '<div class="rays"></div>' : ''}<div class="wc-num" aria-hidden="true">${w.k}</div><div class="wc-sheen"></div><div class="wc-in"><div class="medal">${wzIco(w.k)}</div><div class="wc-body"><div class="wc-rank">RANK ${w.k}</div><div class="wc-title">${w.en}</div><div class="wc-sub">${w.th}</div><div class="wc-name">${esc(p.name)}</div><div class="wc-stats"><span class="pill pts"><b>${p.pts}</b> แต้ม</span><span class="pill">มา ${p.cnt} รอบ</span>${p.x2 ? `<span class="pill fire">${FLAME}x2 · ${p.x2} รอบ</span>` : ''}</div></div></div></div></div></div>`
+        }
+        const embers = Array.from(
+          { length: 16 },
+          (_, i) =>
+            `<i style="--x:${(i * 37 + 7) % 100}%;--s:${3 + (i % 3) * 2}px;--d:${5 + (i % 4)}s;--dl:${((i * 0.7) % 6).toFixed(1)}s;--dx:${(i % 2 ? 1 : -1) * (10 + ((i * 13) % 40))}px"></i>`
+        ).join('')
+        const pod = [1, 0, 2].filter(i => list[i]).map(card).join(''),
+          rest = [3, 4].filter(i => list[i]).map(card).join('')
         return (
-          `<h3>🏆 WARZ HALL OF FAME <small>เฉพาะ 5 อันดับแรกเท่านั้นที่ได้รับยศ</small></h3><div class="hof-grid">` +
-          list
-            .map((p, i) => {
-              const w = WARZ[i]
-              return `<div class="wc k${w.k}"><div class="wc-ico" aria-hidden="true">${w.ico}</div><div class="wc-body"><div class="wc-rank">RANK ${w.k}</div><div class="wc-title">${w.en}</div><div class="wc-sub">${w.th}</div><div class="wc-name">${esc(p.name)}</div><div class="wc-stat"><b>${p.pts}</b> แต้ม · มา ${p.cnt} รอบ${p.x2 ? ` · 🔥 x2 ${p.x2} รอบ` : ''}</div></div></div>`
-            })
-            .join('') +
-          `</div>`
+          `<div class="hof-embers" aria-hidden="true">${embers}</div>` +
+          `<div class="hof-head"><span class="ln"></span><div class="hof-t">WARZ HALL OF FAME</div><span class="ln r"></span></div>` +
+          `<div class="hof-s">เฉพาะ 5 อันดับแรกเท่านั้นที่ได้รับยศบอสโลก</div>` +
+          `<div class="podium">${pod}</div>` +
+          (rest ? `<div class="hof-rest">${rest}</div>` : '')
         )
       }
 
@@ -3681,7 +3764,7 @@
         const xs = x2Rounds(r)
         if (!xs.length) return '<span class="mute">—</span>'
         const extra = xs.reduce((t, x) => t + (x.p - S.cfg.normal), 0)
-        return `<div class="x2cell">${xs.map(x => `<span class="n2" title="${esc(x2Tip(x.no))}">#${x.no}</span>`).join('')}<small class="mute">&nbsp;${xs.length} รอบ · ${extra >= 0 ? '+' : ''}${extra} ครั้งโบนัส</small></div>`
+        return `<div class="x2cell"><span class="x2tag">${FLAME}x${x2Mult(xs[0].p)}</span>${xs.map(x => `<span class="n2" title="${esc(x2Tip(x.no))}">#${x.no}</span>`).join('')}<small class="mute">&nbsp;${xs.length} รอบ · ${extra >= 0 ? '+' : ''}${extra} ครั้งโบนัส</small></div>`
       }
       function renderHof(ranked) {
         const el = $('#hof'),
@@ -3724,7 +3807,7 @@
                   (
                     r,
                     i
-                  ) => `<tr><td class="rk${win(r) ? ' k' + win(r) : ''}">${rk(r)}</td>
+                  ) => `<tr class="${win(r) ? 'rowk k' + win(r) : ''}"><td class="rk${win(r) ? ' k' + win(r) : ''}">${rk(r)}</td>
       <td>${ad ? `<input type="text" class="tin nm" data-ed="name" data-mid="${r.m.id}" value="${esc(r.m.name)}">` : esc(r.m.name)}${win(r) ? '<div>' + ttlBadge(win(r)) + '</div>' : ''}</td>
       <td>${ad ? `<input type="text" class="tin" style="min-width:110px" data-ed="nos" data-mid="${r.m.id}" value="${r.nos.map(x => x.no).join(',')}" title="เลขรูปที่เข้าร่วม เช่น 1,2,5-7">` : r.nos.map(x => `<span class="${x.p !== S.cfg.normal ? 'n2' : 'n1'}">${x.no}</span>`).join(',') || '<span class="mute">—</span>'}</td>
       <td>${x2cell(r)}</td>
