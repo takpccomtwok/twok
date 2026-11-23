@@ -968,6 +968,180 @@
         margin-left: 6px;
         padding: 2px 4px;
       }
+
+      /* ===== WARZ RANK SYSTEM : ยศบอสโลก 5 อันดับแรก ===== */
+      .k1 { --c: #ffd34d; --cs: rgba(255, 211, 77, 0.28); }
+      .k2 { --c: #ff4d5e; --cs: rgba(255, 77, 94, 0.28); }
+      .k3 { --c: #ff8a2b; --cs: rgba(255, 138, 43, 0.28); }
+      .k4 { --c: #b983ff; --cs: rgba(185, 131, 255, 0.28); }
+      .k5 { --c: #4fc3ff; --cs: rgba(79, 195, 255, 0.28); }
+      .hof {
+        margin: 0 0 14px;
+        padding: 14px;
+        border: 1px solid var(--line);
+        background:
+          radial-gradient(620px 170px at 50% 0, rgba(255, 200, 61, 0.14), transparent 70%),
+          linear-gradient(180deg, rgba(225, 29, 46, 0.16), rgba(20, 22, 28, 0.7));
+      }
+      .hof h3 {
+        font-family: 'Kanit', 'Noto Sans Thai', sans-serif;
+        font-size: 20px;
+        letter-spacing: 1px;
+        color: var(--gold);
+        display: flex;
+        align-items: baseline;
+        gap: 10px;
+        flex-wrap: wrap;
+        margin-bottom: 10px;
+      }
+      .hof h3 small {
+        font-family: 'Noto Sans Thai', sans-serif;
+        font-weight: 400;
+        font-size: 13px;
+        color: var(--mute);
+        letter-spacing: 0;
+      }
+      .hof-grid {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 10px;
+      }
+      .wc {
+        --c: var(--gold);
+        --cs: rgba(255, 200, 61, 0.28);
+        display: flex;
+        gap: 12px;
+        align-items: center;
+        min-width: 0;
+        padding: 12px 14px;
+        background: linear-gradient(135deg, var(--cs), var(--panel2) 70%);
+        border: 1px solid var(--line);
+        border-left: 6px solid var(--c);
+      }
+      .wc.k1 {
+        grid-column: 1 / -1;
+        padding: 18px 20px;
+        border-color: var(--c);
+        animation: warzGlow 2.8s ease-in-out infinite;
+      }
+      .wc-ico {
+        flex: 0 0 auto;
+        font-size: 34px;
+        line-height: 1;
+        filter: drop-shadow(0 0 8px var(--c));
+      }
+      .wc.k1 .wc-ico { font-size: 58px; }
+      .wc-body { min-width: 0; }
+      .wc-rank {
+        font-family: 'Kanit', sans-serif;
+        font-weight: 600;
+        font-size: 12px;
+        letter-spacing: 2px;
+        color: var(--c);
+      }
+      .wc-title {
+        font-family: 'Kanit', sans-serif;
+        font-style: italic;
+        font-weight: 800;
+        font-size: 22px;
+        line-height: 1.1;
+        color: var(--c);
+        text-shadow: 0 0 14px var(--cs);
+        overflow-wrap: anywhere;
+      }
+      .wc.k1 .wc-title {
+        font-size: 42px;
+        letter-spacing: 2px;
+        background: linear-gradient(90deg, #fff, var(--gold), var(--ember), var(--gold), #fff);
+        background-size: 200% 100%;
+        -webkit-background-clip: text;
+        background-clip: text;
+        color: transparent;
+        text-shadow: none;
+        animation: warzShine 3.2s linear infinite;
+      }
+      .wc-sub { font-size: 13px; color: var(--mute); }
+      .wc-name {
+        font-family: 'Kanit', sans-serif;
+        font-weight: 600;
+        font-size: 18px;
+        margin-top: 4px;
+        overflow-wrap: anywhere;
+      }
+      .wc.k1 .wc-name { font-size: 26px; }
+      .wc-stat { font-size: 13px; color: var(--mute); }
+      .wc-stat b { font-family: 'Kanit', sans-serif; font-size: 18px; color: var(--gold); }
+      @keyframes warzGlow {
+        0%, 100% { box-shadow: 0 0 12px rgba(255, 211, 77, 0.22); }
+        50% { box-shadow: 0 0 34px rgba(255, 211, 77, 0.55); }
+      }
+      @keyframes warzShine { to { background-position: -200% 0; } }
+      @media (prefers-reduced-motion: reduce) {
+        .wc.k1, .wc.k1 .wc-title { animation: none; }
+      }
+      .ttl {
+        display: inline-flex;
+        align-items: center;
+        gap: 4px;
+        margin-top: 3px;
+        padding: 0 10px;
+        font-family: 'Kanit', sans-serif;
+        font-style: italic;
+        font-weight: 800;
+        font-size: 12px;
+        letter-spacing: 0.5px;
+        color: #111;
+        background: var(--c);
+        white-space: nowrap;
+        clip-path: polygon(6px 0, 100% 0, calc(100% - 6px) 100%, 0 100%);
+      }
+      .ttl small {
+        font-family: 'Noto Sans Thai', sans-serif;
+        font-style: normal;
+        font-weight: 600;
+        font-size: 12px;
+      }
+      .tbl td.rk.k1, .tbl td.rk.k2, .tbl td.rk.k3, .tbl td.rk.k4, .tbl td.rk.k5 {
+        background: var(--c) !important;
+        color: #111;
+      }
+      .x2line {
+        margin-top: 6px;
+        padding-top: 6px;
+        border-top: 1px dashed var(--line);
+        font-size: 13px;
+        color: var(--mute);
+      }
+      .x2tag {
+        display: inline-block;
+        padding: 0 6px;
+        background: var(--ember);
+        color: #111;
+        font-family: 'Kanit', sans-serif;
+        font-weight: 800;
+      }
+      .x2chip {
+        display: inline-block;
+        margin: 1px 2px;
+        padding: 0 6px;
+        background: var(--gold);
+        color: #111;
+        font-weight: 800;
+        text-decoration: none;
+      }
+      .x2chip:hover { background: #fff; }
+      .x2cell { display: flex; flex-wrap: wrap; gap: 2px; align-items: center; }
+      @media (max-width: 900px) {
+        .hof-grid { grid-template-columns: repeat(2, 1fr); }
+      }
+      @media (max-width: 480px) {
+        .hof { padding: 10px; }
+        .wc { padding: 10px; gap: 8px; }
+        .wc-ico { font-size: 26px; }
+        .wc.k1 .wc-ico { font-size: 42px; }
+        .wc.k1 .wc-title { font-size: 30px; }
+        .wc.k1 .wc-name { font-size: 22px; }
+      }
     </style>
   </head>
   <body>
@@ -1147,6 +1321,7 @@
           </button>
           <span class="hint">เลขรูปที่มีพื้นหลังทอง = รอบที่ได้แต้มพิเศษ</span>
         </div>
+        <div id="hof" class="hof hide"></div>
         <div class="tw">
           <table class="tbl pretty">
             <thead>
@@ -1157,6 +1332,7 @@
                   รูปที่เข้าร่วม (แก้ได้)
                   <small class="mute">(เช่น 1,2,5-7)</small>
                 </th>
+                <th id="thX2">🔥 รอบที่ได้ x2</th>
                 <th style="text-align: right">มา (รอบ)</th>
                 <th style="text-align: right">นับรวม (ครั้ง) (แก้ได้)</th>
                 <th style="text-align: right">แต้ม (แก้ได้)</th>
@@ -3451,16 +3627,94 @@
         )
         return rows
       }
+      /* ============================================================
+   ✅ ภาพรวม: ระบบยศ WARZ — 5 อันดับแรก (ที่มีแต้ม > 0) ได้ยศบอสโลก
+   📍 Key Logic: อันดับคิดจาก "แต้ม → ครั้งรวม → จำนวนรอบ → ชื่อ" เสมอ ไม่ขึ้นกับช่องค้นหา/การเรียง
+   ⚠️ Pitfall: ถ้าแต้มเท่ากันเป๊ะ ตัวตัดสินคือครั้งรวม แล้วจำนวนรอบ แล้วชื่อ ก-ฮ
+   ============================================================ */
+      const WARZ = [
+        { k: 1, ico: '👑', en: 'WARZTH', th: 'ราชาบอสโลก' },
+        { k: 2, ico: '⚔️', en: 'WARZ GENERAL', th: 'จอมทัพบอสโลก' },
+        { k: 3, ico: '🔥', en: 'WARZ WARLORD', th: 'เจ้าสงครามบอสโลก' },
+        { k: 4, ico: '🗡️', en: 'WARZ SLAYER', th: 'ผู้พิชิตบอสโลก' },
+        { k: 5, ico: '🛡️', en: 'WARZ KNIGHT', th: 'อัศวินบอสโลก' },
+      ]
+      const ttlBadge = k => {
+        const w = WARZ[k - 1]
+        return w
+          ? `<span class="ttl k${k}" title="${esc(w.th)}">${w.ico} ${w.en}<small>· ${w.th}</small></span>`
+          : ''
+      }
+      function hofHTML(list) {
+        if (!list.length) return ''
+        return (
+          `<h3>🏆 WARZ HALL OF FAME <small>เฉพาะ 5 อันดับแรกเท่านั้นที่ได้รับยศ</small></h3><div class="hof-grid">` +
+          list
+            .map((p, i) => {
+              const w = WARZ[i]
+              return `<div class="wc k${w.k}"><div class="wc-ico" aria-hidden="true">${w.ico}</div><div class="wc-body"><div class="wc-rank">RANK ${w.k}</div><div class="wc-title">${w.en}</div><div class="wc-sub">${w.th}</div><div class="wc-name">${esc(p.name)}</div><div class="wc-stat"><b>${p.pts}</b> แต้ม · มา ${p.cnt} รอบ${p.x2 ? ` · 🔥 x2 ${p.x2} รอบ` : ''}</div></div></div>`
+            })
+            .join('') +
+          `</div>`
+        )
+      }
+
+      function ptsRanked() {
+        return calcRows().sort(
+          (a, b) =>
+            b.pts - a.pts ||
+            b.units - a.units ||
+            b.cnt - a.cnt ||
+            a.m.name.localeCompare(b.m.name, 'th')
+        )
+      }
+      let SESNO = new Map()
+      const x2Mult = p => (S.cfg.normal > 0 ? +(p / S.cfg.normal).toFixed(1) : p)
+      const x2Rounds = r => r.nos.filter(x => x.p !== S.cfg.normal)
+      const x2Tip = no => {
+        const s = SESNO.get(no)
+        return s
+          ? `รอบ #${no} · ${fmtTime(s.time)}${s.label ? ' · ' + s.label : ''} · นับ ${sesPts(s)} ครั้ง (x${x2Mult(sesPts(s))})`
+          : `รอบ #${no}`
+      }
+      function x2cell(r) {
+        const xs = x2Rounds(r)
+        if (!xs.length) return '<span class="mute">—</span>'
+        const extra = xs.reduce((t, x) => t + (x.p - S.cfg.normal), 0)
+        return `<div class="x2cell">${xs.map(x => `<span class="n2" title="${esc(x2Tip(x.no))}">#${x.no}</span>`).join('')}<small class="mute">&nbsp;${xs.length} รอบ · ${extra >= 0 ? '+' : ''}${extra} ครั้งโบนัส</small></div>`
+      }
+      function renderHof(ranked) {
+        const el = $('#hof'),
+          list = ranked
+            .filter(r => r.pts > 0)
+            .slice(0, 5)
+            .map(r => ({
+              name: r.m.name,
+              pts: r.pts,
+              cnt: r.cnt,
+              x2: x2Rounds(r).length,
+            }))
+        el.classList.toggle('hide', !list.length)
+        el.innerHTML = hofHTML(list)
+      }
+
       function renderTable() {
         const rows = sortedRows(),
           total = S.sessions.length,
           ad = window.ROLE !== 'staff'
+        SESNO = new Map(S.sessions.map(x => [x.no, x]))
+        const ranked = ptsRanked(),
+          rkMap = new Map(ranked.map((r, n) => [r.m.id, n + 1])),
+          rk = r => rkMap.get(r.m.id),
+          win = r => (rk(r) <= 5 && r.pts > 0 ? rk(r) : 0)
+        renderHof(ranked)
+        $('#thX2').textContent = '🔥 รอบที่ได้ x' + x2Mult(S.cfg.bonus)
         const num = (r, k, v, w) =>
           ad
             ? `<input type="number" min="0" class="tin" style="width:${w}px;text-align:right" data-ed="${k}" data-mid="${r.m.id}" value="${v}">`
             : v
         const head = ad
-          ? `<tr><td class="rk">＋</td><td colspan="8"><input type="text" list="dlMembers" class="tin" style="width:100%" data-ed="newm" placeholder="เพิ่มสมาชิกใหม่ในตาราง: พิมพ์ชื่อแล้วกด Enter"></td></tr>`
+          ? `<tr><td class="rk">＋</td><td colspan="9"><input type="text" list="dlMembers" class="tin" style="width:100%" data-ed="newm" placeholder="เพิ่มสมาชิกใหม่ในตาราง: พิมพ์ชื่อแล้วกด Enter"></td></tr>`
           : ''
         $('#tBody').innerHTML =
           head +
@@ -3470,9 +3724,10 @@
                   (
                     r,
                     i
-                  ) => `<tr><td class="rk${i < 3 && r.pts > 0 ? ' top' : ''}">${i + 1}</td>
-      <td>${ad ? `<input type="text" class="tin nm" data-ed="name" data-mid="${r.m.id}" value="${esc(r.m.name)}">` : esc(r.m.name)}</td>
+                  ) => `<tr><td class="rk${win(r) ? ' k' + win(r) : ''}">${rk(r)}</td>
+      <td>${ad ? `<input type="text" class="tin nm" data-ed="name" data-mid="${r.m.id}" value="${esc(r.m.name)}">` : esc(r.m.name)}${win(r) ? '<div>' + ttlBadge(win(r)) + '</div>' : ''}</td>
       <td>${ad ? `<input type="text" class="tin" style="min-width:110px" data-ed="nos" data-mid="${r.m.id}" value="${r.nos.map(x => x.no).join(',')}" title="เลขรูปที่เข้าร่วม เช่น 1,2,5-7">` : r.nos.map(x => `<span class="${x.p !== S.cfg.normal ? 'n2' : 'n1'}">${x.no}</span>`).join(',') || '<span class="mute">—</span>'}</td>
+      <td>${x2cell(r)}</td>
       <td class="num">${r.cnt}</td>
       <td class="num">${num(r, 'units', r.units, 64)}</td>
       <td class="num pts">${num(r, 'pts', r.pts, 64)}</td>
@@ -3481,7 +3736,7 @@
       <td class="actc adminonly"><div class="acts"><button class="btn sm ghost warn" data-act="m-clear" data-mid="${r.m.id}" title="ล้างรอบและแต้มของคนนี้ (เก็บชื่อไว้)">ล้างแต้ม</button><button class="btn sm ghost danger" data-act="m-del" data-mid="${r.m.id}" title="ลบสมาชิกคนนี้ออกทั้งหมด">ลบ</button></div></td></tr>`
                 )
                 .join('')
-            : '<tr><td colspan="9" class="mute" style="padding:30px;text-align:center">ยังไม่มีข้อมูล</td></tr>')
+            : '<tr><td colspan="10" class="mute" style="padding:30px;text-align:center">ยังไม่มีข้อมูล</td></tr>')
       }
       /* แก้ตารางคะแนนสดๆ: ชื่อ / รอบที่เข้าร่วม / ครั้งรวม / แต้ม / เพิ่มสมาชิก */
       const parseNos = s => {
